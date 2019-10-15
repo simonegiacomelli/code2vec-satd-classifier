@@ -1,0 +1,11 @@
+#source https://medium.com/issuehunt/50-top-java-projects-on-github-adbfe9f67dbc
+https://github.com/ReactiveX/RxJava
+https://github.com/elastic/elasticsearch
+https://github.com/square/retrofit
+https://github.com/square/okhttp
+https://github.com/spring-projects/spring-boot
+https://github.com/google/guava
+https://github.com/PhilJay/MPAndroidChart
+https://github.com/bumptech/glide
+https://github.com/spring-projects/spring-framework
+https://github.com/JakeWharton/butterknife
