@@ -2,6 +2,7 @@ package sample
 
 import kotlinx.coroutines.*
 import java.util.concurrent.Executors
+import java.util.concurrent.ForkJoinPool
 
 
 class Main {
@@ -36,7 +37,9 @@ class Main {
     }
 
     suspend fun <A, B> Iterable<A>.pmap2(f: suspend (A) -> B): List<B> = withContext(es) {
-        map { async { f(it) } }.awaitAll()
+        map {
+            async { f(it) }
+        }.awaitAll()
     }
 
     suspend fun process2() {
@@ -60,9 +63,23 @@ class Main {
             }
         }
     }
+
+    fun process4() {
+        val customThreadPool = ForkJoinPool(2)
+        val task =
+            customThreadPool.submit {
+                (0..9).map { it }.parallelStream().forEach {
+                    sharade(it)
+                }
+            }
+        println("after submit")
+        task.get()
+        println("after get")
+    }
 }
 
 
 suspend fun main() {
-    Main().process2()
+    Main().process4()
 }
+

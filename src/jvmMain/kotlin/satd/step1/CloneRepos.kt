@@ -1,11 +1,13 @@
 package satd.step1
 
+import kotlinx.coroutines.*
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
-
+import java.util.concurrent.Executors
+import java.util.concurrent.ForkJoinPool
 
 fun main() {
     CloneRepos().go()
@@ -17,16 +19,19 @@ class CloneRepos {
     val reposPath get() = Paths.get("./data/repos/")
 
     fun go() {
-
-        repoList()
-            .readText()
-            .split('\n')
-            .map { it.trim() }
-            .filter { !it.startsWith("#") }
-            .map { URL(it) }
-            .parallelStream()
-            .forEach { ensureRepo(it) }
-
+        val threadCount = Runtime.getRuntime().availableProcessors()
+        logln("Starting ${threadCount} threads")
+        val customThreadPool = ForkJoinPool(threadCount)
+        customThreadPool.submit {
+            repoList()
+                .readText()
+                .split('\n')
+                .map { it.trim() }
+                .filter { !it.startsWith("#") }
+                .map { URL(it) }
+                .parallelStream()
+                .forEach { ensureRepo(it) }
+        }.get()
         logln("")
         logln("Clone done")
     }
