@@ -1,12 +1,12 @@
 package satd.step1
 
-import kotlinx.coroutines.*
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
+import org.eclipse.jgit.lib.TextProgressMonitor
 import java.io.File
+import java.io.PrintWriter
 import java.net.URL
 import java.nio.file.Paths
-import java.util.concurrent.Executors
 import java.util.concurrent.ForkJoinPool
 
 fun main() {
@@ -36,6 +36,7 @@ class CloneRepos {
         logln("Clone done")
     }
 
+    //TODO should be a chain of commands starting from a repo url, repo in folder, repo processing, etc etc
     private fun ensureRepo(it: URL) {
         logln("Cloning ${it}")
         val folder = File(reposPath.toString() + "/" + it.file.drop(1).replace('/', '_'))
@@ -49,6 +50,7 @@ class CloneRepos {
             Git.cloneRepository()
                 .setURI(it.toExternalForm())
                 .setDirectory(folder)
+//                .setProgressMonitor( TextProgressMonitor( PrintWriter(System.out)))
                 .call()
     }
 
