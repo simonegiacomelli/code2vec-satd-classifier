@@ -4,7 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.comments.Comment
 import java.nio.file.Path
 
-class Parser(val source: Path) {
+class Parser(val source: Path, val repo: Repo) {
     val satd = mutableListOf<Comment>()
 
     companion object {
@@ -26,9 +26,4 @@ class Parser(val source: Path) {
         }
     }
 
-    fun satdToFile(){
-        satd.stream()
-            .parallel()
-
-    }
 }

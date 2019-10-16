@@ -11,13 +11,23 @@ class Inspec(val repo: Repo) {
             .parallel()
             .filter { Files.isRegularFile(it) }
             .filter { it.endsWith(".java") }
-            .map { Parser(it).apply { filterSatd() } }
+            .map { Parser(it, repo).apply { filterSatd() } }
             .filter { it.satd.size > 0 }
-            .map { it.apply { satdToFile() } }
             .collect(Collectors.toList())
         return RepoSatd(parser = list, repo = repo)
     }
 
 }
 
-data class RepoSatd(val repo: Repo, val parser: MutableList<Parser>)
+class RepoSatd(val repo: Repo, val parser: MutableList<Parser>) {
+    fun satdToFile() {
+        val folder = Folders.satd.resolve(repo.friendlyName).toFile()
+        folder.deleteRecursively()
+        folder.mkdirs()
+
+        parser.forEach {
+
+        }
+
+    }
+}

@@ -4,16 +4,16 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import java.io.File
 import java.net.URL
-import java.nio.file.Paths
 
 class Repo(val it: URL) {
 
-    val reposPath get() = Paths.get("./data/repos/")
+    val reposPath get() = Folders.repos
+    val friendlyName = it.file.drop(1).replace('/', '_')
 
-    //TODO should be a chain of commands starting from a repo url, repo in folder, repo processing, etc etc
     fun clone(): Repo {
         logln("Cloning ${it}")
-        val folder = File(reposPath.toString() + "/" + it.file.drop(1).replace('/', '_'))
+
+        val folder = File("$reposPath/$friendlyName")
 
         if (folder.exists()) {
             if (!repoOk(it, folder))
