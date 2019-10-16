@@ -64,9 +64,12 @@ class CloneRepos {
 
             repo.reset()
                 .setMode(ResetCommand.ResetType.HARD)
+                .setProgressMonitor(TextProgressMonitor())
                 .call()
 
             repo.pull()
+                .setProgressMonitor(TextProgressMonitor())
+                .call()
 
 
             return true
