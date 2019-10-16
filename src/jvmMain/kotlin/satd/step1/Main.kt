@@ -2,6 +2,7 @@ package satd.step1
 
 import java.net.URL
 import java.util.concurrent.ForkJoinPool
+import java.util.stream.Collectors
 
 fun main() {
     Main().go()
@@ -11,20 +12,21 @@ class Main {
     private fun repoUrlList() = this::class.java.classLoader.getResource("satd/step1/repo-urls.txt")!!
 
     fun go() {
-        val threadCount = Runtime.getRuntime().availableProcessors()
-        logln("Starting ${threadCount} threads")
-        val customThreadPool = ForkJoinPool(threadCount)
-        customThreadPool.submit {
-            repoUrlList()
-                .readText()
-                .split('\n')
-                .map { it.trim() }
-                .filter { !it.startsWith("#") }
-                .map { URL(it) }
-                .parallelStream()
-                .map { CloneRepo(it) }
-                .forEach { it.ensureRepo() }
-        }.get()
+        logln("Starting")
+        repoUrlList()
+            .readText()
+            .split('\n')
+            .map { it.trim() }
+            .filter { !it.startsWith("#") }
+            .map { URL(it) }
+            .stream()
+            .parallel()
+            .map { logln("Starting thread"); it }
+//            .also { logln("Starting thread") }
+            .map { CloneRepo(it) }
+            .map { it.ensureRepo() }
+            .collect(Collectors.toList())
+
         logln("")
         logln("Clone done")
     }

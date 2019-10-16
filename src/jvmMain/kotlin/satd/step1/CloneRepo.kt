@@ -2,7 +2,6 @@ package satd.step1
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
-import org.eclipse.jgit.lib.TextProgressMonitor
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
