@@ -6,12 +6,12 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Paths
 
-class CloneRepo(val it: URL) {
+class Repo(val it: URL) {
 
     val reposPath get() = Paths.get("./data/repos/")
 
     //TODO should be a chain of commands starting from a repo url, repo in folder, repo processing, etc etc
-    fun ensureRepo() {
+    fun clone(): Repo {
         logln("Cloning ${it}")
         val folder = File(reposPath.toString() + "/" + it.file.drop(1).replace('/', '_'))
 
@@ -26,6 +26,7 @@ class CloneRepo(val it: URL) {
                 .setDirectory(folder)
 //                .setProgressMonitor( TextProgressMonitor( PrintWriter(System.out)))
                 .call()
+        return this;
     }
 
     private fun repoOk(repoUrl: URL, repoFolder: File): Boolean {

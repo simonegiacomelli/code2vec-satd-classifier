@@ -1,7 +1,6 @@
 package satd.step1
 
 import java.net.URL
-import java.util.concurrent.ForkJoinPool
 import java.util.stream.Collectors
 
 fun main() {
@@ -23,8 +22,9 @@ class Main {
             .parallel()
             .map { logln("Starting thread"); it }
 //            .also { logln("Starting thread") }
-            .map { CloneRepo(it) }
-            .map { it.ensureRepo() }
+            .map { Repo(it).clone() }
+            .map { Inspec(it).javaSources() }
+            .map {  }
             .collect(Collectors.toList())
 
         logln("")

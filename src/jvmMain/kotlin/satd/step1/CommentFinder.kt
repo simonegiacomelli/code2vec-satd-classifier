@@ -3,16 +3,14 @@ package satd.step1
 import com.github.javaparser.JavaParser
 import java.io.StringReader
 
-
-
-class RepoInspector
-
-{
-
-    companion object{
+class CommentFinder {
+    companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val classText = """public class Dummy{
+            val classText = """
+   /* multi line    
+     comment */
+                public class Dummy{
 //Comment
 }
 //second comment
@@ -25,4 +23,5 @@ class RepoInspector
             }
         }
     }
+
 }
