@@ -41,6 +41,8 @@ kotlin {
                 implementation "ch.qos.logback:logback-classic:$logback_version"
 
                 implementation 'org.eclipse.jgit:org.eclipse.jgit:5.4.2.201908231537-r'
+                implementation 'com.github.javaparser:javaparser-core:3.15.1'
+
             }
         }
         jvmTest {
