@@ -46,12 +46,10 @@ package satd.step1
 
 import org.eclipse.jgit.lib.BatchingProgressMonitor
 
-import satd.step1.logln
-
 /**
  * A simple progress reporter printing on a stream.
  */
-class TextProgressMonitor : BatchingProgressMonitor() {
+class TextProgressMonitor(val prepend: String) : BatchingProgressMonitor() {
 
     /**
      * {@inheritDoc}
@@ -68,7 +66,7 @@ class TextProgressMonitor : BatchingProgressMonitor() {
     override fun onEndTask(taskName: String, workCurr: Int) {
         val s = StringBuilder()
         format(s, taskName, workCurr)
-        s.append("\n") //$NON-NLS-1$
+        //s.append("\n") //$NON-NLS-1$
         send(s)
     }
 
@@ -96,7 +94,7 @@ class TextProgressMonitor : BatchingProgressMonitor() {
     override fun onEndTask(taskName: String, cmp: Int, totalWork: Int, pcnt: Int) {
         val s = StringBuilder()
         format(s, taskName, cmp, totalWork, pcnt)
-        s.append("\n") //$NON-NLS-1$
+        //s.append("\n") //$NON-NLS-1$
         send(s)
     }
 
@@ -104,7 +102,7 @@ class TextProgressMonitor : BatchingProgressMonitor() {
         s: StringBuilder, taskName: String, cmp: Int,
         totalWork: Int, pcnt: Int
     ) {
-        s.append("\r") //$NON-NLS-1$
+        //s.append("\r") //$NON-NLS-1$
         s.append(taskName)
         s.append(": ") //$NON-NLS-1$
         while (s.length < 25)
@@ -127,6 +125,6 @@ class TextProgressMonitor : BatchingProgressMonitor() {
     }
 
     private fun send(s: StringBuilder) {
-        logln(s.toString())
+        logln(prepend.padEnd(55) + ' ' + s.toString())
     }
 }

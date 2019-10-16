@@ -36,13 +36,15 @@ class CloneRepo(val it: URL) {
                 .setForce(true)
                 .call()
 
+            val textProgressMonitor = TextProgressMonitor(repoUrl.toString())
+
             repo.reset()
                 .setMode(ResetCommand.ResetType.HARD)
-                .setProgressMonitor(TextProgressMonitor())
+                .setProgressMonitor(textProgressMonitor)
                 .call()
 
             repo.pull()
-                .setProgressMonitor(TextProgressMonitor())
+                .setProgressMonitor(textProgressMonitor)
                 .call()
 
 
