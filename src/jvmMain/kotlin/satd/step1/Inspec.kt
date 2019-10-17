@@ -17,7 +17,7 @@ class Inspec(val repo: Repo) {
         val filtered = list
             .filter { it.satd.size > 0 }
             .toList()
-        logln("${repo.it} source = ${list.size} filtered = ${filtered.size}")
+        logln("${repo.url} source = ${list.size} filtered = ${filtered.size}")
         return RepoSatd(source = filtered, repo = repo)
     }
 
@@ -35,7 +35,7 @@ class RepoSatd(val repo: Repo, val source: List<Source>) {
         snippetFile
             .printWriter()
             .use { pw ->
-                pw.println("Repo url: ${repo.it}")
+                pw.println("Repo url: ${repo.url}")
                 if (source.isEmpty()) {
                     pw.println("No satd found")
                     return

@@ -5,15 +5,15 @@ import org.eclipse.jgit.api.ResetCommand
 import java.io.File
 import java.net.URL
 
-class Repo(val it: URL) {
+class Repo(val url: URL) {
 
     private val reposPath get() = Folders.repos
-    val friendlyName = it.file.drop(1).replace('/', '_')
-    val textProgressMonitor = TextProgressMonitor(it.toString())
+    val friendlyName = url.file.drop(1).replace('/', '_')
+    val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$friendlyName")
 
     fun clone(): Repo {
-        logln("Cloning ${it}")
+        logln("Cloning ${url}")
 
 
         if (folder.exists()) {
@@ -23,7 +23,7 @@ class Repo(val it: URL) {
 
         if (!folder.exists())
             Git.cloneRepository()
-                .setURI(it.toExternalForm())
+                .setURI(url.toExternalForm())
                 .setDirectory(folder)
 //                .setProgressMonitor(textProgressMonitor)
                 .call()
