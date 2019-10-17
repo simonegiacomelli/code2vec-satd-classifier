@@ -2,6 +2,7 @@ package satd.step1
 
 import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.comments.Comment
+import java.lang.Integer.max
 import java.nio.file.Path
 
 class Source(val path: Path, repo: Repo) {
@@ -29,9 +30,9 @@ class Source(val path: Path, repo: Repo) {
     fun satdSnippets() = sequence {
         val lines = path.toFile().readLines()
         satd.forEach {
-            val begin = it.range.get().begin.line - 1
+            val begin = max(it.range.get().begin.line - 31, 0)
             val end = it.range.get().end.line
-            val selectedLines = lines.drop(begin).take(end - begin + 50)
+            val selectedLines = lines.drop(begin).take(end - begin + 60)
             val content = "-".repeat(5) + " line $begin" + "-".repeat(5) + "\n" + selectedLines.joinToString("\n")
             yield(content)
         }
