@@ -26,4 +26,15 @@ class Source(val path: Path) {
         }
     }
 
+    fun satdSnippets() = sequence {
+        val lines = path.toFile().readLines()
+        satd.forEach {
+            val begin = it.range.get().begin.line
+            val end = it.range.get().end.line
+            val selectedLines = lines.drop(begin).take(end - begin + 50)
+            val content = "-".repeat(5) + " line $begin\n" + selectedLines.joinToString("\n")
+            yield(content)
+        }
+    }
+
 }

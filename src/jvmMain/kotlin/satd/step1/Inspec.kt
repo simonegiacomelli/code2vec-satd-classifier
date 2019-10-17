@@ -1,8 +1,6 @@
 package satd.step1
 
-import java.io.File
 import java.nio.file.Files
-import java.util.stream.Collectors
 import kotlin.streams.toList
 
 
@@ -27,13 +25,27 @@ class Inspec(val repo: Repo) {
 
 class RepoSatd(val repo: Repo, val source: List<Source>) {
     fun satdToFile() {
-        val folder = Folders.satd.resolve(repo.friendlyName).toFile()
-        folder.deleteRecursively()
-        folder.mkdirs()
+        Folders.satd.toFile().mkdirs()
+        val snippetFile = Folders.satd.resolve(repo.friendlyName + ".snippet.java").toFile()
+        if (snippetFile.exists())
+            snippetFile.delete()
 
-        source.forEach {
-            it.path.toFile().copyTo(File(folder, it.path.fileName.toString()))
-        }
+        if (source.isEmpty())
+            return
+
+        snippetFile
+            .printWriter()
+            .use { pw ->
+                source.forEach {
+                    pw.println("-".repeat(200))
+                    pw.println("-".repeat(5) + "${it.path.fileName} ${it.path}")
+                    pw.println(it.satdSnippets().joinToString("\n\n${"-".repeat(100)}\n\n"))
+
+                    pw.println()
+                    pw.println()
+                }
+            }
 
     }
+
 }
