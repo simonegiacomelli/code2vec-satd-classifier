@@ -30,14 +30,16 @@ class RepoSatd(val repo: Repo, val source: List<Source>) {
         if (snippetFile.exists())
             snippetFile.delete()
 
-        if (source.isEmpty()) {
-            snippetFile.writeText("No satd found")
-            return
-        }
+
 
         snippetFile
             .printWriter()
             .use { pw ->
+                pw.println("Repo url: ${repo.it}")
+                if (source.isEmpty()) {
+                    pw.println("No satd found")
+                    return
+                }
                 source.forEach {
                     pw.println("-".repeat(200))
                     pw.println("-".repeat(5) + " ${it.path.fileName} ${it.path}")

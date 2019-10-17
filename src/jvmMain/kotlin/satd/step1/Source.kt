@@ -30,9 +30,12 @@ class Source(val path: Path, repo: Repo) {
     fun satdSnippets() = sequence {
         val lines = path.toFile().readLines()
         satd.forEach {
-            val begin = max(it.range.get().begin.line - 31, 0)
+            val dup = lines.toMutableList()
+            val satdLine = it.range.get().begin.line
+            dup[satdLine - 1] += " <------===== DETECTED SATD"
+            val begin = max(satdLine - 31, 0)
             val end = it.range.get().end.line
-            val selectedLines = lines.drop(begin).take(end - begin + 60)
+            val selectedLines = dup.drop(begin).take(end - begin + 60)
             val content = "-".repeat(5) + " line $begin" + "-".repeat(5) + "\n" + selectedLines.joinToString("\n")
             yield(content)
         }
