@@ -4,7 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.comments.Comment
 import java.nio.file.Path
 
-class Parser(val source: Path, val repo: Repo) {
+class Source(val path: Path) {
     val satd = mutableListOf<Comment>()
 
     companion object {
@@ -16,7 +16,7 @@ class Parser(val source: Path, val repo: Repo) {
     }
 
     fun filterSatd() {
-        val compileUnit = JavaParser().parse(source)!!
+        val compileUnit = JavaParser().parse(path)!!
         for (comment in compileUnit.commentsCollection.get().comments) {
             for (p in patterns)
                 if (comment!!.content.contains(p, ignoreCase = true)) {

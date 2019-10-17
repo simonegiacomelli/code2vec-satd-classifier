@@ -7,16 +7,17 @@ import java.net.URL
 
 class Repo(val it: URL) {
 
-    val reposPath get() = Folders.repos
+    private val reposPath get() = Folders.repos
     val friendlyName = it.file.drop(1).replace('/', '_')
+    val textProgressMonitor = TextProgressMonitor(it.toString())
+    val folder = File("$reposPath/$friendlyName")
 
     fun clone(): Repo {
         logln("Cloning ${it}")
 
-        val folder = File("$reposPath/$friendlyName")
 
         if (folder.exists()) {
-            if (!repoOk(it, folder))
+            if (!repoOk(folder))
                 folder.deleteRecursively()
         }
 
@@ -24,12 +25,12 @@ class Repo(val it: URL) {
             Git.cloneRepository()
                 .setURI(it.toExternalForm())
                 .setDirectory(folder)
-//                .setProgressMonitor( TextProgressMonitor( PrintWriter(System.out)))
+//                .setProgressMonitor(textProgressMonitor)
                 .call()
         return this;
     }
 
-    private fun repoOk(repoUrl: URL, repoFolder: File): Boolean {
+    private fun repoOk(repoFolder: File): Boolean {
         try {
             val repo = Git.open(repoFolder)
             repo.clean()
@@ -37,7 +38,7 @@ class Repo(val it: URL) {
                 .setForce(true)
                 .call()
 
-            val textProgressMonitor = TextProgressMonitor(repoUrl.toString())
+
 
             repo.reset()
                 .setMode(ResetCommand.ResetType.HARD)

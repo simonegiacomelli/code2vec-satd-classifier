@@ -24,7 +24,7 @@ class Main {
 //            .also { logln("Starting thread") }
             .map { Repo(it).clone() }
             .map { Inspec(it).javaSources() }
-            .map { it.saveToFile(); it }
+            .map { it.satdToFile(); it }
             .collect(Collectors.toList())
 
         logln("")
