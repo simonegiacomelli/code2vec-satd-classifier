@@ -71,7 +71,7 @@ jvmJar {
 
 task run(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
-    main = "sample.SampleJvmKt"
+    main = "satd.step1.MainKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
     args = []
 }
