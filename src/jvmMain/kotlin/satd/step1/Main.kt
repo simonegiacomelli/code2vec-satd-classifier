@@ -27,7 +27,7 @@ class Main {
             .map { it.satdToFile(); it }
             .collect(Collectors.toList())
 
-        logln("Generated output located in ${Folders.satd.toAbsolutePath()}")
+        logln("Generated output located in ${Folders.satd.normalize().toAbsolutePath()}")
         logln("Clone done")
     }
 
