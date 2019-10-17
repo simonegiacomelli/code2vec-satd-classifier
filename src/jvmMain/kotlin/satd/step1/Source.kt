@@ -4,7 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.comments.Comment
 import java.nio.file.Path
 
-class Source(val path: Path) {
+class Source(val path: Path, repo: Repo) {
     val satd = mutableListOf<Comment>()
 
     companion object {
@@ -29,10 +29,10 @@ class Source(val path: Path) {
     fun satdSnippets() = sequence {
         val lines = path.toFile().readLines()
         satd.forEach {
-            val begin = it.range.get().begin.line
+            val begin = it.range.get().begin.line - 1
             val end = it.range.get().end.line
             val selectedLines = lines.drop(begin).take(end - begin + 50)
-            val content = "-".repeat(5) + " line $begin\n" + selectedLines.joinToString("\n")
+            val content = "-".repeat(5) + " line $begin" + "-".repeat(5) + "\n" + selectedLines.joinToString("\n")
             yield(content)
         }
     }

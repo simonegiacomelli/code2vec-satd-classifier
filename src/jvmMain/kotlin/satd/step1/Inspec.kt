@@ -11,7 +11,7 @@ class Inspec(val repo: Repo) {
             .parallel()
             .filter { Files.isRegularFile(it) }
             .filter { it.toString().endsWith(".java") }
-            .map { Source(it).apply { filterSatd() } }
+            .map { Source(it,repo).apply { filterSatd() } }
             .toList()
 
         val filtered = list
@@ -38,8 +38,8 @@ class RepoSatd(val repo: Repo, val source: List<Source>) {
             .use { pw ->
                 source.forEach {
                     pw.println("-".repeat(200))
-                    pw.println("-".repeat(5) + "${it.path.fileName} ${it.path}")
-                    pw.println(it.satdSnippets().joinToString("\n\n${"-".repeat(100)}\n\n"))
+                    pw.println("-".repeat(5) + " ${it.path.fileName} ${it.path}")
+                    pw.println(it.satdSnippets().joinToString("\n\n${"-".repeat(100)}\n"))
 
                     pw.println()
                     pw.println()
