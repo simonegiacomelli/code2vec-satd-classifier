@@ -43,7 +43,7 @@ object ShowChangedFilesBetweenCommits {
             // For a description of what the carets do see e.g. http://www.paulboxley.com/blog/2011/06/git-caret-and-tilde
             // This means we are selecting the parent of the parent of the parent of the parent of current HEAD and
             // take the tree-ish of it
-            val oldHead = repository.resolve("HEAD^^^^{tree}")
+            val oldHead = repository.resolve("HEAD^^{tree}")
             val head = repository.resolve("HEAD^{tree}")
 
             println("Printing diff between tree: $oldHead and $head")
