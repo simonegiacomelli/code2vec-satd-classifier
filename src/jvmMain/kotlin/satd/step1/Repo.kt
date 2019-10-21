@@ -32,20 +32,20 @@ class Repo(val url: URL) {
 
     private fun repoOk(repoFolder: File): Boolean {
         try {
-            val repo = Git.open(repoFolder)
-            repo.clean()
+            val git = open(repoFolder)
+            git.clean()
                 .setCleanDirectories(true)
                 .setForce(true)
                 .call()
 
 
 
-            repo.reset()
+            git.reset()
                 .setMode(ResetCommand.ResetType.HARD)
                 .setProgressMonitor(textProgressMonitor)
                 .call()
 
-            repo.pull()
+            git.pull()
                 .setProgressMonitor(textProgressMonitor)
                 .call()
 
@@ -55,6 +55,11 @@ class Repo(val url: URL) {
             logln("exception on ${repoFolder} ${ex}")
             return false
         }
+    }
+
+    fun open(repoFolder: File): Git {
+        val git = Git.open(repoFolder)!!
+        return git
     }
 
 
