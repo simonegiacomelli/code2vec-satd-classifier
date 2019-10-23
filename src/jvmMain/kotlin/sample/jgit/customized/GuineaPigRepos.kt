@@ -9,12 +9,13 @@ object GuineaPigRepos {
 }
 
 class gp1 {
-    companion object{
+    companion object {
         @JvmStatic
         fun main(args: Array<String>) {
             gp1().rebuild()
         }
     }
+
     val rootPath = Folders.guineaPigRepos.resolve("gp1")
     val root = rootPath.toFile();
     fun rebuild() {
@@ -32,16 +33,17 @@ class gp1 {
     }
 
     private fun build(git: Git) {
-        val foo = rootPath.resolve("foo.txt").toFile()
-        foo.writeText("I'm foo")
-        git.add().addFilepattern(foo.name).call()
-        git.commit().setMessage("Added foo").call()
-
-        val bar = rootPath.resolve("bar.txt").toFile()
-        bar.writeText("I'm bar")
-        git.add().addFilepattern(bar.name).call()
-        git.commit().setMessage("Added bar").call()
+        commitFile(git, "foo.txt", "I'm foo", "Added foo")
+        commitFile(git, "bar.txt", "I'm bar", "Added bar")
+        git.branchCreate().setName("branch1").call()
+        commitFile(git, "baz.txt", "I'm baz", "Added baz into branch1")
 
 
+    }
+
+    private fun commitFile(git: Git, filename: String, content: String, commitMessage: String) {
+        rootPath.resolve(filename).toFile().writeText(content)
+        git.add().addFilepattern(filename).call()
+        git.commit().setMessage(commitMessage).call()
     }
 }
