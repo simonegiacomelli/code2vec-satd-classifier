@@ -25,16 +25,13 @@ import java.io.IOException
 
 object CookbookHelper {
 
-    @Throws(IOException::class)
     fun openJGitCookbookRepository(): Repository {
-        val builder = FileRepositoryBuilder()
-        return builder
+        return FileRepositoryBuilder()
             .readEnvironment() // scan environment GIT_* variables
             .findGitDir() // scan up the file system tree
             .build()
     }
 
-    @Throws(IOException::class)
     fun createNewRepository(): Repository {
         // prepare a new folder
         val localPath = File.createTempFile("TestGitRepository", "")
