@@ -4,8 +4,9 @@ import java.nio.file.Paths
 
 class Folders {
     companion object {
-        val repos get() = Paths.get("./data/repos/")
-        val satd get() = Paths.get("./data/satd/")
-        val guineaPigRepos get() = Paths.get("guinea_pig_repos")
+        val data get() = Paths.get("./data")
+        val repos get() = data.resolve("repos")
+        val satd get() = data.resolve("satd")
+        val guineaPigRepos get() = data.resolve("guinea_pig_repos")
     }
 }
