@@ -1,4 +1,4 @@
-package sample
+package sample.jgit
 
 /*
    Copyright 2013, 2014 Dominik Stadler
@@ -19,10 +19,6 @@ package sample
 import org.dstadler.jgit.helper.CookbookHelper
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.errors.GitAPIException
-import org.eclipse.jgit.diff.DiffEntry
-import org.eclipse.jgit.lib.ObjectId
-import org.eclipse.jgit.lib.ObjectReader
-import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 
 import java.io.IOException

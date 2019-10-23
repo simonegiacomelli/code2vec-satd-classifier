@@ -1,11 +1,8 @@
-package sample
+package sample.jgit
 
 import org.eclipse.jgit.internal.storage.file.FileRepository
 import satd.step1.Repo
 import satd.step1.repoUrlList
-import org.eclipse.jgit.revwalk.RevCommit
-import io.netty.channel.group.ChannelMatchers.all
-import jdk.nashorn.internal.objects.NativeFunction.call
 import org.eclipse.jgit.api.Git
 
 
