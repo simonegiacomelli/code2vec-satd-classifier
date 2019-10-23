@@ -17,7 +17,6 @@ package sample.jgit.customized
  */
 
 import org.eclipse.jgit.revwalk.RevWalk
-import satd.step1.Folders
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 
 
@@ -45,7 +44,7 @@ object WalkAllCommits {
 
 
         FileRepositoryBuilder()
-            .setGitDir(gp1.root)
+            .setGitDir(gp1.workTree)
             .readEnvironment()
             .findGitDir() // scan up the file system tree
             .build().use { repository ->
