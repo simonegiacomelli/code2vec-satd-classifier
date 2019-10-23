@@ -1,4 +1,4 @@
-package sample.jgit
+package sample.jgit.cookbook
 
 /*
    Copyright 2013, 2014 Dominik Stadler
@@ -17,40 +17,41 @@ package sample.jgit
  */
 
 import org.dstadler.jgit.helper.CookbookHelper
-import org.eclipse.jgit.lib.Constants
-import org.eclipse.jgit.lib.ObjectId
-import org.eclipse.jgit.lib.ObjectLoader
-import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.treewalk.TreeWalk
 
 import java.io.IOException
 
 /**
+ *
  * Simple snippet which shows how to use RevWalk to iterate over items in a file-tree
+ *
+ * See [WalkTreeNonRecursive] for a different usage of the [TreeWalk] class.
  *
  * @author dominik.stadler at gmx.at
  */
-object BrowseTree {
+object WalkTreeNonRecursive {
 
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
         CookbookHelper.openJGitCookbookRepository().use { repository ->
-            val revId = repository.resolve(Constants.HEAD)
-            TreeWalk(repository).use { treeWalk ->
-                RevWalk(repository).use { revWalk ->
-                    treeWalk.addTree(revWalk.parseTree(revId))
+            val head = repository.findRef("HEAD")
 
+            // a RevWalk allows to walk over commits based on some filtering that is defined
+            RevWalk(repository).use { walk ->
+                val commit = walk.parseCommit(head.objectId)
+                val tree = commit.tree
+                println("Having tree: $tree")
+
+                // now use a TreeWalk to iterate over all files in the Tree
+                // you can set Filters to narrow down the results if needed
+                TreeWalk(repository).use { treeWalk ->
+                    treeWalk.addTree(tree)
+                    // not walk the tree recursively so we only get the elements in the top-level directory
+                    treeWalk.isRecursive = false
                     while (treeWalk.next()) {
-                        println("---------------------------")
-                        System.out.append("name: ").println(treeWalk.nameString)
-                        System.out.append("path: ").println(treeWalk.pathString)
-
-                        val loader = repository.open(treeWalk.getObjectId(0))
-
-                        System.out.append("directory: ").println(loader.type == Constants.OBJ_TREE)
-                        System.out.append("size: ").println(loader.size)
+                        println("found: " + treeWalk.pathString)
                     }
                 }
             }

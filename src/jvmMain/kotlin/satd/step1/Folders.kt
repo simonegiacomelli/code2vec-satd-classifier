@@ -6,5 +6,6 @@ class Folders {
     companion object {
         val repos get() = Paths.get("./data/repos/")
         val satd get() = Paths.get("./data/satd/")
+        val guineaPigRepos get() = Paths.get("guinea_pig_repos")
     }
 }

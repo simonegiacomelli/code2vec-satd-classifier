@@ -1,4 +1,4 @@
-package sample.jgit
+package sample.jgit.cookbook
 
 /*
    Copyright 2013, 2014 Dominik Stadler
@@ -17,47 +17,33 @@ package sample.jgit
  */
 
 import org.dstadler.jgit.helper.CookbookHelper
-import org.eclipse.jgit.lib.Ref
-import org.eclipse.jgit.lib.Repository
-import org.eclipse.jgit.revwalk.RevCommit
-import org.eclipse.jgit.revwalk.RevTree
 import org.eclipse.jgit.revwalk.RevWalk
-import org.eclipse.jgit.treewalk.TreeWalk
 
 import java.io.IOException
 
 /**
- *
- * Simple snippet which shows how to use RevWalk to iterate over items in a file-tree
- *
- * See [WalkTreeNonRecursive] for a different usage of the [TreeWalk] class.
- *
- * @author dominik.stadler at gmx.at
+ * Simple snippet which shows how to use RevWalk to iterate over objects
  */
-object WalkTreeNonRecursive {
+object GetRevTreeFromObjectId {
 
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
         CookbookHelper.openJGitCookbookRepository().use { repository ->
+            // See e.g. GetRevCommitFromObjectId for how to use a SHA-1 directly
             val head = repository.findRef("HEAD")
+            println("Ref of HEAD: " + head + ": " + head.name + " - " + head.objectId.name)
 
             // a RevWalk allows to walk over commits based on some filtering that is defined
             RevWalk(repository).use { walk ->
                 val commit = walk.parseCommit(head.objectId)
-                val tree = commit.tree
-                println("Having tree: $tree")
+                println("Commit: $commit")
 
-                // now use a TreeWalk to iterate over all files in the Tree
-                // you can set Filters to narrow down the results if needed
-                TreeWalk(repository).use { treeWalk ->
-                    treeWalk.addTree(tree)
-                    // not walk the tree recursively so we only get the elements in the top-level directory
-                    treeWalk.isRecursive = false
-                    while (treeWalk.next()) {
-                        println("found: " + treeWalk.pathString)
-                    }
-                }
+                // a commit points to a tree
+                val tree = walk.parseTree(commit.tree.id)
+                println("Found Tree: $tree")
+
+                walk.dispose()
             }
         }
     }

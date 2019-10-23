@@ -1,4 +1,4 @@
-package sample.jgit
+package sample.jgit.cookbook
 
 /*
    Copyright 2013, 2014 Dominik Stadler

@@ -1,4 +1,4 @@
-package sample.jgit
+package sample.jgit.cookbook
 
 /*
    Copyright 2013, 2014 Dominik Stadler
@@ -18,32 +18,40 @@ package sample.jgit
 
 import org.dstadler.jgit.helper.CookbookHelper
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.treewalk.TreeWalk
 
 import java.io.IOException
 
 /**
- * Simple snippet which shows how to use RevWalk to iterate over objects
+ * Simple snippet which shows how to use RevWalk to iterate over items in a file-tree.
+ *
+ * See [WalkTreeNonRecursive] for a different usage of the [TreeWalk] class.
+ *
+ * @author dominik.stadler at gmx.at
  */
-object GetRevTreeFromObjectId {
+object WalkTreeRecursive {
 
     @Throws(IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
         CookbookHelper.openJGitCookbookRepository().use { repository ->
-            // See e.g. GetRevCommitFromObjectId for how to use a SHA-1 directly
             val head = repository.findRef("HEAD")
-            println("Ref of HEAD: " + head + ": " + head.name + " - " + head.objectId.name)
 
             // a RevWalk allows to walk over commits based on some filtering that is defined
             RevWalk(repository).use { walk ->
                 val commit = walk.parseCommit(head.objectId)
-                println("Commit: $commit")
+                val tree = commit.tree
+                println("Having tree: $tree")
 
-                // a commit points to a tree
-                val tree = walk.parseTree(commit.tree.id)
-                println("Found Tree: $tree")
-
-                walk.dispose()
+                // now use a TreeWalk to iterate over all files in the Tree recursively
+                // you can set Filters to narrow down the results if needed
+                TreeWalk(repository).use { treeWalk ->
+                    treeWalk.addTree(tree)
+                    treeWalk.isRecursive = true
+                    while (treeWalk.next()) {
+                        println("found: " + treeWalk.pathString)
+                    }
+                }
             }
         }
     }
