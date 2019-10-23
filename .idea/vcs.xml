@@ -4,5 +4,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/data/guinea_pig_repos/gp1" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/data/guinea_pig_repos/gp_3_parents" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/data/repos/bumptech_glide" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/data/repos/elastic_elasticsearch" vcs="Git" />
   </component>
 </project>
