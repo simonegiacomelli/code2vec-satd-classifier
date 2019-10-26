@@ -164,12 +164,16 @@ class gp_three_source_dag : guinea_pig("gp_three_source_dag") {
         git.checkout().setName("master").call()
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
 
+        //this will complain but the merge will be performed and that fact recorded although there are no changes in the index
+        //https://stackoverflow.com/a/31186732/316766
         sysGit("git merge $branch1 $branch2 -m merge1 --allow-unrelated-histories")
         sysGit("git read-tree master $branch1 $branch2")
 
         git.commit().setMessage("merge1").call()
 
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
+
+        commitFile("after_merge.txt")
     }
 
 }
