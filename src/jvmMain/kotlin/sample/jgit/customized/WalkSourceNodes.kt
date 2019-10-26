@@ -16,7 +16,6 @@ package sample.jgit.customized
    limitations under the License.
  */
 
-import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.errors.JGitInternalException
 import org.eclipse.jgit.api.errors.NoHeadException
 import org.eclipse.jgit.errors.IncorrectObjectTypeException
@@ -27,10 +26,7 @@ import org.eclipse.jgit.lib.Constants
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
-import org.eclipse.jgit.revwalk.RevSort
 import org.eclipse.jgit.revwalk.RevWalk
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder
-import satd.step1.Folders
 import java.io.IOException
 import java.text.MessageFormat
 
@@ -45,15 +41,18 @@ object WalkSourceNodes {
 
     @JvmStatic
     fun main(args: Array<String>) {
-//        val guineaPig = gp1()
-//        guineaPig.rebuild()
-//        val git = guineaPig.git
-        val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
+        val guineaPig = gp1()
+        guineaPig.rebuild()
+        val git = guineaPig.git
+//        val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
 
         println("setting SatdRevWalk")
         val walk = CustomRevWalk(git.repository)
         walk.all()
         for (commit in walk.call()) {
+            commit.parents.forEach {
+                walk.setChild(it, commit);
+            }
             println("Commit: $commit ${commit.fullMessage}")
         }
 
@@ -61,12 +60,22 @@ object WalkSourceNodes {
 }
 
 class SatdCommit(id: AnyObjectId) : RevCommit(id) {
-
+    val childs = mutableListOf<SatdCommit>()
 }
 
 class CustomRevWalk(val repo: Repository) : RevWalk(repo) {
-    override fun createCommit(id: AnyObjectId?): RevCommit {
-        return SatdCommit(id!!)
+    val commits = mutableMapOf<AnyObjectId, SatdCommit>()
+
+    fun setChild(parent: RevCommit, child: RevCommit) {
+        val p = parent as SatdCommit
+        val c = child as SatdCommit
+        p.childs.add(c)
+    }
+
+    override fun createCommit(id: AnyObjectId): RevCommit {
+        val satdCommit = SatdCommit(id)
+        commits.put(id, satdCommit)
+        return satdCommit
     }
 
     var startSpecified = false
