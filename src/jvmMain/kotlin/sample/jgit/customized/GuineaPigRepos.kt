@@ -5,7 +5,7 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 
 
-abstract class guinea_pig( name: String) : AutoCloseable {
+abstract class guinea_pig(name: String) : AutoCloseable {
     val workTree = Folders.guineaPigRepos.resolve(name).toFile()
 
     fun newGit() = Git.init().setDirectory(workTree).call()!!
@@ -47,6 +47,19 @@ abstract class guinea_pig( name: String) : AutoCloseable {
     }
 
     protected abstract fun build()
+
+    /**
+     * jgit does not support all git features, so we fallback to git command line
+     * e.g. octopus merge
+     */
+    fun sysGit(command: String) {
+        ProcessBuilder(command.split(' '))
+            .directory(git.repository.workTree)
+            .inheritIO()
+            .start()
+            .waitFor()
+    }
+
 }
 
 class gp1 : guinea_pig("gp1") {
@@ -102,21 +115,11 @@ class gp_branch_with_3_parents : guinea_pig("gp_branch_with_3_parents") {
         git.checkout().setName("master").call()
         commitFile("pluto.txt", "I'm pluto", "Added pluto")
 
-        //the following would give "Error: Your local changes to the following files would be overwritten by merge"
-        //addFile("new-file.txt","in master, just before merge")
-
-        //jgit seems not to implement octopus merge strategy
-        ProcessBuilder("git merge $branch1 $branch2 -m merge1".split(' '))
-            .directory(git.repository.workTree)
-            .inheritIO()
-            .start()
-            .waitFor()
+        //jgit do not to implement octopus merge strategy
+        sysGit("git merge $branch1 $branch2 -m merge1")
 
     }
-
-
 }
-
 
 class gp_dangling : guinea_pig("gp_dangling") {
 
@@ -161,12 +164,12 @@ class gp_three_source_dag : guinea_pig("gp_three_source_dag") {
         git.checkout().setName("master").call()
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
 
-        ProcessBuilder("git merge $branch1 $branch2 -m merge1 --allow-unrelated-histories".split(' '))
-            .directory(git.repository.workTree)
-            .inheritIO()
-            .start()
-            .waitFor()
+        sysGit("git merge $branch1 $branch2 -m merge1 --allow-unrelated-histories")
+        sysGit("git read-tree master $branch1 $branch2")
 
+        git.commit().setMessage("merge1").call()
 
+        git.reset().setMode(ResetCommand.ResetType.HARD).call()
     }
+
 }
