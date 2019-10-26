@@ -30,9 +30,9 @@ object WalkAllCommits {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val gp1 = GuineaPigRepos.gp1
-        gp1.rebuild()
-        gp1.git { git ->
+        val guineaPig = gp_branch_with_3_parents()
+        guineaPig.rebuild()
+        guineaPig.newGit().use { git ->
             val commits = git.log().all().call()
             var count = 0
             for (commit in commits) {
@@ -44,7 +44,7 @@ object WalkAllCommits {
 
 
         FileRepositoryBuilder()
-            .setGitDir(gp1.workTree)
+            .setGitDir(guineaPig.workTree)
             .readEnvironment()
             .findGitDir() // scan up the file system tree
             .build().use { repository ->
