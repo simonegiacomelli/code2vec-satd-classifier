@@ -16,12 +16,21 @@ package sample.jgit.customized
    limitations under the License.
  */
 
-import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.errors.JGitInternalException
+import org.eclipse.jgit.api.errors.NoHeadException
+import org.eclipse.jgit.errors.IncorrectObjectTypeException
+import org.eclipse.jgit.errors.MissingObjectException
+import org.eclipse.jgit.internal.JGitText
+import org.eclipse.jgit.lib.AnyObjectId
+import org.eclipse.jgit.lib.Constants
+import org.eclipse.jgit.lib.ObjectId
+import org.eclipse.jgit.lib.Repository
+import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevSort
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
-import satd.step1.Folders
-import satd.step1.Repo
+import java.io.IOException
+import java.text.MessageFormat
 
 
 /**
@@ -42,7 +51,12 @@ object WalkSourceNodes {
             git.log().all().call().filter { it.parentCount == 0 }
         }
 
-
+        println("setting SatdRevWalk")
+        val walk = CustomRevWalk(git.repository)
+        walk.all()
+        for ( commit in walk.call()){
+            println("Commit: $commit ${commit.fullMessage}")
+        }
         println("-----walking all refs:")
         FileRepositoryBuilder()
             .setGitDir(git.repository.directory)
@@ -57,9 +71,9 @@ object WalkSourceNodes {
                     println("  ${ref.name}")
                 }
                 // a RevWalk allows to walk over commits based on some filtering that is defined
-                
+
                 RevWalk(repository).use { revWalk ->
-//                    for (ref in sources) {
+                    //                    for (ref in sources) {
 //                        revWalk.markStart(revWalk.parseCommit(ref.toObjectId()))
 //                    }
 //                    println("Walking all commits starting with " + sources.size + " refs: " + sources)
@@ -77,4 +91,98 @@ object WalkSourceNodes {
                 }
             }
     }
+}
+
+class SatdCommit(id: AnyObjectId) : RevCommit(id) {
+
+}
+
+class CustomRevWalk(val repo: Repository) : RevWalk(repo) {
+    override fun createCommit(id: AnyObjectId?): RevCommit {
+        return SatdCommit(id!!)
+    }
+
+    var startSpecified = false
+
+    fun all() {
+        for (refi in repo.refDatabase.refs) {
+            val ref = if (!refi.isPeeled) repo.refDatabase.peel(refi) else refi
+
+            var objectId: ObjectId? = ref.getPeeledObjectId()
+            if (objectId == null)
+                objectId = ref.getObjectId()
+            var commit: RevCommit? = null
+            try {
+                commit = parseCommit(objectId)
+            } catch (e: MissingObjectException) {
+                // ignore as traversal starting point:
+                // - the ref points to an object that does not exist
+                // - the ref points to an object that is not a commit (e.g. a
+                // tree or a blob)
+            } catch (e: IncorrectObjectTypeException) {
+            }
+
+            if (commit != null)
+                add(commit)
+        }
+
+    }
+
+    fun call(): Iterable<RevCommit> {
+
+
+        if (!startSpecified) {
+            try {
+                val headId = repo.resolve(Constants.HEAD)
+                    ?: throw NoHeadException(
+                        JGitText.get().noHEADExistsAndNoExplicitStartingRevisionWasSpecified
+                    )
+                add(headId)
+            } catch (e: IOException) {
+                // all exceptions thrown by add() shouldn't occur and represent
+                // severe low-level exception which are therefore wrapped
+                throw JGitInternalException(
+                    JGitText.get().anExceptionOccurredWhileTryingToAddTheIdOfHEAD,
+                    e
+                )
+            }
+
+        }
+
+        if (this.revFilter != null) {
+            setRevFilter(this.revFilter)
+        }
+        return this
+
+    }
+
+    @Throws(MissingObjectException::class, IncorrectObjectTypeException::class)
+    fun add(start: AnyObjectId) {
+        add(true, start)
+    }
+
+    @Throws(MissingObjectException::class, IncorrectObjectTypeException::class, JGitInternalException::class)
+    private fun add(include: Boolean, start: AnyObjectId) {
+
+        try {
+            if (include) {
+                markStart(lookupCommit(start))
+                startSpecified = true
+            } else
+                markUninteresting(lookupCommit(start))
+
+        } catch (e: MissingObjectException) {
+            throw e
+        } catch (e: IncorrectObjectTypeException) {
+            throw e
+        } catch (e: IOException) {
+            throw JGitInternalException(
+                MessageFormat.format(
+                    JGitText.get().exceptionOccurredDuringAddingOfOptionToALogCommand, start
+                ), e
+            )
+        }
+
+    }
+
 }
