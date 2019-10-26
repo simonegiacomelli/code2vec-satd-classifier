@@ -24,6 +24,7 @@ abstract class guinea_pig(name: String) : AutoCloseable {
         this.use {
             build()
         }
+        sysGit("git log --all --decorate --oneline --graph")
     }
 
     fun commitFile(file: String, content: String, message: String) {
