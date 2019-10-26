@@ -80,12 +80,12 @@ class gp_dangling : guinea_pig("gp_dangling") {
     }
 }
 
-class gp_three_source_dag : guinea_pig("gp_three_source_dag") {
+class gp_three_sink_dag : guinea_pig("gp_three_sink_dag") {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            gp_three_source_dag().rebuild()
+            gp_three_sink_dag().rebuild()
         }
     }
 
