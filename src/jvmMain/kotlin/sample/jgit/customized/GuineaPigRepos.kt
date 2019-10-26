@@ -18,9 +18,9 @@ class gp1 : guinea_pig("gp1") {
         commitFile("bar.txt", "I'm bar", "Added bar")
         val branch1 = "branch1"
         git.checkout().setName(branch1).setCreateBranch(true).call()
-        commitFile("pluto.txt", "I'm pluto", "Added pluto")
+        commitFile("pluto.txt", "I'm pluto", "Added pluto into $branch1")
         git.checkout().setName("master").call()
-        commitFile("baz.txt", "I'm baz", "Added baz into $branch1")
+        commitFile("baz.txt", "I'm baz", "Added baz")
         git.checkout().setName(branch1).call()
         commitFile("foo.txt", "I'm foo\nyes, you  are foo.", "Update foo.txt in $branch1")
         git.checkout().setName("master").call()

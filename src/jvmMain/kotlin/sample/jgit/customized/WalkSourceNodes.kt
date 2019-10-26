@@ -17,6 +17,7 @@ package sample.jgit.customized
  */
 
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.revwalk.RevSort
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import satd.step1.Folders
@@ -33,7 +34,7 @@ object WalkSourceNodes {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val guineaPig = gp_three_sink_dag()
+        val guineaPig = gp1()
         guineaPig.rebuild()
         val git = guineaPig.git
 //        val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
@@ -56,11 +57,17 @@ object WalkSourceNodes {
                     println("  ${ref.name}")
                 }
                 // a RevWalk allows to walk over commits based on some filtering that is defined
+                
                 RevWalk(repository).use { revWalk ->
-                    for (ref in sources) {
-                        revWalk.markStart(revWalk.parseCommit(ref.toObjectId()))
-                    }
-                    println("Walking all commits starting with " + sources.size + " refs: " + sources)
+//                    for (ref in sources) {
+//                        revWalk.markStart(revWalk.parseCommit(ref.toObjectId()))
+//                    }
+//                    println("Walking all commits starting with " + sources.size + " refs: " + sources)
+                    revWalk.sort(RevSort.REVERSE)
+//                    revWalk.revSort.add(RevSort.REVERSE)
+
+                    val head = repository.findRef("HEAD")
+                    revWalk.markStart(revWalk.parseCommit(head.objectId))
                     var count = 0
                     for (commit in revWalk) {
                         println("Commit: $commit ${commit.fullMessage}")
