@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="satd-classifier-js">
-    <output-path>$PROJECT_DIR$/build/libs</output-path>
-    <root id="archive" name="satd-classifier-js.jar" />
-  </artifact>
-</component>
