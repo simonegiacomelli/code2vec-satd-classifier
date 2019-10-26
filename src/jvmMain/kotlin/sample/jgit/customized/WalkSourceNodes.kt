@@ -16,6 +16,7 @@ package sample.jgit.customized
    limitations under the License.
  */
 
+import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.errors.JGitInternalException
 import org.eclipse.jgit.api.errors.NoHeadException
 import org.eclipse.jgit.errors.IncorrectObjectTypeException
@@ -29,6 +30,7 @@ import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevSort
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import satd.step1.Folders
 import java.io.IOException
 import java.text.MessageFormat
 
@@ -43,53 +45,18 @@ object WalkSourceNodes {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val guineaPig = gp1()
-        guineaPig.rebuild()
-        val git = guineaPig.git
-//        val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
-        val sources = git.use { git ->
-            git.log().all().call().filter { it.parentCount == 0 }
-        }
+//        val guineaPig = gp1()
+//        guineaPig.rebuild()
+//        val git = guineaPig.git
+        val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
 
         println("setting SatdRevWalk")
         val walk = CustomRevWalk(git.repository)
         walk.all()
-        for ( commit in walk.call()){
+        for (commit in walk.call()) {
             println("Commit: $commit ${commit.fullMessage}")
         }
-        println("-----walking all refs:")
-        FileRepositoryBuilder()
-            .setGitDir(git.repository.directory)
-            .readEnvironment()
-            .findGitDir() // scan up the file system tree
-            .build().use { repository ->
-                // get a list of all known heads, tags, remotes, ...
 
-                println("All sources ${sources.size}:")
-                sources.forEach {
-                    val ref = it!!
-                    println("  ${ref.name}")
-                }
-                // a RevWalk allows to walk over commits based on some filtering that is defined
-
-                RevWalk(repository).use { revWalk ->
-                    //                    for (ref in sources) {
-//                        revWalk.markStart(revWalk.parseCommit(ref.toObjectId()))
-//                    }
-//                    println("Walking all commits starting with " + sources.size + " refs: " + sources)
-                    revWalk.sort(RevSort.REVERSE)
-//                    revWalk.revSort.add(RevSort.REVERSE)
-
-                    val head = repository.findRef("HEAD")
-                    revWalk.markStart(revWalk.parseCommit(head.objectId))
-                    var count = 0
-                    for (commit in revWalk) {
-                        println("Commit: $commit ${commit.fullMessage}")
-                        count++
-                    }
-                    println("Had $count commits")
-                }
-            }
     }
 }
 
@@ -129,8 +96,6 @@ class CustomRevWalk(val repo: Repository) : RevWalk(repo) {
     }
 
     fun call(): Iterable<RevCommit> {
-
-
         if (!startSpecified) {
             try {
                 val headId = repo.resolve(Constants.HEAD)
