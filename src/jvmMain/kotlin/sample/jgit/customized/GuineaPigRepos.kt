@@ -14,17 +14,17 @@ class gp1 : guinea_pig("gp1") {
     }
 
     override fun build() {
-        commitFile("foo.txt", "I'm foo", "Added foo")
-        commitFile("bar.txt", "I'm bar", "Added bar")
+        commitFile("foo.java", "I'm foo", "Added foo")
+        commitFile("bar.java", "I'm bar", "Added bar")
         val branch1 = "branch1"
         git.checkout().setName(branch1).setCreateBranch(true).call()
-        commitFile("pluto.txt", "I'm pluto", "Added pluto into $branch1")
+        commitFile("pluto.java", "I'm pluto", "Added pluto into $branch1")
         git.checkout().setName("master").call()
-        commitFile("baz.txt", "I'm baz", "Added baz")
+        commitFile("baz.java", "I'm baz", "Added baz")
         git.checkout().setName(branch1).call()
-        commitFile("foo.txt", "I'm foo\nyes, you  are foo.", "Update foo.txt in $branch1")
+        commitFile("foo.java", "I'm foo\nyes, you  are foo.", "Update foo.java in $branch1")
         git.checkout().setName("master").call()
-        commitFile("bar.txt", "I'm bar\nyes bar", "Update bar")
+        commitFile("bar.java", "I'm bar\nyes bar", "Update bar")
         git.merge()
             .include(git.repository.resolve(branch1))
             .setCommit(true)
@@ -45,17 +45,17 @@ class gp_merge_with_3_parents : guinea_pig("gp_branch_with_3_parents") {
     }
 
     override fun build() {
-        commitFile("foo.txt", "I'm foo", "Added foo")
+        commitFile("foo.java", "I'm foo", "Added foo")
         val branch1 = "branch1"
         val branch2 = "branch2"
         git.checkout().setName(branch1).setCreateBranch(true).call()
-        commitFile("bar.txt", "I'm bar", "Added bar into $branch1")
+        commitFile("bar.java", "I'm bar", "Added bar into $branch1")
         git.checkout().setName("master").call()
-        commitFile("branch-intruder.txt", "between branches", "between branches")
+        commitFile("branch-intruder.java", "between branches", "between branches")
         git.checkout().setName(branch2).setCreateBranch(true).call()
-        commitFile("baz.txt", "I'm baz", "Added baz into $branch2")
+        commitFile("baz.java", "I'm baz", "Added baz into $branch2")
         git.checkout().setName("master").call()
-        commitFile("pluto.txt", "I'm pluto", "Added pluto")
+        commitFile("pluto.java", "I'm pluto", "Added pluto")
 
         //jgit do not to implement octopus merge strategy
         sysGit("git merge $branch1 $branch2 -m merge1")
@@ -73,10 +73,10 @@ class gp_dangling : guinea_pig("gp_dangling") {
     }
 
     override fun build() {
-        commitFile("foo.txt", "I'm foo", "Added foo")
-        commitFile("bar.txt", "I'm bar", "Added bar")
+        commitFile("foo.java", "I'm foo", "Added foo")
+        commitFile("bar.java", "I'm bar", "Added bar")
         git.checkout().setName("dangling1").setOrphan(true).call()
-        commitFile("dangling.txt", "I'm dangling", "Added dangling")
+        commitFile("dangling.java", "I'm dangling", "Added dangling")
     }
 }
 
@@ -90,18 +90,18 @@ class gp_three_sink_dag : guinea_pig("gp_three_sink_dag") {
     }
 
     override fun build() {
-        commitFile("master_x.txt")
-        commitFile("master_y.txt")
+        commitFile("master_x.java")
+        commitFile("master_y.java")
         val branch1 = "dangling1"
         git.checkout().setName(branch1).setOrphan(true).call()
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
-        commitFile("dangling1_x.txt")
-        commitFile("dangling1_y.txt")
+        commitFile("dangling1_x.java")
+        commitFile("dangling1_y.java")
         val branch2 = "dangling2"
         git.checkout().setName(branch2).setOrphan(true).call()
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
-        commitFile("dangling2_x.txt")
-        commitFile("dangling2_y.txt")
+        commitFile("dangling2_x.java")
+        commitFile("dangling2_y.java")
 
         git.checkout().setName("master").call()
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
@@ -115,7 +115,7 @@ class gp_three_sink_dag : guinea_pig("gp_three_sink_dag") {
 
         git.reset().setMode(ResetCommand.ResetType.HARD).call()
 
-        commitFile("after_merge.txt")
+        commitFile("after_merge.java")
     }
 
 }
