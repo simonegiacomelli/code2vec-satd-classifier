@@ -17,7 +17,7 @@ internal class SpeedTest {
     }
 
     @Test
-    fun b() {
+    fun twoSlots() {
         val clock = FakeClock()
         val target = Speed(10, clock::get)
 
