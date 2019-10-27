@@ -14,17 +14,20 @@ import org.eclipse.jgit.revwalk.RevWalk
 import java.io.IOException
 import java.text.MessageFormat
 
-class CustomRevWalk(val repo: Repository) : RevWalk(repo) {
-    val commits = mutableMapOf<AnyObjectId, SatdCommit>()
+/**
+ * Customized RevWalk that holds [CRevCommit] type
+ */
+class CRevWalk(val repo: Repository) : RevWalk(repo) {
+    val commits = mutableMapOf<AnyObjectId, CRevCommit>()
 
     fun link(parent: RevCommit, child: RevCommit) {
-        val p = parent as SatdCommit
-        val c = child as SatdCommit
+        val p = parent as CRevCommit
+        val c = child as CRevCommit
         p.childs.add(c)
     }
 
     override fun createCommit(id: AnyObjectId): RevCommit {
-        val satdCommit = SatdCommit(id)
+        val satdCommit = CRevCommit(id)
         commits.put(id, satdCommit)
         println("crea $satdCommit")
         return satdCommit
@@ -56,7 +59,7 @@ class CustomRevWalk(val repo: Repository) : RevWalk(repo) {
 
     }
 
-    fun call(): Iterable<RevCommit> {
+    fun call(): Iterable<CRevCommit> {
         if (!startSpecified) {
             try {
                 val headId = repo.resolve(Constants.HEAD)
@@ -78,7 +81,7 @@ class CustomRevWalk(val repo: Repository) : RevWalk(repo) {
         if (this.revFilter != null) {
             setRevFilter(this.revFilter)
         }
-        return this
+        return this as Iterable<CRevCommit>
 
     }
 

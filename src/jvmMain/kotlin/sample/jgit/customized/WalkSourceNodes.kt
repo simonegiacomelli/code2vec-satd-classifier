@@ -16,7 +16,7 @@ package sample.jgit.customized
    limitations under the License.
  */
 
-import satd.step2.CustomRevWalk
+import satd.step2.CRevWalk
 
 
 /**
@@ -36,7 +36,7 @@ object WalkSourceNodes {
 
 
         println("setting SatdRevWalk")
-        val walk = CustomRevWalk(git.repository)
+        val walk = CRevWalk(git.repository)
         walk.all()
         for (commit in walk.call()) {
             if(commit.parentCount==0)
