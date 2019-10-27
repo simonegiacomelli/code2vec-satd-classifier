@@ -30,7 +30,7 @@ object WalkAllCommits {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val guineaPig = gp_branch_with_3_parents()
+        val guineaPig = gp_merge_with_3_parents()
         guineaPig.rebuild()
         guineaPig.newGit().use { git ->
             val commits = git.log().all().call()

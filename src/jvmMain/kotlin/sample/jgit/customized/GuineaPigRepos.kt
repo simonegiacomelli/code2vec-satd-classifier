@@ -35,12 +35,12 @@ class gp1 : guinea_pig("gp1") {
 
 }
 
-class gp_branch_with_3_parents : guinea_pig("gp_branch_with_3_parents") {
+class gp_merge_with_3_parents : guinea_pig("gp_branch_with_3_parents") {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            gp_branch_with_3_parents().rebuild()
+            gp_merge_with_3_parents().rebuild()
         }
     }
 
