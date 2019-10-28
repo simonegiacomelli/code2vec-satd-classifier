@@ -11,6 +11,9 @@ internal class SourceTest {
     val class2b by lazy { load("Class2b.java") }
     val class3 by lazy { load("Class3.java") }
     val class4 by lazy { load("Class4.java") }
+    val class5block by lazy { load("Class5block.java") }
+    val class5jdoc by lazy { load("Class5jdoc.java") }
+    val class5line by lazy { load("Class5line.java") }
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/$s")!!.readText()
 
@@ -41,6 +44,25 @@ internal class SourceTest {
     @Test
     fun `double satd comment in one method should be accounted as one`() {
         val target = Source(class4)
+        assertEquals(1, target.satdList.size)
+    }
+
+    @Test
+    fun `method block comment`() {
+        val target = Source(class5block)
+        assertEquals(1, target.satdList.size)
+    }
+
+    @Test
+    fun `method jdoc comment`() {
+        val target = Source(class5jdoc)
+        assertEquals(1, target.satdList.size)
+    }
+
+    //todo should I include this?
+    //@Test
+    fun `method line comment`() {
+        val target = Source(class5line)
         assertEquals(1, target.satdList.size)
     }
 
