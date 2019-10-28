@@ -12,8 +12,10 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
 class Source(val content: String) {
     val satdList = mutableSetOf<Satd>()
+    /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
     val methodList = mutableSetOf<MethodDeclaration>()
     fun addMethod(method: MethodDeclaration, comment: Comment) {
+
 //        if(!satdList.contains(Satd(method)))
 //            satdList.add(Satd(method))
         if (Satd.foundIn(comment.content))
