@@ -1,11 +1,11 @@
-package satd.step2
+package satd.utils
 
 import java.util.*
 
 /**
  * Keep track of spin per second in a time window
  */
-class Speed(val window: Int, val time: () -> Long = System::currentTimeMillis) {
+class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
     val counter = LinkedList<Int>()
 
     var trackedSecond: Int = -1
@@ -15,7 +15,7 @@ class Speed(val window: Int, val time: () -> Long = System::currentTimeMillis) {
         reset()
     }
 
-    fun reset(): Speed {
+    fun reset(): Rate {
         counter.clear()
         counter.push(0)
         trackedSecond = currentSecond()

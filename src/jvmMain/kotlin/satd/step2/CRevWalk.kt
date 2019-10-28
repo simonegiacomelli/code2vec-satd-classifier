@@ -29,7 +29,7 @@ class CRevWalk(val repo: Repository) : RevWalk(repo) {
     override fun createCommit(id: AnyObjectId): RevCommit {
         val satdCommit = CRevCommit(id)
         commits.put(id, satdCommit)
-        println("crea $satdCommit")
+//        println("crea $satdCommit")
         return satdCommit
     }
 

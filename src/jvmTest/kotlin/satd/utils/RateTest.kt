@@ -1,15 +1,14 @@
-package satd.step2
+package satd.utils
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
-internal class SpeedTest {
+internal class RateTest {
 
     @Test
     fun lowRate() {
         val clock = FakeClock()
-        val target = Speed(10, clock::get)
+        val target = Rate(10, clock::get)
 
         target.spin()
         target.spin()
@@ -19,7 +18,7 @@ internal class SpeedTest {
     @Test
     fun twoSlots() {
         val clock = FakeClock()
-        val target = Speed(10, clock::get)
+        val target = Rate(10, clock::get)
 
 
         target.spin()
@@ -36,7 +35,7 @@ internal class SpeedTest {
     @Test
     fun testCircularBuffer() {
         val clock = FakeClock()
-        val target = Speed(10, clock::get)
+        val target = Rate(10, clock::get)
 
 
         (1..40).forEach {
