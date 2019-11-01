@@ -22,7 +22,7 @@ class Collector(val repo: Repository) {
         AntiSpin { println("commits/sec:$commitRate blob/sec:$blobRate satd/sec: $satdRate") }
 
 
-    fun collect() {
+    fun commits(): MutableCollection<CRevCommit> {
         commitRate.reset()
         blobRate.reset()
         val walk = CRevWalk(repo)
@@ -32,6 +32,7 @@ class Collector(val repo: Repository) {
             findSatd(commit)
 
         ratePrinter.callback()
+        return walk.commits.values
     }
 
     private fun findSatd(commit: CRevCommit) {
@@ -46,8 +47,8 @@ class Collector(val repo: Repository) {
 
             val blob = blobs.getOrPut(objectId) {
                 blobRate.spin()
-                val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-                val blob = Blob(objectId, content)
+                //val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
+                val blob = Blob(objectId, "")
                 if (blob.satdList.isNotEmpty())
                     satdRate.spin()
                 blob
