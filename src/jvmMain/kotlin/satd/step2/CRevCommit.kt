@@ -13,4 +13,5 @@ class CRevCommit(id: AnyObjectId) : RevCommit(id) {
         parents.forEach { (it as CRevCommit).childs.add(this) }
     }
 
+    val blobWithSatd = mutableListOf<Blob>()
 }

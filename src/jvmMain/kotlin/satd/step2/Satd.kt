@@ -1,5 +1,6 @@
 package satd.step2
 
+import com.github.javaparser.ast.Node
 import com.github.javaparser.ast.body.MethodDeclaration
 
 class Satd(val method: MethodDeclaration) {
@@ -17,8 +18,10 @@ class Satd(val method: MethodDeclaration) {
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        return method.equals(other)
+    override fun equals(obj: Any?): Boolean {
+        return if (obj == null || obj !is Satd) {
+            false
+        } else method.equals(obj.method)
     }
 
     override fun hashCode(): Int {

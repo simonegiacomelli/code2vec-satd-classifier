@@ -6,8 +6,6 @@ import org.eclipse.jgit.lib.ObjectId
 /**
  * Contains all the satd of this git source file (git blob object)
  */
-class Blob(src: AnyObjectId, val content: String) : ObjectId(src) {
-    fun init(): Blob {
-        return this
-    }
+class Blob(src: AnyObjectId, content: String) : ObjectId(src) {
+    val satdList = Source(content).satdList
 }

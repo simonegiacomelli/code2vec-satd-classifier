@@ -8,6 +8,8 @@ import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
 import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
+import satd.utils.pathSize
+import satd.utils.printStats
 import java.nio.charset.Charset
 
 /**
@@ -23,15 +25,18 @@ class Tracker(val repo: Repository) {
 //            gp.rebuild()
 //            val git = gp.git
 //            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
-//            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
-            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
+            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
+            git.printStats()
+//            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
             Tracker(git.repository).walk()
         }
     }
 
     val commitRate = Rate(10)
     val blobRate = Rate(10)
-    val ratePrinter = AntiSpin { "commits/sec:${commitRate.rate()} files/sec:${blobRate.rate()}" }
+    val satdRate = Rate(10)
+    val ratePrinter =
+        AntiSpin { "commits/sec:$commitRate blob/sec:$blobRate satd/sec: $satdRate" }
 
 
     fun walk() {
@@ -56,14 +61,19 @@ class Tracker(val repo: Repository) {
             val objectId = treeWalk.getObjectId(0)!!
 
             val blob = blobs.getOrPut(objectId) {
-                val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-                val blobsSatd = Blob(objectId, content).init()
                 blobRate.spin()
-                blobsSatd
+                val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
+                val blob = Blob(objectId, content)
+                if (blob.satdList.isNotEmpty())
+                    satdRate.spin()
+                blob
             }
+
+            if (blob.satdList.isNotEmpty())
+                commit.blobWithSatd.add(blob)
+
             ratePrinter.spin()
         }
     }
-
 
 }

@@ -49,5 +49,7 @@ class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
         return counter.sum().toDouble() / counter.size
     }
 
-
+    override fun toString(): String {
+        return "${rate()}"
+    }
 }

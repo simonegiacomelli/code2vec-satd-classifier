@@ -11,21 +11,21 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
 
 class Source(val content: String) {
-    val satdList = mutableSetOf<Satd>()
-    /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
-    val methodList = mutableSetOf<MethodDeclaration>()
-    fun addMethod(method: MethodDeclaration, comment: Comment) {
+    val satdList = compileSatd()
 
-//        if(!satdList.contains(Satd(method)))
-//            satdList.add(Satd(method))
-        if (Satd.foundIn(comment.content))
-            if (!methodList.contains(method)) {
-                satdList.add(Satd(method))
-                methodList.add(method)
-            }
-    }
+    private fun compileSatd(): List<Satd> {
+        val satdList = mutableSetOf<Satd>()
+        val methodList = mutableSetOf<MethodDeclaration>()
+        /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
+        fun addMethod(method: MethodDeclaration, comment: Comment) {
 
-    init {
+            if (Satd.foundIn(comment.content))
+                if (!methodList.contains(method)) {
+                    satdList.add(Satd(method))
+                    methodList.add(method)
+                }
+        }
+
         val cu = JavaParser().parse(content)!!
         cu.result.get().types.filterNotNull().forEach { type ->
             type.methods.forEach { method ->
@@ -45,5 +45,6 @@ class Source(val content: String) {
                 }, null)
             }
         }
+        return satdList.toList()
     }
 }
