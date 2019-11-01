@@ -1,10 +1,29 @@
 package sample.jgit.customized
 
-import satd.step1.Folders
-import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
+import satd.utils.GuineaPig
 
-class gp1 : guinea_pig("gp1") {
+/**
+ * Create repository to inspect and study git internals
+ */
+abstract class KnowGitGuineaPig(name: String) : GuineaPig("kown_git", name) {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            listOf(
+                gp1(),
+                gp_dangling(),
+                gp_three_sink_dag(),
+                gp_three_sink_dag(),
+                gp_merge_with_3_parents()
+            ).forEach {
+                it.rebuild()
+            }
+        }
+    }
+}
+
+class gp1 : KnowGitGuineaPig("gp1") {
 
     companion object {
         @JvmStatic
@@ -35,7 +54,7 @@ class gp1 : guinea_pig("gp1") {
 
 }
 
-class gp_merge_with_3_parents : guinea_pig("gp_branch_with_3_parents") {
+class gp_merge_with_3_parents : KnowGitGuineaPig("gp_branch_with_3_parents") {
 
     companion object {
         @JvmStatic
@@ -63,7 +82,7 @@ class gp_merge_with_3_parents : guinea_pig("gp_branch_with_3_parents") {
     }
 }
 
-class gp_dangling : guinea_pig("gp_dangling") {
+class gp_dangling : KnowGitGuineaPig("gp_dangling") {
 
     companion object {
         @JvmStatic
@@ -80,7 +99,7 @@ class gp_dangling : guinea_pig("gp_dangling") {
     }
 }
 
-class gp_three_sink_dag : guinea_pig("gp_three_sink_dag") {
+class gp_three_sink_dag : KnowGitGuineaPig("gp_three_sink_dag") {
 
     companion object {
         @JvmStatic
@@ -120,60 +139,3 @@ class gp_three_sink_dag : guinea_pig("gp_three_sink_dag") {
 
 }
 
-abstract class guinea_pig(name: String) : AutoCloseable {
-    val workTree = Folders.guineaPigRepos.resolve(name).toFile()
-
-    fun newGit() = Git.init().setDirectory(workTree).call()!!
-
-    private val lazyGit = lazy { newGit() }
-    val git by lazyGit
-
-    override fun close() {
-        if (lazyGit.isInitialized()) git.close()
-    }
-
-    fun rebuild() {
-        workTree.deleteRecursively()
-        assert(!workTree.exists())
-        workTree.mkdirs()
-        this.use {
-            build()
-        }
-        sysGit("git log --all --decorate --oneline --graph")
-    }
-
-    fun commitFile(file: String, content: String, message: String) {
-        addFile(file, content)
-        git.commit().setMessage(message).call()
-    }
-
-    fun commitFile(file: String, content: String) {
-        addFile(file, content)
-        git.commit().setMessage("Adding $file").call()
-    }
-
-    fun commitFile(file: String) {
-        addFile(file, "Content of $file")
-        git.commit().setMessage("Adding $file").call()
-    }
-
-    fun addFile(file: String, content: String) {
-        git.repository.workTree.resolve(file).writeText(content)
-        git.add().addFilepattern(file).call()
-    }
-
-    protected abstract fun build()
-
-    /**
-     * jgit does not support all git features, so we fallback to git command line
-     * e.g. octopus merge
-     */
-    fun sysGit(command: String) {
-        ProcessBuilder(command.split(' '))
-            .directory(git.repository.workTree)
-            .inheritIO()
-            .start()
-            .waitFor()
-    }
-
-}
