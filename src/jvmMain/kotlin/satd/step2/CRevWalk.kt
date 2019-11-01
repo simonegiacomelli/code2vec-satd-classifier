@@ -20,12 +20,6 @@ import java.text.MessageFormat
 class CRevWalk(val repo: Repository) : RevWalk(repo) {
     val commits = mutableMapOf<AnyObjectId, CRevCommit>()
 
-    fun link(parent: RevCommit, child: RevCommit) {
-        val p = parent as CRevCommit
-        val c = child as CRevCommit
-        p.childs.add(c)
-    }
-
     override fun createCommit(id: AnyObjectId): RevCommit {
         val satdCommit = CRevCommit(id)
         commits.put(id, satdCommit)

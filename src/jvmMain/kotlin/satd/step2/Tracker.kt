@@ -1,6 +1,7 @@
 package satd.step2
 
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.treewalk.TreeWalk
 import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
@@ -13,7 +14,7 @@ import java.nio.charset.Charset
  * Tracker of SATD across the repository history
  */
 class Tracker(val repo: Repository) {
-    val blobsSatdSet = mutableSetOf<Blob>()
+    val blobs = mutableMapOf<ObjectId, Blob>()
 
     companion object {
         @JvmStatic
@@ -32,36 +33,34 @@ class Tracker(val repo: Repository) {
     val blobRate = Rate(10)
     val ratePrinter = AntiSpin { "commits/sec:${commitRate.rate()} files/sec:${blobRate.rate()}" }
 
+
     fun walk() {
         commitRate.reset()
         blobRate.reset()
-
         val walk = CRevWalk(repo)
         walk.all()
-        var counter = 0
-        for (commit in walk.call()) {
-            counter++
-            commitRate.spin()
-            commit.parents.forEach { parent -> walk.link(parent, commit) }
+
+        for (commit in walk.call())
             findSatd(commit)
-        }
 
     }
 
     private fun findSatd(commit: CRevCommit) {
+        commitRate.spin()
+        commit.addReverseEdges()
         val treeWalk = TreeWalk(repo)
         treeWalk.addTree(commit.tree)
         treeWalk.filter = PathSuffixFilter.create(".java")
         treeWalk.isRecursive = true
         while (treeWalk.next()) {
             val objectId = treeWalk.getObjectId(0)!!
-            if (!blobsSatdSet.contains(objectId)) {
+
+            val blob = blobs.getOrPut(objectId) {
                 val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
                 val blobsSatd = Blob(objectId, content).init()
-                blobsSatdSet.add(blobsSatd)
                 blobRate.spin()
-            } else
-            ;
+                blobsSatd
+            }
             ratePrinter.spin()
         }
     }

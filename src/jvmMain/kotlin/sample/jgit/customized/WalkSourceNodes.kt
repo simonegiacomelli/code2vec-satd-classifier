@@ -16,6 +16,7 @@ package sample.jgit.customized
    limitations under the License.
  */
 
+import satd.step2.CRevCommit
 import satd.step2.CRevWalk
 
 
@@ -39,14 +40,12 @@ object WalkSourceNodes {
         val walk = CRevWalk(git.repository)
         walk.all()
         for (commit in walk.call()) {
-            if(commit.parentCount==0)
+            if (commit.parentCount == 0)
                 println("walk $commit has no parent")
             else
                 println("walk $commit")
-            commit.parents.forEach {
-                walk.link(it, commit);
-            }
-           // println("Commit: $commit ${commit.fullMessage}")
+            commit.addReverseEdges()
+            // println("Commit: $commit ${commit.fullMessage}")
         }
 
         println("Sink count: ${walk.commits.values.filter { it.parents.size == 0 }.size}")

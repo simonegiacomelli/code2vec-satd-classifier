@@ -8,4 +8,9 @@ import org.eclipse.jgit.revwalk.RevCommit
  */
 class CRevCommit(id: AnyObjectId) : RevCommit(id) {
     val childs = mutableListOf<CRevCommit>()
+
+    fun addReverseEdges() {
+        parents.forEach { (it as CRevCommit).childs.add(this) }
+    }
+
 }

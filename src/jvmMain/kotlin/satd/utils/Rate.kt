@@ -7,7 +7,7 @@ import java.util.*
  */
 class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
     val counter = LinkedList<Int>()
-
+    var spinCount = 0
     var trackedSecond: Int = -1
     var secs = 0
 
@@ -16,6 +16,7 @@ class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
     }
 
     fun reset(): Rate {
+        spinCount++
         counter.clear()
         counter.push(0)
         trackedSecond = currentSecond()
