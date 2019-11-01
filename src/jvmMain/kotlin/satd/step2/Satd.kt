@@ -1,12 +1,11 @@
 package satd.step2
 
 import com.github.javaparser.ast.body.MethodDeclaration
-import satd.step1.Source
 
 class Satd(val method: MethodDeclaration) {
     companion object {
         fun foundIn(comment: String): Boolean {
-            for (p in Source.patterns)
+            for (p in patterns)
                 if (comment.contains(p, ignoreCase = true)) return true
             return false
         }
