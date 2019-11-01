@@ -16,7 +16,6 @@ class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
     }
 
     fun reset(): Rate {
-        spinCount++
         counter.clear()
         counter.push(0)
         trackedSecond = currentSecond()
@@ -24,6 +23,7 @@ class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
     }
 
     fun spin() {
+        spinCount++
         val currentSecond = currentSecond()
 
         secs = currentSecond - trackedSecond

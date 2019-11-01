@@ -10,6 +10,6 @@ fun main(args: Array<String>) {
 //  val git = Git.open(Folders.repos.resolve("google_guava").toFile())
     val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
     git.printStats()
-    val commits = Collector(git.repository).commits()
-    Grapher(commits).trackSatd()
+//    val commits = Collector(git.repository).commits()
+    Grapher2(git).trackSatd()
 }
