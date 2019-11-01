@@ -14,7 +14,7 @@ fun Git.stats(): RepoStats {
     val sizeBytes = pathSize(this.repository.workTree.toPath())
 
     return RepoStats(
-        path = this.repository.workTree.absolutePath.toString(),
+        path = this.repository.workTree.toPath().normalize().toAbsolutePath().toString(),
         commitCount = commitCount,
         sizeMB = sizeBytes / (1024 * 1024)
     )

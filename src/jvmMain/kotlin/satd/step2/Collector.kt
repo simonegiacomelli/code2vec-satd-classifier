@@ -1,45 +1,28 @@
 package satd.step2
 
-import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.treewalk.TreeWalk
 import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
-import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
-import satd.utils.pathSize
 import satd.utils.printStats
 import java.nio.charset.Charset
 
 /**
- * Tracker of SATD across the repository history
+ * Collect SATD across the repository history
  */
-class Tracker(val repo: Repository) {
+class Collector(val repo: Repository) {
     val blobs = mutableMapOf<ObjectId, Blob>()
-
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-//            val gp = gp1()
-//            gp.rebuild()
-//            val git = gp.git
-//            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
-            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
-            git.printStats()
-//            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
-            Tracker(git.repository).walk()
-        }
-    }
 
     val commitRate = Rate(10)
     val blobRate = Rate(10)
     val satdRate = Rate(10)
     val ratePrinter =
-        AntiSpin { "commits/sec:$commitRate blob/sec:$blobRate satd/sec: $satdRate" }
+        AntiSpin { println("commits/sec:$commitRate blob/sec:$blobRate satd/sec: $satdRate") }
 
 
-    fun walk() {
+    fun collect() {
         commitRate.reset()
         blobRate.reset()
         val walk = CRevWalk(repo)
@@ -48,6 +31,7 @@ class Tracker(val repo: Repository) {
         for (commit in walk.call())
             findSatd(commit)
 
+        ratePrinter.callback()
     }
 
     private fun findSatd(commit: CRevCommit) {
@@ -70,7 +54,7 @@ class Tracker(val repo: Repository) {
             }
 
             if (blob.satdList.isNotEmpty())
-                commit.blobWithSatd.add(blob)
+                commit.addSatd(blob, treeWalk.nameString)
 
             ratePrinter.spin()
         }

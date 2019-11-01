@@ -1,6 +1,6 @@
 package satd.utils
 
-class AntiSpin(val msg: () -> String) {
+class AntiSpin(val callback: () -> Unit) {
     val time: () -> Long = System::currentTimeMillis
 
     private fun currentSecond(): Int {
@@ -14,7 +14,7 @@ class AntiSpin(val msg: () -> String) {
         val currentSecond = currentSecond()
         if (lastSecond != currentSecond) {
             lastSecond = currentSecond
-            println(msg())
+            callback()
         }
     }
 }

@@ -13,5 +13,9 @@ class CRevCommit(id: AnyObjectId) : RevCommit(id) {
         parents.forEach { (it as CRevCommit).childs.add(this) }
     }
 
-    val blobWithSatd = mutableListOf<Blob>()
+    val blobWithSatd = mutableMapOf<Blob, MutableList<String>>()
+    fun addSatd(blob: Blob, filename: String) {
+        val filenameList = blobWithSatd.getOrPut(blob) { mutableListOf() }
+        filenameList.add(filename)
+    }
 }

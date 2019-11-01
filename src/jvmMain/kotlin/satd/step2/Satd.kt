@@ -1,9 +1,11 @@
 package satd.step2
 
-import com.github.javaparser.ast.Node
 import com.github.javaparser.ast.body.MethodDeclaration
 
 class Satd(val method: MethodDeclaration) {
+    val childs by lazy { mutableSetOf<Satd>() }
+    val parents by lazy { mutableSetOf<Satd>() }
+
     companion object {
         fun foundIn(comment: String): Boolean {
             for (p in patterns)
