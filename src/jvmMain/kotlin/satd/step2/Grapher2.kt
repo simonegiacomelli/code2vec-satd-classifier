@@ -18,7 +18,7 @@ import java.nio.charset.Charset
  */
 class Grapher2(val git: Git) {
     val repo = git.repository
-    val blobs = mutableMapOf<ObjectId, Satds>()
+    val blobs = mutableMapOf<ObjectId, SourceWithId>()
 
     val reader = git.repository.newObjectReader()
     val emptyTreeIterator = EmptyTreeIterator()
@@ -79,12 +79,12 @@ class Grapher2(val git: Git) {
         }
     }
 
-    private fun getObjectSatdForId(objectId: ObjectId): Satds {
+    private fun getObjectSatdForId(objectId: ObjectId): SourceWithId {
         val objectSatd = blobs.getOrPut(objectId) {
             blobRate.spin()
             val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-            val objectSatd = Satds(objectId, content)
-            if (objectSatd.list.isNotEmpty())
+            val objectSatd = SourceWithId(objectId, content)
+            if (objectSatd.satdList.isNotEmpty())
                 satdRate.spin()
             objectSatd
         }

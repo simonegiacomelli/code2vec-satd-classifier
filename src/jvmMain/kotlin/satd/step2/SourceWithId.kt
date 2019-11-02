@@ -7,15 +7,16 @@ import org.eclipse.jgit.lib.ObjectId
 /**
  * Contains all the satd of this git source file (git blob object)
  */
-class Satds(src: AnyObjectId, content: String) : ObjectId(src) {
-    val list = Source(content).satdList
+class SourceWithId(src: AnyObjectId, content: String) : ObjectId(src) {
+    val satdList = Source(content).satdList
 
-    val parents = mutableListOf<Satds>()
+    val parents = mutableListOf<SourceWithId>()
+
 
     fun add(diff: DiffEntry) {
     }
 
-    fun linkOld(diff: DiffEntry, old: Satds) {
+    fun linkOld(diff: DiffEntry, old: SourceWithId) {
         parents.add(old)
     }
 

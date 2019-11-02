@@ -11,7 +11,6 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
-import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.printStats
@@ -37,7 +36,7 @@ class Grapher3(val git: Git) {
     }
 
     val repo = git.repository
-    val allSatds = mutableMapOf<ObjectId, Satds>()
+    val allSatds = mutableMapOf<ObjectId, SourceWithId>()
 
     val reader = git.repository.newObjectReader()
     val emptyTreeIterator = EmptyTreeIterator()
@@ -85,9 +84,11 @@ class Grapher3(val git: Git) {
                     ratePrinter.spin()
                     when (it.changeType) {
                         ADD -> it.newId.satds().add(it)
-//                        COPY,RENAME, //should not matter to our satd tracking
                         MODIFY -> it.newId.satds().linkOld(it, it.oldId.satds())
                         DELETE -> it.oldId.satds().delete(it)
+                        COPY, RENAME -> {
+                            /*should not matter to our satd tracking*/
+                        }
                         null -> TODO()
                     }
 
@@ -95,12 +96,12 @@ class Grapher3(val git: Git) {
         }
     }
 
-    private fun processedSatds(objectId: ObjectId): Satds {
+    private fun processedSatds(objectId: ObjectId): SourceWithId {
         val objectSatd = allSatds.getOrPut(objectId) {
             sourceRate.spin()
             val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-            val objectSatd = Satds(objectId, content)
-            if (objectSatd.list.isNotEmpty())
+            val objectSatd = SourceWithId(objectId, content)
+            if (objectSatd.satdList.isNotEmpty())
                 satdRate.spin()
             objectSatd
         }
