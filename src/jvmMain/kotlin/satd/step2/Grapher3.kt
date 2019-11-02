@@ -26,9 +26,9 @@ class Grapher3(val git: Git) {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-//    val git = satd_gp1().apply { rebuild() }.git
-//  val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
-            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
+            val git = satd_gp1().apply { rebuild() }.git
+//            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
+//            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
 //    val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
             git.printStats()
 //    val commits = Collector(git.repository).commits()
@@ -84,10 +84,8 @@ class Grapher3(val git: Git) {
                 .forEach {
                     ratePrinter.spin()
                     when (it.changeType) {
-
                         ADD -> it.newId.satds().add(it)
-                        COPY,
-                        RENAME,
+//                        COPY,RENAME, //should not matter to our satd tracking
                         MODIFY -> it.newId.satds().linkOld(it, it.oldId.satds())
                         DELETE -> it.oldId.satds().delete(it)
                         null -> TODO()

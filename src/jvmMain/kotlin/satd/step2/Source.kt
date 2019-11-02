@@ -10,10 +10,10 @@ import com.github.javaparser.ast.comments.LineComment
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
 
-class Source(val content: String) {
-    val satdList = compileSatd()
+class Source(content: String) {
+    val satdList = compileSatd(content)
 
-    private fun compileSatd(): List<Method> {
+    private fun compileSatd(content: String): List<Method> {
         val satdList = mutableSetOf<Method>()
         val methodList = mutableSetOf<MethodDeclaration>()
         /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
