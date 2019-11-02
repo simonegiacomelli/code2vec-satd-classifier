@@ -1,7 +1,7 @@
 package satd.step2
 
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.diff.DiffEntry
+import org.eclipse.jgit.diff.DiffEntry.ChangeType.*
 import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.treewalk.AbstractTreeIterator
@@ -18,7 +18,7 @@ import java.nio.charset.Charset
  */
 class Grapher2(val git: Git) {
     val repo = git.repository
-    val blobs = mutableMapOf<ObjectId, Blob>()
+    val blobs = mutableMapOf<ObjectId, ObjectSatd>()
 
     val reader = git.repository.newObjectReader()
     val emptyTreeIterator = EmptyTreeIterator()
@@ -39,10 +39,10 @@ class Grapher2(val git: Git) {
             if (child.parents.isNotEmpty())
                 child.parents.forEach {
                     val parent = it as CRevCommit
-                    visitEdge(child, parent.newTreeIterator())
+                    visitEdge(child, parent, parent.newTreeIterator())
                 }
-            else
-                visitEdge(child, emptyTreeIterator)
+//            else visitEdge(child, emptyTreeIterator)
+            else visitEdge(child, CRevCommit(ObjectId.zeroId()), emptyTreeIterator)
 
             ratePrinter.spin()
         }
@@ -52,42 +52,43 @@ class Grapher2(val git: Git) {
     fun CRevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
 
 
-    private fun visitEdge(child: CRevCommit, parentTree: AbstractTreeIterator) {
+    private fun visitEdge(child: CRevCommit, parent: CRevCommit, parentIterator: AbstractTreeIterator) {
         edgeRate.spin()
-        //println("visiting parent --------------> $child ${child.shortMessage}")
         DiffFormatter(DisabledOutputStream.INSTANCE).use { formatter ->
             formatter.setRepository(git.repository)
-            val entries = formatter.scan(parentTree, child.newTreeIterator())
+            val entries = formatter.scan(parentIterator, child.newTreeIterator())
 
             entries.forEach {
-                //                val fileHeader = formatter.toFileHeader(it)
-//                println("${it.changeType} " + fileHeader.toEditList())
-                when (it.changeType) {
-                    DiffEntry.ChangeType.ADD, DiffEntry.ChangeType.MODIFY ->
-                        process(child, it.newId.toObjectId(), it.newPath)
-
-                }
+                ratePrinter.spin()
+                if (it.newPath.endsWith(".java"))
+                    when (it.changeType) {
+                        ADD -> {
+                            child.addSatd(getObjectSatdForId(it.newId.toObjectId()), it.newPath)
+                        }
+                        COPY, RENAME, MODIFY -> {
+                            child.addSatd(getObjectSatdForId(it.newId.toObjectId()), it.newPath)
+                            parent.addSatd(getObjectSatdForId(it.oldId.toObjectId()), it.oldPath)
+                        }
+                        DELETE -> {
+                            println("delete ${it.newPath}")
+                            parent.addSatd(getObjectSatdForId(it.oldId.toObjectId()), it.oldPath)
+                        }
+                        null -> TODO()
+                    }
             }
-            //            println("DiffEntries ${entries.size}")
         }
     }
 
-    private fun process(commit: CRevCommit, objectId: ObjectId, filename: String) {
-        if (!filename.endsWith(".java"))
-            return
-        ratePrinter.spin()
-        val blob = blobs.getOrPut(objectId) {
+    private fun getObjectSatdForId(objectId: ObjectId): ObjectSatd {
+        val objectSatd = blobs.getOrPut(objectId) {
             blobRate.spin()
             val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-            val blob = Blob(objectId, content)
-            if (blob.satdList.isNotEmpty())
+            val objectSatd = ObjectSatd(objectId, content)
+            if (objectSatd.list.isNotEmpty())
                 satdRate.spin()
-            blob
+            objectSatd
         }
-
-        if (blob.satdList.isNotEmpty())
-            commit.addSatd(blob, filename)
-
+        return objectSatd
     }
 
 }

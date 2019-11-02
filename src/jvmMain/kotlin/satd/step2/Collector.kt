@@ -6,14 +6,12 @@ import org.eclipse.jgit.treewalk.TreeWalk
 import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
 import satd.utils.AntiSpin
 import satd.utils.Rate
-import satd.utils.printStats
-import java.nio.charset.Charset
 
 /**
  * Collect SATD across the repository history
  */
 class Collector(val repo: Repository) {
-    val blobs = mutableMapOf<ObjectId, Blob>()
+    val blobs = mutableMapOf<ObjectId, ObjectSatd>()
 
     val commitRate = Rate(10)
     val blobRate = Rate(10)
@@ -48,13 +46,13 @@ class Collector(val repo: Repository) {
             val blob = blobs.getOrPut(objectId) {
                 blobRate.spin()
                 //val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-                val blob = Blob(objectId, "")
-                if (blob.satdList.isNotEmpty())
+                val blob = ObjectSatd(objectId, "")
+                if (blob.list.isNotEmpty())
                     satdRate.spin()
                 blob
             }
 
-            if (blob.satdList.isNotEmpty())
+            if (blob.list.isNotEmpty())
                 commit.addSatd(blob, treeWalk.nameString)
 
             ratePrinter.spin()
