@@ -57,10 +57,9 @@ class Grapher3(val git: Git) {
             if (child.parents.isNotEmpty())
                 child.parents.forEach {
                     val parent = it
-                    visitEdge(child, parent, parent.newTreeIterator())
+                    visitEdge(child.newTreeIterator(), parent.newTreeIterator())
                 }
-//            else visitEdge(child, emptyTreeIterator)
-            else visitEdge(child, CRevCommit(ObjectId.zeroId()), emptyTreeIterator)
+            else visitEdge(child.newTreeIterator(), emptyTreeIterator)
 
             ratePrinter.spin()
         }
@@ -71,11 +70,14 @@ class Grapher3(val git: Git) {
     private fun AbbreviatedObjectId.satds() = processedSatds(this.toObjectId())
     private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
 
-    private fun visitEdge(child: RevCommit, parent: RevCommit, parentIterator: AbstractTreeIterator) {
+    private fun visitEdge(
+        childIterator: AbstractTreeIterator,
+        parentIterator: AbstractTreeIterator
+    ) {
         edgeRate.spin()
         DiffFormatter(DisabledOutputStream.INSTANCE).use { formatter ->
             formatter.setRepository(git.repository)
-            val entries = formatter.scan(parentIterator, child.newTreeIterator())
+            val entries = formatter.scan(parentIterator, childIterator)
 
             entries
                 .filterNotNull()
