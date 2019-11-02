@@ -11,7 +11,7 @@ import satd.utils.Rate
  * Collect SATD across the repository history
  */
 class Collector(val repo: Repository) {
-    val blobs = mutableMapOf<ObjectId, ObjectSatd>()
+    val blobs = mutableMapOf<ObjectId, Satds>()
 
     val commitRate = Rate(10)
     val blobRate = Rate(10)
@@ -46,7 +46,7 @@ class Collector(val repo: Repository) {
             val blob = blobs.getOrPut(objectId) {
                 blobRate.spin()
                 //val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-                val blob = ObjectSatd(objectId, "")
+                val blob = Satds(objectId, "")
                 if (blob.list.isNotEmpty())
                     satdRate.spin()
                 blob

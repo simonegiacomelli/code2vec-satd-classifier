@@ -13,15 +13,15 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 class Source(val content: String) {
     val satdList = compileSatd()
 
-    private fun compileSatd(): List<Satd> {
-        val satdList = mutableSetOf<Satd>()
+    private fun compileSatd(): List<Method> {
+        val satdList = mutableSetOf<Method>()
         val methodList = mutableSetOf<MethodDeclaration>()
         /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
         fun addMethod(method: MethodDeclaration, comment: Comment) {
 
-            if (Satd.foundIn(comment.content))
+            if (Method.foundIn(comment.content))
                 if (!methodList.contains(method)) {
-                    satdList.add(Satd(method))
+                    satdList.add(Method(method))
                     methodList.add(method)
                 }
         }

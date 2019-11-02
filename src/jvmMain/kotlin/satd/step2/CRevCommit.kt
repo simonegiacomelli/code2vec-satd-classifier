@@ -13,15 +13,15 @@ class CRevCommit(id: AnyObjectId) : RevCommit(id) {
     /**
      * map between Blob<-->FilenameList
      */
-    val blobWithSatd = mutableMapOf<ObjectSatd, MutableList<String>>()
+    val blobWithSatd = mutableMapOf<Satds, MutableList<String>>()
 
     fun addReverseEdges() {
         parents.forEach { (it as CRevCommit).childs.add(this) }
     }
 
-    fun addSatd(objectSatd: ObjectSatd, filename: String) {
-        if (objectSatd.list.isNotEmpty()) {
-            val filenameList = blobWithSatd.getOrPut(objectSatd) { mutableListOf() }
+    fun addSatd(satds: Satds, filename: String) {
+        if (satds.list.isNotEmpty()) {
+            val filenameList = blobWithSatd.getOrPut(satds) { mutableListOf() }
             filenameList.add(filename)
         }
     }

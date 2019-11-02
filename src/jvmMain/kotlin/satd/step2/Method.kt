@@ -2,9 +2,9 @@ package satd.step2
 
 import com.github.javaparser.ast.body.MethodDeclaration
 
-class Satd(val method: MethodDeclaration) {
-    val childs by lazy { mutableSetOf<Satd>() }
-    val parents by lazy { mutableSetOf<Satd>() }
+class Method(val method: MethodDeclaration) {
+    val childs by lazy { mutableSetOf<Method>() }
+    val parents by lazy { mutableSetOf<Method>() }
 
     companion object {
         fun foundIn(comment: String): Boolean {
@@ -21,7 +21,7 @@ class Satd(val method: MethodDeclaration) {
     }
 
     override fun equals(obj: Any?): Boolean {
-        return if (obj == null || obj !is Satd) {
+        return if (obj == null || obj !is Method) {
             false
         } else method.equals(obj.method)
     }
