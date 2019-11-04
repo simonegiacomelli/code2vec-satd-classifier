@@ -10,16 +10,40 @@ import org.eclipse.jgit.lib.ObjectId
 class SourceWithId(src: AnyObjectId, content: String) : ObjectId(src) {
     val satdList = Source(content).satdList
 
-    val parents = mutableListOf<SourceWithId>()
+    val parents = mutableMapOf<SourceWithId, MutableList<Info>>()
+    val names = mutableSetOf<String>()
+    val commits = mutableSetOf<AnyObjectId>()
 
-
-    fun add(diff: DiffEntry) {
+    fun add(info: Info) {
+        names.add(info.newPath)
+        commits.add(info.newCommitId)
     }
 
-    fun linkOld(diff: DiffEntry, old: SourceWithId) {
-        parents.add(old)
+    fun modify(
+        info: Info,
+        oldSatd: SourceWithId
+    ) {
+        val list = parents.getOrPut(oldSatd) { mutableListOf() }
+        list.add(info)
+        names.add(info.newPath)
+        commits.add(info.newCommitId)
     }
 
-    fun delete(diff: DiffEntry) {
+    fun delete(info: Info) {
+    }
+
+    override fun toString(): String {
+        return abbreviate(7).name()
     }
 }
+
+
+data class Info(
+    val changeType: DiffEntry.ChangeType,
+    val oldCommitId: AnyObjectId,
+    val newCommitId: AnyObjectId,
+    val newId: AnyObjectId,
+    val oldId: AnyObjectId,
+    val newPath: String,
+    val oldPath: String
+)

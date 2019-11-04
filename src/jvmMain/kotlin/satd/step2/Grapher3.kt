@@ -5,12 +5,14 @@ import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.diff.DiffEntry.ChangeType.*
 import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.lib.AbbreviatedObjectId
+import org.eclipse.jgit.lib.AnyObjectId
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
+import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.printStats
@@ -25,13 +27,15 @@ class Grapher3(val git: Git) {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val git = satd_gp1().apply { rebuild() }.git
+//            val git = satd_gp1().apply { rebuild() }.git
+            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
 //            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
 //            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
-//    val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
+//            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
             git.printStats()
 //    val commits = Collector(git.repository).commits()
-            Grapher3(git).trackSatd()
+            val g = Grapher3(git).apply { trackSatd() }
+            SatdGraph(g.allSatds).dot(git.repository.workTree.name)
         }
     }
 
@@ -47,7 +51,7 @@ class Grapher3(val git: Git) {
     val commitRate = Rate(10)
     val ratePrinter =
         AntiSpin { println("commit#:${commitRate.spinCount} edge#:${edgeRate.spinCount} source#:${sourceRate.spinCount} edge/sec:$edgeRate source/sec:$sourceRate satd/sec: $satdRate") }
-    val satdGraph = SatdGraph()
+
 
     fun trackSatd() {
 
@@ -57,13 +61,14 @@ class Grapher3(val git: Git) {
             if (child.parents.isNotEmpty())
                 child.parents.forEach {
                     val parent = it
-                    visitEdge(child.newTreeIterator(), parent.newTreeIterator())
+                    visitEdge(child.newTreeIterator(), parent.newTreeIterator(), child, parent)
                 }
-            else visitEdge(child.newTreeIterator(), emptyTreeIterator)
+            else visitEdge(child.newTreeIterator(), emptyTreeIterator, child, ObjectId.zeroId())
 
             ratePrinter.spin()
         }
         ratePrinter.callback()
+
     }
 
     private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
@@ -72,7 +77,9 @@ class Grapher3(val git: Git) {
 
     private fun visitEdge(
         childIterator: AbstractTreeIterator,
-        parentIterator: AbstractTreeIterator
+        parentIterator: AbstractTreeIterator,
+        childCommit: ObjectId,
+        parentCommit: ObjectId
     ) {
         edgeRate.spin()
         DiffFormatter(DisabledOutputStream.INSTANCE).use { formatter ->
@@ -83,11 +90,12 @@ class Grapher3(val git: Git) {
                 .filterNotNull()
                 .filter { it.isJavaSource() }
                 .forEach {
+                    val info = it.toInfo(parentCommit, childCommit)
                     ratePrinter.spin()
                     when (it.changeType) {
-                        ADD -> it.newId.satds().add(it)
-                        MODIFY -> it.newId.satds().linkOld(it, it.oldId.satds())
-                        DELETE -> it.oldId.satds().delete(it)
+                        ADD -> it.newId.satds().add(info)
+                        MODIFY -> it.newId.satds().modify(info, it.oldId.satds())
+                        DELETE -> it.oldId.satds().delete(info)
                         COPY, RENAME -> {
                             /*should not matter to our satd tracking*/
                         }
@@ -101,7 +109,8 @@ class Grapher3(val git: Git) {
     private fun processedSatds(objectId: ObjectId): SourceWithId {
         val objectSatd = allSatds.getOrPut(objectId) {
             sourceRate.spin()
-            val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
+//            val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
+            val content = ""
             val objectSatd = SourceWithId(objectId, content)
             if (objectSatd.satdList.isNotEmpty())
                 satdRate.spin()
@@ -110,7 +119,50 @@ class Grapher3(val git: Git) {
         return objectSatd
     }
 
+    private fun DiffEntry.toInfo(oldCommitId: AnyObjectId, newCommitId: AnyObjectId) =
+        Info(
+            changeType = changeType,
+            oldCommitId = oldCommitId,
+            newCommitId = newCommitId,
+            newId = newId.toObjectId(),
+            oldId = oldId.toObjectId(),
+            newPath = newPath,
+            oldPath = oldPath
+        )
+
 }
 
 
-class SatdGraph
+class SatdGraph(val allSatds: MutableMap<ObjectId, SourceWithId>) {
+    val AnyObjectId.esc get() = "\"$this\""
+    val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
+
+    fun dot(filename: String) {
+        val folder = Folders.satd.resolve("dots").toFile()
+        folder.mkdirs()
+        folder.resolve("$filename.dot").bufferedWriter().use { buf ->
+            buf.appendln("digraph one {")
+            allSatds.values.forEach { child ->
+                child.parents.forEach { parent ->
+                    val label = parent.value.joinToString(", ") {
+                        "${it.oldCommitId.abb} -> ${it.newCommitId.abb} "
+                    }
+//                    val label = ${child} -> ${parent.key}
+                    buf.appendln("  ${child.esc} -> ${parent.key.esc} [ label = \"$label\"] ")
+                }
+                val labelList = mutableListOf(child.names
+                    .map { it.substringAfterLast("/") }
+                    .joinToString(", "))
+                labelList.addAll(child.commits.map { it.abb })
+
+                val label = labelList.joinToString("\\n")
+                buf.appendln("  ${child.esc} [ label = \"$label\" ] ")
+            }
+            buf.appendln("}")
+        }
+
+        val cmd = "dot -Tpng -o $filename.png $filename.dot"
+        println("Running [$cmd]")
+        Runtime.getRuntime().exec(cmd,null,folder).waitFor()
+    }
+}
