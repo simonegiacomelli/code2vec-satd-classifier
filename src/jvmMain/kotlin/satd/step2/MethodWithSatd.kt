@@ -9,51 +9,28 @@ import com.github.javaparser.ast.comments.JavadocComment
 import com.github.javaparser.ast.comments.LineComment
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
-abstract class Method {
-    abstract val name: String
-    abstract val hasSatd: Boolean
-    abstract val comment: String
-    open val exists = true
-    val childs by lazy { mutableSetOf<Method>() }
-    val parents by lazy { mutableSetOf<Method>() }
+fun findMethodsByName(content: String, names: Set<String>): List<Method> {
 
-    override fun equals(other: Any?): Boolean {
-        TODO()
-    }
+    val cu = JavaParser().parse(content)!!
 
-    override fun hashCode(): Int {
-        TODO()
-    }
-}
-
-private class MethodWithSatd(val method: MethodDeclaration, override val comment: String) : Method() {
-    override val hasSatd get() = true
-
-    override val name get() = method.name.asString()!!
-
-    companion object {
-        fun foundIn(comment: String): Boolean {
-            for (p in patterns)
-                if (comment.contains(p, ignoreCase = true)) return true
-            return false
+    //look for methods that matches requested names
+    val foundMethods = cu.result.get().types
+        .filterNotNull()
+        .flatMap { type ->
+            type.methods
+                .filter { names.contains(it.nameAsString) }
+                .map { MethodWithoutSatd(it.nameAsString) }
         }
 
-        val patterns by lazy {
-            val content = this::class.java.classLoader.getResource("satd/step1/hack-patterns.txt")!!.readText()
-            content.split('\n')
-                .map { it.trim() }
+    val result = mutableListOf<Method>()
+    result.addAll(foundMethods)
+
+    //add all missing names that were not found
+    names.subtract(result.map { it.name })
+        .forEach {
+            result.add(MethodMissing(it))
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return if (other == null || other !is MethodWithSatd) {
-            false
-        } else method.equals(other.method)
-    }
-
-    override fun hashCode(): Int {
-        return method.hashCode()
-    }
+    return result.toList()
 }
 
 
@@ -92,6 +69,24 @@ fun findMethodsWithSatd(content: String): List<Method> {
     return satdList.toList()
 }
 
+abstract class Method {
+    abstract val name: String
+    abstract val hasSatd: Boolean
+    abstract val comment: String
+    open val exists = true
+    val childs by lazy { mutableSetOf<Method>() }
+    val parents by lazy { mutableSetOf<Method>() }
+
+    override fun equals(other: Any?): Boolean {
+        TODO()
+    }
+
+    override fun hashCode(): Int {
+        TODO()
+    }
+}
+
+
 class MethodWithoutSatd(override val name: String) : Method() {
     override val hasSatd get() = false
     override val comment = ""
@@ -103,26 +98,32 @@ class MethodMissing(override val name: String) : Method() {
     override val exists = false
 }
 
-fun findMethodsByName(content: String, names: Set<String>): List<Method> {
+private class MethodWithSatd(val method: MethodDeclaration, override val comment: String) : Method() {
+    override val hasSatd get() = true
 
-    val cu = JavaParser().parse(content)!!
+    override val name get() = method.name.asString()!!
 
-    //look for methods that matches requested names
-    val foundMethods = cu.result.get().types
-        .filterNotNull()
-        .flatMap { type ->
-            type.methods
-                .filter { names.contains(it.nameAsString) }
-                .map { MethodWithoutSatd(it.nameAsString) }
+    companion object {
+        fun foundIn(comment: String): Boolean {
+            for (p in patterns)
+                if (comment.contains(p, ignoreCase = true)) return true
+            return false
         }
 
-    val result = mutableListOf<Method>()
-    result.addAll(foundMethods)
-
-    //add all missing names that were not found
-    names.subtract(result.map { it.name })
-        .forEach {
-            result.add(MethodMissing(it))
+        val patterns by lazy {
+            val content = this::class.java.classLoader.getResource("satd/step1/hack-patterns.txt")!!.readText()
+            content.split('\n')
+                .map { it.trim() }
         }
-    return result.toList()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other == null || other !is MethodWithSatd) {
+            false
+        } else method.equals(other.method)
+    }
+
+    override fun hashCode(): Int {
+        return method.hashCode()
+    }
 }
