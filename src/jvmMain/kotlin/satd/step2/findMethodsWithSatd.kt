@@ -9,31 +9,6 @@ import com.github.javaparser.ast.comments.JavadocComment
 import com.github.javaparser.ast.comments.LineComment
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
-fun findMethodsByName(content: String, names: Set<String>): List<Method> {
-
-    val cu = JavaParser().parse(content)!!
-
-    //look for methods that matches requested names
-    val foundMethods = cu.result.get().types
-        .filterNotNull()
-        .flatMap { type ->
-            type.methods
-                .filter { names.contains(it.nameAsString) }
-                .map { MethodWithoutSatd(it) }
-        }
-
-    val result = mutableListOf<Method>()
-    result.addAll(foundMethods)
-
-    //add all missing names that were not found
-    names.subtract(result.map { it.name })
-        .forEach {
-            result.add(MethodMissing(it))
-        }
-    return result.toList()
-}
-
-
 fun findMethodsWithSatd(content: String): List<Method> {
     val satdList = mutableSetOf<MethodWithSatd>()
     val methodList = mutableSetOf<MethodDeclaration>()
@@ -69,39 +44,7 @@ fun findMethodsWithSatd(content: String): List<Method> {
     return satdList.toList()
 }
 
-abstract class Method {
-    abstract val name: String
-    abstract val hasSatd: Boolean
-    abstract val comment: String
-    open val exists = true
-    val childs by lazy { mutableSetOf<Method>() }
-    val parents by lazy { mutableSetOf<Method>() }
-    abstract val method: MethodDeclaration
-
-    override fun equals(other: Any?): Boolean {
-        TODO()
-    }
-
-    override fun hashCode(): Int {
-        TODO()
-    }
-}
-
-
-class MethodWithoutSatd(override val method: MethodDeclaration) : Method() {
-    override val hasSatd get() = false
-    override val name: String get() = method.nameAsString
-    override val comment = ""
-}
-
-class MethodMissing(override val name: String) : Method() {
-    override val hasSatd get() = false
-    override val comment = ""
-    override val exists = false
-    override val method get() = throw IllegalStateException("This does not have a method")
-}
-
-private class MethodWithSatd(override val method: MethodDeclaration, override val comment: String) : Method() {
+class MethodWithSatd(override val method: MethodDeclaration, override val comment: String) : Method() {
     override val hasSatd get() = true
 
     override val name get() = method.name.asString()!!
