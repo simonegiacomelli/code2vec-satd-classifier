@@ -11,7 +11,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
 
 class Source(content: String) {
-    val satdList = compileSatd(content)
+    val satdMethods = compileSatd(content)
 
     private fun compileSatd(content: String): List<Method> {
         val satdList = mutableSetOf<Method>()

@@ -84,7 +84,7 @@ class Grapher2(val git: Git) {
             blobRate.spin()
             val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
             val objectSatd = SourceWithId(objectId, content)
-            if (objectSatd.satdList.isNotEmpty())
+            if (objectSatd.satdMethods.isNotEmpty())
                 satdRate.spin()
             objectSatd
         }

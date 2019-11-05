@@ -47,12 +47,12 @@ class Collector(val repo: Repository) {
                 blobRate.spin()
                 //val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
                 val blob = SourceWithId(objectId, "")
-                if (blob.satdList.isNotEmpty())
+                if (blob.satdMethods.isNotEmpty())
                     satdRate.spin()
                 blob
             }
 
-            if (blob.satdList.isNotEmpty())
+            if (blob.satdMethods.isNotEmpty())
                 commit.addSatd(blob, treeWalk.nameString)
 
             ratePrinter.spin()

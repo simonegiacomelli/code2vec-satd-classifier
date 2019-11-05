@@ -41,7 +41,7 @@ class Grapher3(val git: Git) {
 
     val repo = git.repository
     val repoName get() = git.repository.workTree.name
-    val allSatds = mutableMapOf<ObjectId, SourceWithId>()
+    val allSatds = mutableMapOf<ObjectId, SourceInfo>()
 
     val reader = git.repository.newObjectReader()
     val emptyTreeIterator = EmptyTreeIterator()
@@ -74,6 +74,7 @@ class Grapher3(val git: Git) {
     private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
     private fun AbbreviatedObjectId.source() = processedSatds(this.toObjectId())
     private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
+    private fun ObjectId.content() = repo.open(this).bytes.toString(Charset.forName("UTF-8"))
 
     private fun visitEdge(
         childIterator: AbstractTreeIterator,
@@ -93,9 +94,9 @@ class Grapher3(val git: Git) {
                     val info = it.toInfo(parentCommit, childCommit)
                     ratePrinter.spin()
                     when (it.changeType) {
-                        ADD -> it.newId.source().add(info)
-                        MODIFY -> it.newId.source().modify(info, it.oldId.source())
-                        DELETE -> it.oldId.source().delete(info)
+                        ADD -> it.newId.source()
+                        MODIFY -> it.newId.source().link(it.oldId.source())
+                        DELETE -> it.oldId.source().delete()
                         COPY, RENAME -> {
                             /*should not matter to our satd tracking*/
                         }
@@ -106,15 +107,17 @@ class Grapher3(val git: Git) {
         }
     }
 
-    private fun processedSatds(objectId: ObjectId): SourceWithId {
+    private fun processedSatds(objectId: ObjectId): SourceInfo {
         val objectSatd = allSatds.getOrPut(objectId) {
             sourceRate.spin()
-            val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
+            val content = objectId.content()
 //            val content = ""
-            val objectSatd = SourceWithId(objectId, content)
-            if (objectSatd.satdList.isNotEmpty())
+            val satdMethods = Source(content).satdMethods
+
+            if (satdMethods.isNotEmpty())
                 satdRate.spin()
-            objectSatd
+
+            SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
         }
         return objectSatd
     }
@@ -130,75 +133,16 @@ class Grapher3(val git: Git) {
             oldPath = oldPath
         )
 
-}
 
+    inner class SourceInfo(val objectId: ObjectId, val methods: MutableMap<String, IMethod>) {
 
-class DotGraph(val allSatds: MutableMap<ObjectId, SourceWithId>, val filename: String) {
-    val AnyObjectId.esc get() = "\"$this\""
-    val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
-    val folder = Folders.satd.resolve("dots").toFile()
+        fun link(old: SourceInfo) {
 
-    fun full(): Dot {
-
-        folder.mkdirs()
-        folder.resolve("$filename.dot").bufferedWriter().use { buf ->
-            buf.appendln("digraph one {")
-            allSatds.values.forEach { child ->
-                child.parents.forEach { parent ->
-                    val label = parent.value.joinToString(", ") {
-                        "${it.oldCommitId.abb} -> ${it.newCommitId.abb} "
-                    }
-//                    val label = ${child} -> ${parent.key}
-                    buf.appendln("  ${child.esc} -> ${parent.key.esc} [ label = \"$label\"] ")
-                }
-                val labelList = mutableListOf(child.names
-                    .map { it.substringAfterLast("/") }
-                    .joinToString(", "))
-                labelList.addAll(child.commits.map { it.abb })
-
-                val label = labelList.joinToString("\\n")
-                buf.appendln("  ${child.esc} [ label = \"$label\" ] ")
-            }
-            buf.appendln("}")
         }
-        return Dot(filename)
 
-    }
+        fun delete() {
 
-    fun satd(): Dot {
-        val filename = this.filename + "_satd"
-        val folder = Folders.satd.resolve("dots").toFile()
-        folder.mkdirs()
-        folder.resolve("$filename.dot").bufferedWriter().use { buf ->
-            buf.appendln("digraph one {")
-            allSatds.values.forEach { child ->
-                child.parents.forEach { parent ->
-                    val label = parent.value.joinToString(", ") {
-                        "${it.oldCommitId.abb} -> ${it.newCommitId.abb} "
-                    }
-//                    val label = ${child} -> ${parent.key}
-                    buf.appendln("  ${child.esc} -> ${parent.key.esc} [ label = \"$label\"] ")
-                }
-                val labelList = mutableListOf(child.names
-                    .map { it.substringAfterLast("/") }
-                    .joinToString(", "))
-                labelList.addAll(child.commits.map { it.abb })
-
-                val label = labelList.joinToString("\\n")
-                buf.appendln("  ${child.esc} [ label = \"$label\" ] ")
-            }
-            buf.appendln("}")
         }
-        return Dot(filename)
 
-    }
-
-    inner class Dot(val filename: String) {
-
-        fun toPng() {
-            val cmd = "dot -Tpng -o $filename.png $filename.dot"
-            println("Running [$cmd]")
-            Runtime.getRuntime().exec(cmd, null, folder).waitFor()
-        }
     }
 }

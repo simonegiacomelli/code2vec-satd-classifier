@@ -2,11 +2,18 @@ package satd.step2
 
 import com.github.javaparser.ast.body.MethodDeclaration
 
-class Method(val method: MethodDeclaration, val comment: String) {
-    val childs by lazy { mutableSetOf<Method>() }
-    val parents by lazy { mutableSetOf<Method>() }
+abstract class IMethod {
+    abstract val name: String
+    abstract val hasSatd: Boolean
+    val childs by lazy { mutableSetOf<IMethod>() }
+    val parents by lazy { mutableSetOf<IMethod>() }
 
+}
 
+class Method(val method: MethodDeclaration, val comment: String) : IMethod() {
+    override val hasSatd get() = true
+
+    override val name get() = method.name.asString()!!
 
     companion object {
         fun foundIn(comment: String): Boolean {

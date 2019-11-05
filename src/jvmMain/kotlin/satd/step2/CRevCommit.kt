@@ -20,7 +20,7 @@ class CRevCommit(id: AnyObjectId) : RevCommit(id) {
     }
 
     fun addSatd(sourceWithId: SourceWithId, filename: String) {
-        if (sourceWithId.satdList.isNotEmpty()) {
+        if (sourceWithId.satdMethods.isNotEmpty()) {
             val filenameList = blobWithSatd.getOrPut(sourceWithId) { mutableListOf() }
             filenameList.add(filename)
         }

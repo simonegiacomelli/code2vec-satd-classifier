@@ -8,27 +8,24 @@ import org.eclipse.jgit.lib.ObjectId
  * Contains all the satd of this git source file (git blob object)
  */
 class SourceWithId(src: AnyObjectId, content: String) : ObjectId(src) {
-    val satdList = Source(content).satdList
+    val satdMethods = Source(content).satdMethods.map { it.name to it }.toMap()
 
-    val parents = mutableMapOf<SourceWithId, MutableList<Info>>()
-//    val childs = mutableSetOf<SourceWithId>()
-    val names = mutableSetOf<String>()
-    val commits = mutableSetOf<AnyObjectId>()
+//    val names = mutableSetOf<String>()
+//    val commits = mutableSetOf<AnyObjectId>()
 
     fun add(info: Info) {
-        names.add(info.newPath)
-        commits.add(info.newCommitId)
+//        names.add(info.newPath)
+//        commits.add(info.newCommitId)
     }
 
     fun modify(
         info: Info,
-        oldSatd: SourceWithId
+        oldSource: SourceWithId
     ) {
-        val parentCommits = parents.getOrPut(oldSatd) { mutableListOf() }
-        parentCommits.add(info)
-//        oldSatd.childs.add(this)
-        names.add(info.newPath)
-        commits.add(info.newCommitId)
+//        names.add(info.newPath)
+//        commits.add(info.newCommitId)
+
+//        oldSource.satdMethods.
     }
 
     fun delete(info: Info) {
