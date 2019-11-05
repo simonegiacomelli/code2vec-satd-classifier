@@ -24,7 +24,7 @@ class Persistence {
 
 fun validationSql() = "CALL SESSION_ID()"
 
-val databasePath get() = Folders.database.resolve("h2satd")
+val databasePath get() = Folders.database.resolve("h2satd/db1")
 
 fun connection(): Connection {
     Class.forName("org.h2.Driver")
