@@ -34,19 +34,19 @@ class satd_gp1 : SatdGuineaPig("satd_gp1") {
         }
     }
 
-    fun addAndCommitResources(folder: String, vararg filenames: String) {
+    fun addAndCommitResources(folder: String, message: String, vararg filenames: String) {
         filenames.forEach {
             addResource(folder, it)
         }
-        git.commit().setMessage("Committing ${filenames.joinToString(", ")} for $folder").call()
+        git.commit().setMessage("Committing ${filenames.joinToString(", ")} for $folder - $message").call()
     }
 
     override fun build() {
-        addAndCommitResources("commit1", "Class1.java", "Class2.java")
-        addAndCommitResources("commit2", "Class2.java")
-        addAndCommitResources("commit3", "Class2.java")
-        addAndCommitResources("commit4", "Class2.java")
-        addAndCommitResources("commit5", "Class2.java")
+        addAndCommitResources("commit1", "", "Class1.java", "Class2.java")
+        addAndCommitResources("commit2", "introducing SATD", "Class2.java")
+        addAndCommitResources("commit3", "adding a method without touching the satd", "Class2.java")
+        addAndCommitResources("commit4", "removing satd", "Class2.java")
+        addAndCommitResources("commit5", "", "Class2.java")
     }
 
 
