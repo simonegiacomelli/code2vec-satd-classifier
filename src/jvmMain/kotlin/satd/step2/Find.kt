@@ -27,9 +27,13 @@ import java.nio.charset.Charset
 class Find(val git: Git) {
 
     companion object {
+
+        init {
+            setupDatabase()
+        }
+
         @JvmStatic
         fun main(args: Array<String>) {
-            setupDatabase()
             val git = satd_gp1().apply { rebuild() }.git
 //            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
 //            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
@@ -41,6 +45,15 @@ class Find(val git: Git) {
 //            DotGraph(g.allSatds, git.repository.workTree.name).full()
         }
     }
+
+    // some utility extension methods
+    private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
+
+    private fun AbbreviatedObjectId.source() = processedSatds(this.toObjectId())
+    private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
+    private fun ObjectId.content() = repo.open(this).bytes.toString(Charset.forName("UTF-8"))
+    private val AnyObjectId.esc get() = "\"$this\""
+    private val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
 
     val repo = git.repository
     val repoName = repo.workTree.name
@@ -73,11 +86,6 @@ class Find(val git: Git) {
         ratePrinter.callback()
 
     }
-
-    private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
-    private fun AbbreviatedObjectId.source() = processedSatds(this.toObjectId())
-    private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
-    private fun ObjectId.content() = repo.open(this).bytes.toString(Charset.forName("UTF-8"))
 
     private fun visitEdge(
         childIterator: AbstractTreeIterator,
@@ -159,8 +167,7 @@ class Find(val git: Git) {
 
 
     }
+
+
 }
 
-
-private val AnyObjectId.esc get() = "\"$this\""
-private val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"

@@ -44,10 +44,10 @@ fun setupDatabase() {
 }
 
 object DbSatds : LongIdTable() {
-    val repo = varchar("repo", 200)
-    val commit = varchar("token", 50)
+    val commit = varchar("commit", 50)
     val satd = text("satd")
     val fixed = text("fixed")
+    val repo = varchar("repo", 200)
 
     init {
         index(true, repo, commit) // Unique index

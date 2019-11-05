@@ -5,8 +5,8 @@ class AntiSpin(val callback: () -> Unit) {
 
     private fun currentSecond(): Int {
         val current = time()
-        val currentSecond = (current / 1000).toInt()
-        return currentSecond
+        val currentWindow = (current / 1000).toInt()
+        return currentWindow
     }
 
     var lastSecond = -1
