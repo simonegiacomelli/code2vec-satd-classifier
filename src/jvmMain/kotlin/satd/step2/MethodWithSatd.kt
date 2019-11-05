@@ -19,7 +19,7 @@ fun findMethodsByName(content: String, names: Set<String>): List<Method> {
         .flatMap { type ->
             type.methods
                 .filter { names.contains(it.nameAsString) }
-                .map { MethodWithoutSatd(it.nameAsString) }
+                .map { MethodWithoutSatd(it) }
         }
 
     val result = mutableListOf<Method>()
@@ -76,6 +76,7 @@ abstract class Method {
     open val exists = true
     val childs by lazy { mutableSetOf<Method>() }
     val parents by lazy { mutableSetOf<Method>() }
+    abstract val method: MethodDeclaration
 
     override fun equals(other: Any?): Boolean {
         TODO()
@@ -87,8 +88,9 @@ abstract class Method {
 }
 
 
-class MethodWithoutSatd(override val name: String) : Method() {
+class MethodWithoutSatd(override val method: MethodDeclaration) : Method() {
     override val hasSatd get() = false
+    override val name: String get() = method.nameAsString
     override val comment = ""
 }
 
@@ -96,9 +98,10 @@ class MethodMissing(override val name: String) : Method() {
     override val hasSatd get() = false
     override val comment = ""
     override val exists = false
+    override val method get() = throw IllegalStateException("This does not have a method")
 }
 
-private class MethodWithSatd(val method: MethodDeclaration, override val comment: String) : Method() {
+private class MethodWithSatd(override val method: MethodDeclaration, override val comment: String) : Method() {
     override val hasSatd get() = true
 
     override val name get() = method.name.asString()!!

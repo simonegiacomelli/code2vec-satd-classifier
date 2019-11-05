@@ -91,13 +91,10 @@ class Main(val git: Git) {
                 .filterNotNull()
                 .filter { it.isJavaSource() }
                 .forEach {
-                    val info = it.toInfo(parentCommit, childCommit)
                     ratePrinter.spin()
                     when (it.changeType) {
-                        ADD -> it.newId.source()
-                        MODIFY -> it.newId.source().link(it.oldId.source(), info)
-                        DELETE -> it.oldId.source().delete()
-                        COPY, RENAME -> {
+                        MODIFY -> it.newId.source().link(it.oldId.source(), parentCommit, childCommit)
+                        COPY, RENAME, ADD, DELETE -> {
                             /*should not matter to our satd tracking*/
                         }
                         null -> TODO()
@@ -121,21 +118,10 @@ class Main(val git: Git) {
         return objectSatd
     }
 
-    private fun DiffEntry.toInfo(oldCommitId: AnyObjectId, newCommitId: AnyObjectId) =
-        Info(
-            changeType = changeType,
-            oldCommitId = oldCommitId,
-            newCommitId = newCommitId,
-            newId = newId.toObjectId(),
-            oldId = oldId.toObjectId(),
-            newPath = newPath,
-            oldPath = oldPath
-        )
-
 
     inner class SourceInfo(val objectId: ObjectId, val methods: MutableMap<String, Method>) {
 
-        fun link(oldSource: SourceInfo, info: Info) {
+        fun link(oldSource: SourceInfo, oldCommitId: AnyObjectId, newCommitId: AnyObjectId) {
             //we are interested in disappearing satd to the next state of the method
             //we are not interested in the previous state of a method with satd
 
@@ -150,29 +136,20 @@ class Main(val git: Git) {
             oldSatd.forEach { old ->
                 val new = methods.get(old.name)!!
                 if (old.hasSatd && new.exists && !new.hasSatd) {
-                    println("from ${info.oldCommitId.abb} to ${info.newCommitId.abb} satd disappeared")
-
+                    println("-".repeat(50))
+                    println("from ${oldCommitId.abb} to ${newCommitId.abb} satd disappeared")
+                    println("old------------------")
+                    println("${old.method}")
+                    println("new------------------")
+                    println("${new.method}")
                 }
             }
         }
 
-        fun delete() {
-
-        }
 
     }
 }
 
-
-data class Info(
-    val changeType: DiffEntry.ChangeType,
-    val oldCommitId: AnyObjectId,
-    val newCommitId: AnyObjectId,
-    val newId: AnyObjectId,
-    val oldId: AnyObjectId,
-    val newPath: String,
-    val oldPath: String
-)
 
 
 private val AnyObjectId.esc get() = "\"$this\""
