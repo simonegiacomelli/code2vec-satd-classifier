@@ -22,19 +22,19 @@ import java.nio.charset.Charset
 /**
  * Creates graph of satd evolution through commits
  */
-class Grapher3(val git: Git) {
+class Main(val git: Git) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val git = satd_gp1().apply { rebuild() }.git
-//            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
+//            val git = satd_gp1().apply { rebuild() }.git
+            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
 //            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
 //            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
 //            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
             git.printStats()
 //    val commits = Collector(git.repository).commits()
-            val g = Grapher3(git).apply { trackSatd() }
+            val g = Main(git).apply { trackSatd() }
 //            DotGraph(g.allSatds, git.repository.workTree.name).full()
         }
     }
@@ -111,7 +111,6 @@ class Grapher3(val git: Git) {
         val objectSatd = allSatds.getOrPut(objectId) {
             sourceRate.spin()
             val content = objectId.content()
-//            val content = ""
             val satdMethods = findMethodsWithSatd(content)
 
             if (satdMethods.isNotEmpty())
@@ -134,7 +133,7 @@ class Grapher3(val git: Git) {
         )
 
 
-    inner class SourceInfo(val objectId: ObjectId, val methods: MutableMap<String, IMethod>) {
+    inner class SourceInfo(val objectId: ObjectId, val methods: MutableMap<String, Method>) {
 
         fun link(oldSource: SourceInfo, info: Info) {
             //we are interested in disappearing satd to the next state of the method
@@ -152,9 +151,8 @@ class Grapher3(val git: Git) {
                 val new = methods.get(old.name)!!
                 if (old.hasSatd && new.exists && !new.hasSatd) {
                     println("from ${info.oldCommitId.abb} to ${info.newCommitId.abb} satd disappeared")
+
                 }
-//                old.childs.add(new)
-//                new.parents.add(old)
             }
         }
 

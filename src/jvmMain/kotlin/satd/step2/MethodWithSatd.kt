@@ -1,14 +1,21 @@
 package satd.step2
 
+import com.github.javaparser.JavaParser
+import com.github.javaparser.ast.Node
 import com.github.javaparser.ast.body.MethodDeclaration
+import com.github.javaparser.ast.comments.BlockComment
+import com.github.javaparser.ast.comments.Comment
+import com.github.javaparser.ast.comments.JavadocComment
+import com.github.javaparser.ast.comments.LineComment
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 
-abstract class IMethod {
+abstract class Method {
     abstract val name: String
     abstract val hasSatd: Boolean
     abstract val comment: String
     open val exists = true
-    val childs by lazy { mutableSetOf<IMethod>() }
-    val parents by lazy { mutableSetOf<IMethod>() }
+    val childs by lazy { mutableSetOf<Method>() }
+    val parents by lazy { mutableSetOf<Method>() }
 
     override fun equals(other: Any?): Boolean {
         TODO()
@@ -19,7 +26,7 @@ abstract class IMethod {
     }
 }
 
-class MethodWithSatd(val method: MethodDeclaration, override val comment: String) : IMethod() {
+private class MethodWithSatd(val method: MethodDeclaration, override val comment: String) : Method() {
     override val hasSatd get() = true
 
     override val name get() = method.name.asString()!!
@@ -47,4 +54,75 @@ class MethodWithSatd(val method: MethodDeclaration, override val comment: String
     override fun hashCode(): Int {
         return method.hashCode()
     }
+}
+
+
+fun findMethodsWithSatd(content: String): List<Method> {
+    val satdList = mutableSetOf<MethodWithSatd>()
+    val methodList = mutableSetOf<MethodDeclaration>()
+    /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
+    fun addMethod(method: MethodDeclaration, comment: Comment) {
+
+        if (MethodWithSatd.foundIn(comment.content))
+            if (!methodList.contains(method)) {
+                satdList.add(MethodWithSatd(method, comment.content))
+                methodList.add(method)
+            }
+    }
+
+    val cu = JavaParser().parse(content)!!
+    cu.result.get().types.filterNotNull().forEach { type ->
+        type.methods.forEach { method ->
+            method.accept(object : VoidVisitorAdapter<Node>() {
+                override fun visit(n: BlockComment, arg: Node?) {
+                    addMethod(method, n)
+                }
+
+                override fun visit(n: LineComment, arg: Node?) {
+                    addMethod(method, n)
+                }
+
+                override fun visit(n: JavadocComment, arg: Node?) {
+                    addMethod(method, n)
+                }
+
+            }, null)
+        }
+    }
+    return satdList.toList()
+}
+
+class MethodWithoutSatd(override val name: String) : Method() {
+    override val hasSatd get() = false
+    override val comment = ""
+}
+
+class MethodMissing(override val name: String) : Method() {
+    override val hasSatd get() = false
+    override val comment = ""
+    override val exists = false
+}
+
+fun findMethodsByName(content: String, names: Set<String>): List<Method> {
+
+    val cu = JavaParser().parse(content)!!
+
+    //look for methods that matches requested names
+    val foundMethods = cu.result.get().types
+        .filterNotNull()
+        .flatMap { type ->
+            type.methods
+                .filter { names.contains(it.nameAsString) }
+                .map { MethodWithoutSatd(it.nameAsString) }
+        }
+
+    val result = mutableListOf<Method>()
+    result.addAll(foundMethods)
+
+    //add all missing names that were not found
+    names.subtract(result.map { it.name })
+        .forEach {
+            result.add(MethodMissing(it))
+        }
+    return result.toList()
 }
