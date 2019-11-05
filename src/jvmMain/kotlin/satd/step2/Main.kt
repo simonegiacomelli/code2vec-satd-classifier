@@ -12,6 +12,8 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
@@ -27,6 +29,7 @@ class Main(val git: Git) {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
+            setupDatabase()
             val git = satd_gp1().apply { rebuild() }.git
 //            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
 //            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
@@ -40,7 +43,7 @@ class Main(val git: Git) {
     }
 
     val repo = git.repository
-    val repoName get() = git.repository.workTree.name
+    val repoName = repo.workTree.name
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
 
     val reader = git.repository.newObjectReader()
@@ -95,7 +98,7 @@ class Main(val git: Git) {
                     when (it.changeType) {
                         MODIFY -> it.newId.source().link(it.oldId.source(), parentCommit, childCommit)
                         COPY, RENAME, ADD, DELETE -> {
-                            /*should not matter to our satd tracking*/
+                            /* should not matter to our satd tracking */
                         }
                         null -> TODO()
                     }
@@ -142,6 +145,14 @@ class Main(val git: Git) {
                     println("${old.method}")
                     println("new------------------")
                     println("${new.method}")
+                    transaction {
+                        DbSatds.insert {
+                            it[this.repo] = repoName
+                            it[this.commit] = "${newCommitId.name}"
+                            it[this.satd] = "${old.method}"
+                            it[this.fixed] = "${new.method}"
+                        }
+                    }
                 }
             }
         }
@@ -149,7 +160,6 @@ class Main(val git: Git) {
 
     }
 }
-
 
 
 private val AnyObjectId.esc get() = "\"$this\""
