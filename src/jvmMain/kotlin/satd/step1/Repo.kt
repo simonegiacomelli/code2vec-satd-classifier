@@ -12,6 +12,8 @@ class Repo(val url: URL) {
     val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$friendlyName")
 
+    fun newGit() = open(folder)
+
     fun clone(): Repo {
         logln("Cloning ${url}")
 

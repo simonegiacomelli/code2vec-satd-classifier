@@ -24,8 +24,6 @@ class Persistence {
     }
 }
 
-fun validationSql() = "CALL SESSION_ID()"
-
 val databasePath get() = Folders.database.resolve("h2satd/db1")
 
 fun connection(): Connection {
@@ -33,10 +31,9 @@ fun connection(): Connection {
     return DriverManager.getConnection(
         "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=19091",
         "sa",
-        "sa"
+        ""
     )
 }
-
 
 fun setupDatabase() {
     Database.connect(::connection)
