@@ -42,7 +42,8 @@ kotlin {
 
                 implementation 'org.eclipse.jgit:org.eclipse.jgit:5.4.2.201908231537-r'
                 implementation 'com.github.javaparser:javaparser-core:3.15.1'
-
+                implementation 'com.h2database:h2:1.4.200'
+                implementation 'org.jetbrains.exposed:exposed:0.17.6'
             }
         }
         jvmTest {
