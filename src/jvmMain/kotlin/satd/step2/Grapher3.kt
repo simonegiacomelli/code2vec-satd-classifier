@@ -27,8 +27,8 @@ class Grapher3(val git: Git) {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-//            val git = satd_gp1().apply { rebuild() }.git
-            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
+            val git = satd_gp1().apply { rebuild() }.git
+//            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
 //            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
 //            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
 //            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
@@ -95,7 +95,7 @@ class Grapher3(val git: Git) {
                     ratePrinter.spin()
                     when (it.changeType) {
                         ADD -> it.newId.source()
-                        MODIFY -> it.newId.source().link(it.oldId.source())
+                        MODIFY -> it.newId.source().link(it.oldId.source(), info)
                         DELETE -> it.oldId.source().delete()
                         COPY, RENAME -> {
                             /*should not matter to our satd tracking*/
@@ -112,7 +112,7 @@ class Grapher3(val git: Git) {
             sourceRate.spin()
             val content = objectId.content()
 //            val content = ""
-            val satdMethods = Source(content).satdMethods
+            val satdMethods = findMethodsWithSatd(content)
 
             if (satdMethods.isNotEmpty())
                 satdRate.spin()
@@ -136,8 +136,26 @@ class Grapher3(val git: Git) {
 
     inner class SourceInfo(val objectId: ObjectId, val methods: MutableMap<String, IMethod>) {
 
-        fun link(old: SourceInfo) {
+        fun link(oldSource: SourceInfo, info: Info) {
+            //we are interested in disappearing satd to the next state of the method
+            //we are not interested in the previous state of a method with satd
 
+            val oldSatd = oldSource.methods.values.filter { it.hasSatd }
+            val oldNamesWithSatd = oldSatd.map { it.name }.toSet()
+            val missingNewMethodsNames = oldNamesWithSatd.subtract(methods.keys)
+
+            val missingNewMethods = findMethodsByName(objectId.content(), missingNewMethodsNames)
+            methods.putAll(missingNewMethods.map { it.name to it })
+
+            //now old and new contains matching methods instances
+            oldSatd.forEach { old ->
+                val new = methods.get(old.name)!!
+                if (old.hasSatd && new.exists && !new.hasSatd) {
+                    println("from ${info.oldCommitId.abb} to ${info.newCommitId.abb} satd disappeared")
+                }
+//                old.childs.add(new)
+//                new.parents.add(old)
+            }
         }
 
         fun delete() {
@@ -146,3 +164,18 @@ class Grapher3(val git: Git) {
 
     }
 }
+
+
+data class Info(
+    val changeType: DiffEntry.ChangeType,
+    val oldCommitId: AnyObjectId,
+    val newCommitId: AnyObjectId,
+    val newId: AnyObjectId,
+    val oldId: AnyObjectId,
+    val newPath: String,
+    val oldPath: String
+)
+
+
+private val AnyObjectId.esc get() = "\"$this\""
+private val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"

@@ -5,12 +5,21 @@ import com.github.javaparser.ast.body.MethodDeclaration
 abstract class IMethod {
     abstract val name: String
     abstract val hasSatd: Boolean
+    abstract val comment: String
+    open val exists = true
     val childs by lazy { mutableSetOf<IMethod>() }
     val parents by lazy { mutableSetOf<IMethod>() }
 
+    override fun equals(other: Any?): Boolean {
+        TODO()
+    }
+
+    override fun hashCode(): Int {
+        TODO()
+    }
 }
 
-class Method(val method: MethodDeclaration, val comment: String) : IMethod() {
+class MethodWithSatd(val method: MethodDeclaration, override val comment: String) : IMethod() {
     override val hasSatd get() = true
 
     override val name get() = method.name.asString()!!
@@ -29,10 +38,10 @@ class Method(val method: MethodDeclaration, val comment: String) : IMethod() {
         }
     }
 
-    override fun equals(obj: Any?): Boolean {
-        return if (obj == null || obj !is Method) {
+    override fun equals(other: Any?): Boolean {
+        return if (other == null || other !is MethodWithSatd) {
             false
-        } else method.equals(obj.method)
+        } else method.equals(other.method)
     }
 
     override fun hashCode(): Int {
