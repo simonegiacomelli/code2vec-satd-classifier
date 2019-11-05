@@ -53,8 +53,6 @@ class Grapher3(val git: Git) {
     val ratePrinter =
         AntiSpin { println("commit#:${commitRate.spinCount} edge#:${edgeRate.spinCount} source#:${sourceRate.spinCount} edge/sec:$edgeRate source/sec:$sourceRate satd/sec: $satdRate") }
 
-    val satdCache = SatdCache(repoName)
-
     fun trackSatd() {
 
 
