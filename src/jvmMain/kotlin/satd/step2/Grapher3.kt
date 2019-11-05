@@ -16,7 +16,6 @@ import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.printStats
-import java.io.File
 import java.nio.charset.Charset
 
 
@@ -75,7 +74,7 @@ class Grapher3(val git: Git) {
     }
 
     private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
-    private fun AbbreviatedObjectId.satds() = processedSatds(this.toObjectId())
+    private fun AbbreviatedObjectId.source() = processedSatds(this.toObjectId())
     private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
 
     private fun visitEdge(
@@ -96,9 +95,9 @@ class Grapher3(val git: Git) {
                     val info = it.toInfo(parentCommit, childCommit)
                     ratePrinter.spin()
                     when (it.changeType) {
-                        ADD -> it.newId.satds().add(info)
-                        MODIFY -> it.newId.satds().modify(info, it.oldId.satds())
-                        DELETE -> it.oldId.satds().delete(info)
+                        ADD -> it.newId.source().add(info)
+                        MODIFY -> it.newId.source().modify(info, it.oldId.source())
+                        DELETE -> it.oldId.source().delete(info)
                         COPY, RENAME -> {
                             /*should not matter to our satd tracking*/
                         }
@@ -204,8 +203,4 @@ class DotGraph(val allSatds: MutableMap<ObjectId, SourceWithId>, val filename: S
             Runtime.getRuntime().exec(cmd, null, folder).waitFor()
         }
     }
-}
-
-class SatdCache(repoName: String) {
-
 }
