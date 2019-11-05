@@ -15,6 +15,9 @@ class Main {
     fun go() {
         logln("Starting")
 
+        if (!Folders.database_db1.toFile().deleteRecursively())
+            throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
+
         repoUrlList()
             .stream()
             .parallel()

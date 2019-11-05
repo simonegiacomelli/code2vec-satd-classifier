@@ -18,6 +18,7 @@ import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.printStats
+import satd.utils.stats
 import java.nio.charset.Charset
 
 
@@ -27,22 +28,8 @@ import java.nio.charset.Charset
 class Find(val git: Git) {
 
     companion object {
-
         init {
             setupDatabase()
-        }
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val git = satd_gp1().apply { rebuild() }.git
-//            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
-//            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
-//            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
-//            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
-            git.printStats()
-//    val commits = Collector(git.repository).commits()
-            val g = Find(git).apply { trackSatd() }
-//            DotGraph(g.allSatds, git.repository.workTree.name).full()
         }
     }
 
@@ -57,17 +44,22 @@ class Find(val git: Git) {
 
     val repo = git.repository
     val repoName = repo.workTree.name
+    val commitCount by lazy { git.log().all().call().count() }
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
 
     val reader = git.repository.newObjectReader()
     val emptyTreeIterator = EmptyTreeIterator()
 
-    val edgeRate = Rate(10)
     val sourceRate = Rate(10)
     val satdRate = Rate(10)
     val commitRate = Rate(10)
     val ratePrinter =
-        AntiSpin { println("commit#:${commitRate.spinCount} edge#:${edgeRate.spinCount} source#:${sourceRate.spinCount} edge/sec:$edgeRate source/sec:$sourceRate satd/sec: $satdRate") }
+        AntiSpin(10000) {
+            println(
+                "${repoName.padEnd(50)} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
+                        "satd/sec: $satdRate source/sec:$sourceRate "
+            )
+        }
 
     fun trackSatd() {
 
@@ -84,7 +76,6 @@ class Find(val git: Git) {
             ratePrinter.spin()
         }
         ratePrinter.callback()
-
     }
 
     private fun visitEdge(
@@ -93,7 +84,6 @@ class Find(val git: Git) {
         childCommit: ObjectId,
         parentCommit: ObjectId
     ) {
-        edgeRate.spin()
         DiffFormatter(DisabledOutputStream.INSTANCE).use { formatter ->
             formatter.setRepository(git.repository)
             val entries = formatter.scan(parentIterator, childIterator)
@@ -120,10 +110,6 @@ class Find(val git: Git) {
             sourceRate.spin()
             val content = objectId.content()
             val satdMethods = findMethodsWithSatd(content)
-
-            if (satdMethods.isNotEmpty())
-                satdRate.spin()
-
             SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
         }
         return objectSatd
@@ -147,12 +133,6 @@ class Find(val git: Git) {
             oldSatd.forEach { old ->
                 val new = methods.get(old.name)!!
                 if (old.hasSatd && new.exists && !new.hasSatd) {
-                    println("-".repeat(50))
-                    println("from ${oldCommitId.abb} to ${newCommitId.abb} satd disappeared")
-                    println("old------------------")
-                    println("${old.method}")
-                    println("new------------------")
-                    println("${new.method}")
                     transaction {
                         DbSatds.insert {
                             it[this.repo] = repoName
@@ -161,13 +141,29 @@ class Find(val git: Git) {
                             it[this.fixed] = "${new.method}"
                         }
                     }
+                    satdRate.spin()
                 }
             }
         }
 
 
     }
+}
 
-
+class FindMain {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val git = satd_gp1().apply { rebuild() }.git
+//            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
+//            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
+//            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
+//            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
+            git.printStats()
+//    val commits = Collector(git.repository).commits()
+            val g = Find(git).apply { trackSatd() }
+//            DotGraph(g.allSatds, git.repository.workTree.name).full()
+        }
+    }
 }
 

@@ -24,7 +24,7 @@ class Persistence {
     }
 }
 
-val databasePath get() = Folders.database.resolve("h2satd/db1")
+val databasePath get() = Folders.database_db1.resolve("h2satd")
 
 fun connection(): Connection {
     Class.forName("org.h2.Driver")
@@ -44,14 +44,14 @@ fun setupDatabase() {
 }
 
 object DbSatds : LongIdTable() {
-    val commit = varchar("commit", 50)
     val satd = text("satd")
     val fixed = text("fixed")
+    val commit = varchar("commit", 50)
     val repo = varchar("repo", 200)
 
-    init {
-        index(true, repo, commit) // Unique index
-    }
+//    init {
+//        index(true, repo, commit) // Unique index
+//    }
 }
 
 class DbSatd(id: EntityID<Long>) : LongEntity(id) {

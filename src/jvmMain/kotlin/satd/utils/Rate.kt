@@ -5,7 +5,7 @@ import java.util.*
 /**
  * Keep track of spin per second in a time window
  */
-class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
+class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis) {
     val counter = LinkedList<Int>()
     var spinCount = 0
     var trackedSecond: Int = -1
@@ -30,7 +30,7 @@ class Rate(val window: Int, val time: () -> Long = System::currentTimeMillis) {
 
         repeat(secs) { counter.addFirst(0) }
 
-        val exceedSize = counter.size - window
+        val exceedSize = counter.size - windowSecs
         repeat(exceedSize) { counter.removeLast() }
 
         counter[0]++
