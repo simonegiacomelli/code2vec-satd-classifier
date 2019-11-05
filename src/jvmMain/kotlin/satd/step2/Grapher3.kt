@@ -16,6 +16,7 @@ import satd.step1.Folders
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.printStats
+import java.io.File
 import java.nio.charset.Charset
 
 
@@ -35,11 +36,12 @@ class Grapher3(val git: Git) {
             git.printStats()
 //    val commits = Collector(git.repository).commits()
             val g = Grapher3(git).apply { trackSatd() }
-            SatdGraph(g.allSatds).dot(git.repository.workTree.name)
+//            DotGraph(g.allSatds, git.repository.workTree.name).full()
         }
     }
 
     val repo = git.repository
+    val repoName get() = git.repository.workTree.name
     val allSatds = mutableMapOf<ObjectId, SourceWithId>()
 
     val reader = git.repository.newObjectReader()
@@ -52,6 +54,7 @@ class Grapher3(val git: Git) {
     val ratePrinter =
         AntiSpin { println("commit#:${commitRate.spinCount} edge#:${edgeRate.spinCount} source#:${sourceRate.spinCount} edge/sec:$edgeRate source/sec:$sourceRate satd/sec: $satdRate") }
 
+    val satdCache = SatdCache(repoName)
 
     fun trackSatd() {
 
@@ -109,8 +112,8 @@ class Grapher3(val git: Git) {
     private fun processedSatds(objectId: ObjectId): SourceWithId {
         val objectSatd = allSatds.getOrPut(objectId) {
             sourceRate.spin()
-//            val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
-            val content = ""
+            val content = repo.open(objectId).bytes.toString(Charset.forName("UTF-8"))
+//            val content = ""
             val objectSatd = SourceWithId(objectId, content)
             if (objectSatd.satdList.isNotEmpty())
                 satdRate.spin()
@@ -133,11 +136,40 @@ class Grapher3(val git: Git) {
 }
 
 
-class SatdGraph(val allSatds: MutableMap<ObjectId, SourceWithId>) {
+class DotGraph(val allSatds: MutableMap<ObjectId, SourceWithId>, val filename: String) {
     val AnyObjectId.esc get() = "\"$this\""
     val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
+    val folder = Folders.satd.resolve("dots").toFile()
 
-    fun dot(filename: String) {
+    fun full(): Dot {
+
+        folder.mkdirs()
+        folder.resolve("$filename.dot").bufferedWriter().use { buf ->
+            buf.appendln("digraph one {")
+            allSatds.values.forEach { child ->
+                child.parents.forEach { parent ->
+                    val label = parent.value.joinToString(", ") {
+                        "${it.oldCommitId.abb} -> ${it.newCommitId.abb} "
+                    }
+//                    val label = ${child} -> ${parent.key}
+                    buf.appendln("  ${child.esc} -> ${parent.key.esc} [ label = \"$label\"] ")
+                }
+                val labelList = mutableListOf(child.names
+                    .map { it.substringAfterLast("/") }
+                    .joinToString(", "))
+                labelList.addAll(child.commits.map { it.abb })
+
+                val label = labelList.joinToString("\\n")
+                buf.appendln("  ${child.esc} [ label = \"$label\" ] ")
+            }
+            buf.appendln("}")
+        }
+        return Dot(filename)
+
+    }
+
+    fun satd(): Dot {
+        val filename = this.filename + "_satd"
         val folder = Folders.satd.resolve("dots").toFile()
         folder.mkdirs()
         folder.resolve("$filename.dot").bufferedWriter().use { buf ->
@@ -160,9 +192,20 @@ class SatdGraph(val allSatds: MutableMap<ObjectId, SourceWithId>) {
             }
             buf.appendln("}")
         }
+        return Dot(filename)
 
-        val cmd = "dot -Tpng -o $filename.png $filename.dot"
-        println("Running [$cmd]")
-        Runtime.getRuntime().exec(cmd,null,folder).waitFor()
     }
+
+    inner class Dot(val filename: String) {
+
+        fun toPng() {
+            val cmd = "dot -Tpng -o $filename.png $filename.dot"
+            println("Running [$cmd]")
+            Runtime.getRuntime().exec(cmd, null, folder).waitFor()
+        }
+    }
+}
+
+class SatdCache(repoName: String) {
+
 }

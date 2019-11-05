@@ -21,7 +21,7 @@ class Source(content: String) {
 
             if (Method.foundIn(comment.content))
                 if (!methodList.contains(method)) {
-                    satdList.add(Method(method))
+                    satdList.add(Method(method,comment.content))
                     methodList.add(method)
                 }
         }

@@ -11,6 +11,7 @@ class SourceWithId(src: AnyObjectId, content: String) : ObjectId(src) {
     val satdList = Source(content).satdList
 
     val parents = mutableMapOf<SourceWithId, MutableList<Info>>()
+//    val childs = mutableSetOf<SourceWithId>()
     val names = mutableSetOf<String>()
     val commits = mutableSetOf<AnyObjectId>()
 
@@ -23,8 +24,9 @@ class SourceWithId(src: AnyObjectId, content: String) : ObjectId(src) {
         info: Info,
         oldSatd: SourceWithId
     ) {
-        val list = parents.getOrPut(oldSatd) { mutableListOf() }
-        list.add(info)
+        val parentCommits = parents.getOrPut(oldSatd) { mutableListOf() }
+        parentCommits.add(info)
+//        oldSatd.childs.add(this)
         names.add(info.newPath)
         commits.add(info.newCommitId)
     }

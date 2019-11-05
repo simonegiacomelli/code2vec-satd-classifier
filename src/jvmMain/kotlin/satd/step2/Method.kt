@@ -2,9 +2,11 @@ package satd.step2
 
 import com.github.javaparser.ast.body.MethodDeclaration
 
-class Method(val method: MethodDeclaration) {
+class Method(val method: MethodDeclaration, val comment: String) {
     val childs by lazy { mutableSetOf<Method>() }
     val parents by lazy { mutableSetOf<Method>() }
+
+
 
     companion object {
         fun foundIn(comment: String): Boolean {
