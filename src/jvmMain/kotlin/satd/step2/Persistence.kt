@@ -10,6 +10,8 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
+import java.sql.Connection
+import java.sql.DriverManager
 
 class Persistence {
     companion object {
