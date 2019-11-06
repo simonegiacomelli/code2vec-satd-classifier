@@ -70,9 +70,15 @@ jvmJar {
     from(new File(jsBrowserWebpack.entry.name, jsBrowserWebpack.outputPath))
 }
 
-task run(type: JavaExec, dependsOn: [jvmJar]) {
+task step1(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step1.MainKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
+}
+task step2(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
     args = []
 }
