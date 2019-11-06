@@ -19,7 +19,7 @@ class Main {
 
         repoUrlList()
             .stream()
-            .parallel()
+//            .parallel()
             .map { logln("Starting thread"); it }
             .map { Repo(it).clone() }
             .map { Find(it.newGit()).trackSatd() }
