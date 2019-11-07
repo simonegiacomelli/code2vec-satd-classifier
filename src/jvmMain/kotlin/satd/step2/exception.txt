@@ -1,3 +1,43 @@
+elastic_elasticsearch                              commit#:8841/91940 source#:29453  satd#:40 satd/sec: 0.1 source/sec:14.6
+elastic_elasticsearch                              commit#:9216/91940 source#:29563  satd#:40 satd/sec: 0.1 source/sec:11.0
+elastic_elasticsearch                              commit#:9515/91940 source#:29760  satd#:40 satd/sec: 0.1 source/sec:19.7
+elastic_elasticsearch                              commit#:9548/91940 source#:29922  satd#:40 satd/sec: 0.1 source/sec:16.2
+elastic_elasticsearch                              commit#:9673/91940 source#:29991  satd#:40 satd/sec: 0.1 source/sec:6.9
+elastic_elasticsearch                              commit#:9749/91940 source#:30168  satd#:40 satd/sec: 0.1 source/sec:17.7
+elastic_elasticsearch                              commit#:10001/91940 source#:30272  satd#:40 satd/sec: 0.1 source/sec:10.4
+elastic_elasticsearch                              commit#:10168/91940 source#:30402  satd#:40 satd/sec: 0.1 source/sec:14.6
+elastic_elasticsearch                              commit#:10223/91940 source#:30681  satd#:40 satd/sec: 0.1 source/sec:27.9
+elastic_elasticsearch                              commit#:10402/91940 source#:30787  satd#:40 satd/sec: 0.1 source/sec:10.6
+elastic_elasticsearch                              commit#:10484/91940 source#:31080  satd#:40 satd/sec: 0.1 source/sec:29.3
+Exception in thread "main" java.util.NoSuchElementException: No value present
+        at java.util.Optional.get(Optional.java:135)
+        at satd.step2.FindMethodsWithSatdKt.findMethodsWithSatd(findMethodsWithSatd.kt:26)
+        at satd.step2.Find.processedSatds(Find.kt:112)
+        at satd.step2.Find.source(Find.kt:39)
+        at satd.step2.Find.visitEdge(Find.kt:97)
+        at satd.step2.Find.trackSatd(Find.kt:72)
+        at satd.step2.Main$go$3.apply(Main.kt:25)
+        at satd.step2.Main$go$3.apply(Main.kt:13)
+        at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193)
+        at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193)
+        at java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:193)
+        at java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1382)
+        at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:481)
+        at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
+        at java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:708)
+        at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+        at java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:499)
+        at kotlin.streams.jdk8.StreamsKt.toList(Streams.kt:60)
+        at satd.step2.Main.go(Main.kt:26)
+        at satd.step2.MainKt.main(Main.kt:10)
+        at satd.step2.MainKt.main(Main.kt)
+
+
+
+
+OLD EXCEPTION (parallel)
+
+
 Exception in thread "main" java.util.NoSuchElementException
         at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
         at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
