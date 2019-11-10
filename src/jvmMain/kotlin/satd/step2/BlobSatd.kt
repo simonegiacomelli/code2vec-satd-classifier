@@ -5,24 +5,23 @@ import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Repository
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.utils.Rate
 import java.nio.charset.Charset
 
-class BlobSatd(val repo: Repository,val  stat: Stat) {
+class BlobSatd(val repo: Repository, val stat: Stat) {
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
-
-
     val repoName = repo.workTree.name
+    val cache = Cache("containsSatd", repoName)
 
-    fun processedSatds(objectId: ObjectId): SourceInfo {
-        val objectSatd = allSatds.getOrPut(objectId) {
+    fun processedSatds(objectId: ObjectId): SourceInfo =
+        allSatds.getOrPut(objectId) {
             stat.sourceRate.spin()
-            val content = objectId.content()
-            val satdMethods = findMethodsWithSatd(content)
+            val containsSatd = cache[objectId.name]
+            val satdMethods = if (containsSatd != "1") findMethodsWithSatd(objectId.content()) else emptyList()
+            if (containsSatd == null)
+                cache[objectId.name] = if (satdMethods.isEmpty()) "0" else "1"
+
             SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
         }
-        return objectSatd
-    }
 
     private fun ObjectId.content() = repo.open(this).bytes.toString(Charset.forName("UTF-8"))
 
