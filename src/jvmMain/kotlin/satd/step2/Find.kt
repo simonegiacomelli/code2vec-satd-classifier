@@ -12,8 +12,6 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
-import satd.utils.AntiSpin
-import satd.utils.Rate
 import satd.utils.printStats
 
 
@@ -39,24 +37,12 @@ class Find(val git: Git) {
 
     val repo = git.repository
     val repoName = repo.workTree.name
-    val commitCount by lazy { git.log().all().call().count() }
-    val stat = Stat()
+    val stat = Stat(repoName, commitCount = git.log().all().call().count())
     val blobSatd = BlobSatd(repo, stat)
-
-    val sourceRate get() = stat.sourceRate
-    val satdRate get() = stat.satdRate
 
     val reader = git.repository.newObjectReader()
 
     val emptyTreeIterator = EmptyTreeIterator()
-
-    val ratePrinter =
-        AntiSpin(10000) {
-            println(
-                "${repoName.padEnd(50)} commit#:${stat.commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
-                        "satd/sec: $satdRate source/sec:$sourceRate "
-            )
-        }
 
     fun trackSatd() {
 
@@ -70,9 +56,9 @@ class Find(val git: Git) {
                 }
             else visitEdge(child.newTreeIterator(), emptyTreeIterator, child, ObjectId.zeroId())
 
-            ratePrinter.spin()
+            stat.printSpin()
         }
-        ratePrinter.callback()
+        stat.printForce()
     }
 
     private fun visitEdge(
@@ -89,7 +75,7 @@ class Find(val git: Git) {
                 .filterNotNull()
                 .filter { it.isJavaSource() }
                 .forEach {
-                    ratePrinter.spin()
+                    stat.ratePrinter.spin()
                     when (it.changeType) {
                         MODIFY -> it.newId.source().link(it.oldId.source(), parentCommit, childCommit)
                         COPY, RENAME, ADD, DELETE -> {
