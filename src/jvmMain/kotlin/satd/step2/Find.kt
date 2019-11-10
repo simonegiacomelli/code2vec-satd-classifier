@@ -45,6 +45,7 @@ class Find(val git: Git) {
     val emptyTreeIterator = EmptyTreeIterator()
 
     fun trackSatd() {
+        git.printStats()
         blobSatd.cache.load()
 
         for (child in git.log().all().call()) {
