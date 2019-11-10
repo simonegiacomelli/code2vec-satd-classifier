@@ -12,12 +12,9 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.printStats
-import java.nio.charset.Charset
 
 
 /**
@@ -43,18 +40,20 @@ class Find(val git: Git) {
     val repo = git.repository
     val repoName = repo.workTree.name
     val commitCount by lazy { git.log().all().call().count() }
-    val blobSatd = BlobSatd(repo)
-    val sourceRate get() = blobSatd.sourceRate
-    val satdRate get() = blobSatd.satdRate
+    val stat = Stat()
+    val blobSatd = BlobSatd(repo, stat)
+
+    val sourceRate get() = stat.sourceRate
+    val satdRate get() = stat.satdRate
 
     val reader = git.repository.newObjectReader()
+
     val emptyTreeIterator = EmptyTreeIterator()
 
-    val commitRate = Rate(10)
     val ratePrinter =
         AntiSpin(10000) {
             println(
-                "${repoName.padEnd(50)} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
+                "${repoName.padEnd(50)} commit#:${stat.commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
                         "satd/sec: $satdRate source/sec:$sourceRate "
             )
         }
@@ -63,7 +62,7 @@ class Find(val git: Git) {
 
 
         for (child in git.log().all().call()) {
-            commitRate.spin()
+            stat.commitRate.spin()
             if (child.parents.isNotEmpty())
                 child.parents.forEach {
                     val parent = it

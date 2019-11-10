@@ -8,16 +8,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Rate
 import java.nio.charset.Charset
 
-class BlobSatd(val repo: Repository) {
+class BlobSatd(val repo: Repository,val  stat: Stat) {
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
-    val sourceRate = Rate(10)
-    val satdRate = Rate(10)
+
 
     val repoName = repo.workTree.name
 
     fun processedSatds(objectId: ObjectId): SourceInfo {
         val objectSatd = allSatds.getOrPut(objectId) {
-            sourceRate.spin()
+            stat.sourceRate.spin()
             val content = objectId.content()
             val satdMethods = findMethodsWithSatd(content)
             SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
@@ -52,7 +51,7 @@ class BlobSatd(val repo: Repository) {
                             it[this.fixed] = "${new.method}"
                         }
                     }
-                    satdRate.spin()
+                    stat.satdRate.spin()
                 }
             }
         }
