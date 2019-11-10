@@ -80,5 +80,5 @@ task step2(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step2.MainKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
-    args = []
+    args = ['-XX:HeapDumpPath="heapdumps/"',]
 }

@@ -22,13 +22,21 @@ class Stat(repoName: String, commitCount: Int) {
     val satdRate = Rate(10)
     val commitRate = Rate(10)
 
+    val rt = Runtime.getRuntime()
+    val mb = 1024 * 1024
 
     val ratePrinter =
         AntiSpin(10000) {
             println(
                 "${repoName.padEnd(50)} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
-                        "satd/sec: $satdRate source/sec:$sourceRate "
+                        "satd/sec: $satdRate source/sec:$sourceRate ${mem()}"
             )
         }
+
+    private fun mem(): String {
+        val used = (rt.totalMemory() - rt.freeMemory()) / mb
+        val m = rt.maxMemory() / mb
+        return "mem:$used/$m"
+    }
 
 }
