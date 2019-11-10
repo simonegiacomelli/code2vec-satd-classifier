@@ -1,8 +1,9 @@
 package satd.step2
 
 import satd.step1.Folders
+import satd.utils.AntiSpin
 
-class Cache(val type: String, val context: String) {
+open class Cache(val type: String, val context: String) {
 
     val folder = Folders.cache.resolve(type)
     val filename = folder.resolve(context).toFile()
@@ -37,4 +38,11 @@ class Cache(val type: String, val context: String) {
                 }
         }
     }
+
+
+}
+
+class CacheSpin(type: String, context: String) : Cache(type, context) {
+    private val antiSpin = AntiSpin(windowMillis = 10000) { store() }
+    fun storeSpin() = antiSpin.spin()
 }

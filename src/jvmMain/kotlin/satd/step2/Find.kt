@@ -57,6 +57,7 @@ class Find(val git: Git) {
             else visitEdge(child.newTreeIterator(), emptyTreeIterator, child, ObjectId.zeroId())
 
             stat.printSpin()
+            blobSatd.cache.storeSpin()
         }
         stat.printForce()
         blobSatd.cache.store()

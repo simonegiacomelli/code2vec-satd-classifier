@@ -10,7 +10,7 @@ import java.nio.charset.Charset
 class BlobSatd(val repo: Repository, val stat: Stat) {
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
     val repoName = repo.workTree.name
-    val cache = Cache("containsSatd", repoName)
+    val cache = CacheSpin("containsSatd", repoName)
 
     fun processedSatds(objectId: ObjectId): SourceInfo =
         allSatds.getOrPut(objectId) {
