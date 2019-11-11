@@ -14,6 +14,7 @@ internal class SourceTest {
     val class5block by lazy { load("Class5block.java") }
     val class5jdoc by lazy { load("Class5jdoc.java") }
     val class5line by lazy { load("Class5line.java") }
+    val fixmethod by lazy { load("Fixmethod.java") }
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/$s")!!.readText()
 
@@ -56,7 +57,13 @@ internal class SourceTest {
     @Test
     fun `method jdoc comment`() {
         val target = findMethodsWithSatd(class5jdoc)
+
         assertEquals(1, target.size)
+    }
+    @Test
+    fun `comment fixmethod should not be matched`() {
+        val target = findMethodsWithSatd(fixmethod)
+        assertEquals(0, target.size)
     }
 
     //todo should I include this?
