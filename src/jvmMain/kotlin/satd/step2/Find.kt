@@ -67,7 +67,7 @@ class Find(val git: Git) {
     private fun visitEdge(
         childIterator: AbstractTreeIterator,
         parentIterator: AbstractTreeIterator,
-        childCommit: ObjectId,
+        childCommit: RevCommit,
         parentCommit: ObjectId
     ) {
         DiffFormatter(DisabledOutputStream.INSTANCE).use { formatter ->

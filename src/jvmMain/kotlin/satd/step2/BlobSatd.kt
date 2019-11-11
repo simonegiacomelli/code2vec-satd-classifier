@@ -3,6 +3,7 @@ package satd.step2
 import org.eclipse.jgit.lib.AnyObjectId
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Repository
+import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.charset.Charset
@@ -27,7 +28,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
 
     inner class SourceInfo(val objectId: ObjectId, val methods: MutableMap<String, Method>) {
 
-        fun link(oldSource: SourceInfo, oldCommitId: AnyObjectId, newCommitId: AnyObjectId) {
+        fun link(oldSource: SourceInfo, oldCommitId: AnyObjectId, newCommitId: RevCommit) {
             //we are interested in disappearing satd to the next state of the method
             //we are not interested in the previous state of a method with satd
 
@@ -51,6 +52,8 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                             it[this.pattern] = "${old.pattern}"
                             it[this.satd_len] = "${old.method}".lines().size
                             it[this.fixed_len] = "${new.method}".lines().size
+                            it[this.commit_message] = newCommitId.fullMessage
+
                         }
                     }
                     stat.satdRate.spin()

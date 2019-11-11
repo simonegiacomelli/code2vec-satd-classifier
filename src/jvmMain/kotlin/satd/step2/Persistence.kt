@@ -46,6 +46,7 @@ object DbSatds : LongIdTable() {
     val satd_len = integer("satd_len").nullable()
     val fixed_len = integer("fixed_len").nullable()
     val pattern = varchar("pattern", 200)
+    val commit_message = text("commit_message")
 
 //    init {
 //        index(true, repo, commit) // Unique index
