@@ -49,6 +49,8 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                             it[this.satd] = "${old.method}"
                             it[this.fixed] = "${new.method}"
                             it[this.pattern] = "${old.pattern}"
+                            it[this.satd_len] = "${old.method}".lines().size
+                            it[this.fixed_len] = "${new.method}".lines().size
                         }
                     }
                     stat.satdRate.spin()
