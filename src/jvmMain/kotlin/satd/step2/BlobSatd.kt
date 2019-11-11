@@ -16,7 +16,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
         allSatds.getOrPut(objectId) {
             stat.sourceRate.spin()
             val containsSatd = cache[objectId.name]
-            val satdMethods = if (containsSatd != "1") findMethodsWithSatd(objectId.content()) else emptyList()
+            val satdMethods = if (containsSatd != "0") findMethodsWithSatd(objectId.content()) else emptyList()
             if (containsSatd == null)
                 cache[objectId.name] = if (satdMethods.isEmpty()) "0" else "1"
 
@@ -48,6 +48,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                             it[this.commit] = "${newCommitId.name}"
                             it[this.satd] = "${old.method}"
                             it[this.fixed] = "${new.method}"
+                            it[this.pattern] = "${old.pattern}"
                         }
                     }
                     stat.satdRate.spin()

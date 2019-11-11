@@ -14,14 +14,9 @@ import satd.step1.Folders
 import java.sql.Connection
 import java.sql.DriverManager
 
-class Persistence {
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            setupDatabase()
-            Server.startWebServer(connection())
-        }
-    }
+fun main() {
+    setupDatabase()
+    Server.startWebServer(connection())
 }
 
 val databasePath get() = Folders.database_db1.resolve("h2satd")
@@ -48,6 +43,9 @@ object DbSatds : LongIdTable() {
     val fixed = text("fixed")
     val commit = varchar("commit", 50)
     val repo = varchar("repo", 200)
+    val satd_len = integer("satd_len").nullable()
+    val fixed_len = integer("fixed_len").nullable()
+    val pattern = varchar("pattern", 200)
 
 //    init {
 //        index(true, repo, commit) // Unique index
