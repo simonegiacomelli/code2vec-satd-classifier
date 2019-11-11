@@ -8,6 +8,7 @@ import com.github.javaparser.ast.comments.Comment
 import com.github.javaparser.ast.comments.JavadocComment
 import com.github.javaparser.ast.comments.LineComment
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
+import java.util.regex.Pattern
 
 fun findMethodsWithSatd(content: String): List<Method> {
     val satdList = mutableSetOf<MethodWithSatd>()
@@ -57,8 +58,10 @@ class MethodWithSatd(
 
     companion object {
         fun match(comment: String): String? {
-            for (p in patterns)
-                if (comment.contains(p, ignoreCase = true)) return p
+            for ((p, r) in reg)
+                if (comment.contains(p, ignoreCase = true) &&
+                    r.matcher(comment).find())
+                    return p
             return null
         }
 
@@ -67,6 +70,7 @@ class MethodWithSatd(
             content.split('\n')
                 .map { it.trim() }
         }
+        val reg by lazy { patterns.map { Pair(it, Pattern.compile("""\b$it\b""", Pattern.CASE_INSENSITIVE)!!) } }
     }
 
     override fun equals(other: Any?): Boolean {
