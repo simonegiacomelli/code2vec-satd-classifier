@@ -80,5 +80,11 @@ task step2(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step2.MainKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
-    args = ['-XX:HeapDumpPath="heapdumps/"',]
+    args = ['-XX:HeapDumpPath="heapdumps/"']
+}
+task showdatabase(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.PersistenceKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
 }
