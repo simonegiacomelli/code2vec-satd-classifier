@@ -67,4 +67,5 @@ internal class SourceTest {
     }
 
     //TODO detect failed parsing of incorrect java source
+    //TODO add method name correctenss check
 }

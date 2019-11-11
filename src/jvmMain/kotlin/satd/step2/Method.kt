@@ -9,6 +9,7 @@ abstract class Method {
     abstract val comment: String
     open val exists = true
     abstract val method: MethodDeclaration
+    open val pattern: String = ""
 }
 
 

@@ -15,9 +15,10 @@ fun findMethodsWithSatd(content: String): List<Method> {
     /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
     fun addMethod(method: MethodDeclaration, comment: Comment) {
 
-        if (MethodWithSatd.foundIn(comment.content))
+        val pattern = MethodWithSatd.match(comment.content)
+        if (pattern != null)
             if (!methodList.contains(method)) {
-                satdList.add(MethodWithSatd(method, comment.content))
+                satdList.add(MethodWithSatd(method, comment.content, pattern))
                 methodList.add(method)
             }
     }
@@ -44,16 +45,21 @@ fun findMethodsWithSatd(content: String): List<Method> {
     return satdList.toList()
 }
 
-class MethodWithSatd(override val method: MethodDeclaration, override val comment: String) : Method() {
+class MethodWithSatd(
+    override val method: MethodDeclaration,
+    override val comment: String,
+    override val pattern: String
+) : Method() {
+
     override val hasSatd get() = true
 
     override val name get() = method.name.asString()!!
 
     companion object {
-        fun foundIn(comment: String): Boolean {
+        fun match(comment: String): String? {
             for (p in patterns)
-                if (comment.contains(p, ignoreCase = true)) return true
-            return false
+                if (comment.contains(p, ignoreCase = true)) return p
+            return null
         }
 
         val patterns by lazy {
