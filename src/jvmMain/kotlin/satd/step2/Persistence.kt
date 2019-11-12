@@ -40,13 +40,13 @@ fun setupDatabase() {
 
 object DbSatds : LongIdTable() {
     val satd = text("satd")
+    val pattern = varchar("pattern", 200)
+    val commit_message = text("commit_message")
     val fixed = text("fixed")
     val commit = varchar("commit", 50)
     val repo = varchar("repo", 200)
     val satd_len = integer("satd_len").nullable()
     val fixed_len = integer("fixed_len").nullable()
-    val pattern = varchar("pattern", 200)
-    val commit_message = text("commit_message")
 
 //    init {
 //        index(true, repo, commit) // Unique index
