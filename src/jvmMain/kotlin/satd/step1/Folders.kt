@@ -7,6 +7,7 @@ class Folders {
         val data get() = Paths.get("./data")
         val repos get() = data.resolve("repos")
         val satd get() = data.resolve("satd")
+        val log get() = data.resolve("log")
         val cache get() = data.resolve("cache")
         val database get() = data.resolve("database")
         val database_db1 get() = database.resolve("db1").toAbsolutePath().normalize()!!

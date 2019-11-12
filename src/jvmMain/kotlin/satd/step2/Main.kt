@@ -22,8 +22,8 @@ class Main {
             .androidRepos
             .stream()
             .parallel()
-            .map { logln("Starting thread"); it }
             .map { Repo(it).clone() }
+            .filter { !it.failed }
             .map { Find(it.newGit()).trackSatd() }
             .toList()
 

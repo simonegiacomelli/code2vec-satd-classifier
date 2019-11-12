@@ -13,12 +13,26 @@ class Repo(val url: URL) {
     val friendlyName = url.file.drop(1).replace('/', '_')
     val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$friendlyName")
-
+    val failedClones = Folders.log.resolve("failed_clones")
+    var exception: Exception? = null
+    val failed get() = exception != null
     fun newGit() = open(folder)
 
     fun clone(): Repo {
-        logln("Cloning ${url}")
+        try {
+            cloneInternal()
+        } catch (ex: Exception) {
+            exception = ex
+            failedClones.toFile().mkdirs()
+            failedClones.resolve("$friendlyName.txt")
+                .toFile()
+                .writeText("$url\n$ex")
+        }
+        return this
+    }
 
+    private fun cloneInternal() {
+        logln("Cloning ${url}")
 
         if (folder.exists()) {
             if (!repoOk(folder))
@@ -31,7 +45,6 @@ class Repo(val url: URL) {
                 .setDirectory(folder)
 //                .setProgressMonitor(textProgressMonitor)
                 .call()
-        return this;
     }
 
     private fun repoOk(repoFolder: File): Boolean {
