@@ -39,9 +39,9 @@ fun setupDatabase() {
 }
 
 object DbSatds : LongIdTable() {
-    val satd = text("satd")
     val pattern = varchar("pattern", 200)
     val commit_message = text("commit_message")
+    val satd = text("satd")
     val fixed = text("fixed")
     val commit = varchar("commit", 50)
     val repo = varchar("repo", 200)
