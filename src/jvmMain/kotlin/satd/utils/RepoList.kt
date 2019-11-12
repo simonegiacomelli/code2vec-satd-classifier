@@ -7,7 +7,8 @@ class RepoList {
 
     companion object {
         val tenRepos by lazy { repoUrlList("satd/step1/repo-urls.txt") }
-        val androidRepos by lazy { repoUrlList("satd/urls/android-repo-urls.txt") }
+        val androidReposFull by lazy { repoUrlList("satd/urls/android-repo-urls.txt") }
+        val androidRepos100 by lazy { repoUrlList("satd/urls/android-repo-urls-100.txt") }
 
 
         private fun repoTxtResource(resource: String): URL {
@@ -31,7 +32,7 @@ class RepoList {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            androidRepos.forEach {
+            androidReposFull.forEach {
                 println(it)
             }
         }

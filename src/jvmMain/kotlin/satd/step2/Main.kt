@@ -19,7 +19,7 @@ class Main {
 
         RepoList
 //            .tenRepos
-            .androidRepos
+            .androidRepos100
             .stream()
             .parallel()
             .map { Repo(it).clone() }
