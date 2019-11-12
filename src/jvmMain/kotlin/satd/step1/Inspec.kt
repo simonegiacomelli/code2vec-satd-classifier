@@ -1,6 +1,7 @@
 package satd.step1
 
 import satd.utils.Repo
+import satd.utils.logln
 import java.nio.file.Files
 import kotlin.streams.toList
 

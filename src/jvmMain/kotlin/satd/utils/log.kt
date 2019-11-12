@@ -1,4 +1,4 @@
-package satd.step1
+package satd.utils
 
 fun logln(line: String) {
     val name = Thread.currentThread().name

@@ -3,6 +3,7 @@ package satd.step2
 import satd.utils.Repo
 import satd.utils.RepoList
 import satd.step1.*
+import satd.utils.logln
 import kotlin.streams.toList
 
 fun main() {
@@ -17,7 +18,8 @@ class Main {
             throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
 
         RepoList
-            .tenRepos
+//            .tenRepos
+            .androidRepos
             .stream()
             .parallel()
             .map { logln("Starting thread"); it }
@@ -25,8 +27,7 @@ class Main {
             .map { Find(it.newGit()).trackSatd() }
             .toList()
 
-        logln("Clone done")
-        logln("You can find the generated output in folder ${Folders.satd.normalize().toAbsolutePath()}")
+        logln("Done")
     }
 
 }

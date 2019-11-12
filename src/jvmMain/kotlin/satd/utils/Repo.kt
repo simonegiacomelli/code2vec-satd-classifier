@@ -4,7 +4,6 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import satd.step1.Folders
 import satd.step1.TextProgressMonitor
-import satd.step1.logln
 import java.io.File
 import java.net.URL
 

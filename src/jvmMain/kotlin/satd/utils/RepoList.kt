@@ -3,19 +3,19 @@ package satd.utils
 import java.net.MalformedURLException
 import java.net.URL
 
-class RepoList() {
+class RepoList {
 
     companion object {
         val tenRepos by lazy { repoUrlList("satd/step1/repo-urls.txt") }
         val androidRepos by lazy { repoUrlList("satd/urls/android-repo-urls.txt") }
 
 
-        fun repoTxtResource(resource: String): URL {
+        private fun repoTxtResource(resource: String): URL {
 
             return this::class.java.classLoader.getResource(resource)!!
         }
 
-        fun repoUrlList(resource: String) = repoTxtResource(resource)
+        private fun repoUrlList(resource: String) = repoTxtResource(resource)
             .readText()
             .split('\n')
             .map { it.trim() }

@@ -45,6 +45,7 @@
 package satd.step1
 
 import org.eclipse.jgit.lib.BatchingProgressMonitor
+import satd.utils.logln
 
 /**
  * A simple progress reporter printing on a stream.
