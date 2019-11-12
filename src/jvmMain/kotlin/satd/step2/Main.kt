@@ -1,9 +1,6 @@
 package satd.step2
 
-import satd.step1.Folders
-import satd.step1.Repo
-import satd.step1.logln
-import satd.step1.repoUrlList
+import satd.step1.*
 import kotlin.streams.toList
 
 fun main() {
@@ -17,9 +14,10 @@ class Main {
         if (!Folders.database_db1.toFile().deleteRecursively())
             throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
 
-        repoUrlList()
+        RepoList
+            .tenRepos
             .stream()
-//            .parallel()
+            .parallel()
             .map { logln("Starting thread"); it }
             .map { Repo(it).clone() }
             .map { Find(it.newGit()).trackSatd() }

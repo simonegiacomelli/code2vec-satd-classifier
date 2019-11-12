@@ -5,6 +5,7 @@ import org.eclipse.jgit.api.ResetCommand
 import java.io.File
 import java.net.URL
 
+//TODO should be moved to parent package
 class Repo(val url: URL) {
 
     private val reposPath get() = Folders.repos

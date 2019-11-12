@@ -1,16 +1,16 @@
 package sample.jgit
 
+import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.internal.storage.file.FileRepository
 import satd.step1.Repo
-import satd.step1.repoUrlList
-import org.eclipse.jgit.api.Git
+import satd.step1.RepoList
 
 
 class RepoCommitsHarness {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val repo = Repo(repoUrlList().first())
+            val repo = Repo(RepoList.tenRepos.first())
             if (!repo.folder.exists())
                 repo.clone()
 

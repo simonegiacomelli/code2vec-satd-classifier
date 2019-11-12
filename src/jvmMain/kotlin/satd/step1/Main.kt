@@ -1,6 +1,5 @@
 package satd.step1
 
-import java.util.stream.Collectors
 import kotlin.streams.toList
 
 fun main() {
@@ -11,7 +10,8 @@ class Main {
     fun go() {
         logln("Starting")
 
-        repoUrlList()
+        RepoList
+            .tenRepos
             .stream()
             .parallel()
             .map { logln("Starting thread"); it }

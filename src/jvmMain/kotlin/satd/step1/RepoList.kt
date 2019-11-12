@@ -1,23 +1,38 @@
 package satd.step1
 
+import java.net.MalformedURLException
 import java.net.URL
 
-fun repoUrlList() = RepoList.repoUrlList()
+//TODO should be moved to parent package
+class RepoList() {
 
-private class RepoList {
     companion object {
-        fun repoTxtResource() = this::class.java.classLoader.getResource("satd/step1/repo-urls.txt")!!
+        val tenRepos by lazy { repoUrlList("satd/step1/repo-urls.txt") }
+        val androidRepos by lazy { repoUrlList("satd/urls/android-repo-urls.txt") }
 
-        fun repoUrlList() = repoTxtResource()
+
+        fun repoTxtResource(resource: String): URL {
+
+            return this::class.java.classLoader.getResource(resource)!!
+        }
+
+        fun repoUrlList(resource: String) = repoTxtResource(resource)
             .readText()
             .split('\n')
             .map { it.trim() }
             .filter { !it.startsWith("#") }
-            .map { URL(it) }
+            .filter { it.isNotEmpty() }
+            .map {
+                try {
+                    URL(it)
+                } catch (ex: MalformedURLException) {
+                    throw Exception("Offending url [$it]", ex)
+                }
+            }
 
         @JvmStatic
         fun main(args: Array<String>) {
-            repoUrlList().forEach {
+            androidRepos.forEach {
                 println(it)
             }
         }
