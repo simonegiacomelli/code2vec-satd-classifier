@@ -2,8 +2,8 @@ package sample.jgit
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.internal.storage.file.FileRepository
-import satd.step1.Repo
-import satd.step1.RepoList
+import satd.utils.Repo
+import satd.utils.RepoList
 
 
 class RepoCommitsHarness {

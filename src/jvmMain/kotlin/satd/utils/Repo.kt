@@ -1,11 +1,13 @@
-package satd.step1
+package satd.utils
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
+import satd.step1.Folders
+import satd.step1.TextProgressMonitor
+import satd.step1.logln
 import java.io.File
 import java.net.URL
 
-//TODO should be moved to parent package
 class Repo(val url: URL) {
 
     private val reposPath get() = Folders.repos

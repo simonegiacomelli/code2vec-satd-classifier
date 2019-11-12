@@ -1,9 +1,8 @@
-package satd.step1
+package satd.utils
 
 import java.net.MalformedURLException
 import java.net.URL
 
-//TODO should be moved to parent package
 class RepoList() {
 
     companion object {
