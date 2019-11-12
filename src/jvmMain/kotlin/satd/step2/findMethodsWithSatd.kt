@@ -25,6 +25,8 @@ fun findMethodsWithSatd(content: String): List<Method> {
     }
 
     val cu = JavaParser().parse(content)!!
+    if (!cu.result.isPresent)
+        return emptyList()
     cu.result.get().types.filterNotNull().forEach { type ->
         type.methods.forEach { method ->
             method.accept(object : VoidVisitorAdapter<Node>() {
@@ -60,7 +62,8 @@ class MethodWithSatd(
         fun match(comment: String): String? {
             for ((p, r) in reg)
                 if (comment.contains(p, ignoreCase = true) &&
-                    r.matcher(comment).find())
+                    r.matcher(comment).find()
+                )
                     return p
             return null
         }

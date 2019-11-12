@@ -8,13 +8,17 @@ fun findMethodsByName(content: String, names: Set<String>): List<Method> {
     val cu = JavaParser().parse(content)!!
 
     //look for methods that matches requested names
-    val foundMethods = cu.result.get().types
-        .filterNotNull()
-        .flatMap { type ->
-            type.methods
-                .filter { names.contains(it.nameAsString) }
-                .map { MethodWithoutSatd(it) }
-        }
+    val foundMethods =
+        if (!cu.result.isPresent)
+            emptyList()
+        else
+            cu.result.get().types
+                .filterNotNull()
+                .flatMap { type ->
+                    type.methods
+                        .filter { names.contains(it.nameAsString) }
+                        .map { MethodWithoutSatd(it) }
+                }
 
     val result = mutableListOf<Method>()
     result.addAll(foundMethods)
