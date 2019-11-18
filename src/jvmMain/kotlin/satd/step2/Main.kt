@@ -21,6 +21,7 @@ class Main {
 //            .tenRepos
 //            .androidRepos100
             .androidReposFull
+            .take(2000)
             .stream()
             .parallel()
             .map { Repo(it).clone() }
