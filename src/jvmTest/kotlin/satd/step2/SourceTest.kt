@@ -16,7 +16,7 @@ internal class SourceTest {
     val class5line by lazy { load("Class5line.java") }
     val fixmethod by lazy { load("Fixmethod.java") }
 
-    private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/$s")!!.readText()
+    private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/SourceTest/$s")!!.readText()
 
     @Test
     fun `method with satd should be correctly detected`() {
