@@ -42,7 +42,9 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             //now old and new contains matching methods instances
             oldSatd.forEach { old ->
                 val new = methods.get(old.name)!!
-                if (old.hasSatd && new.exists && !new.hasSatd) {
+                if (old.hasSatd && new.exists && !new.hasSatd
+                    && Requirements(old, new).accept()
+                ) {
                     transaction {
                         DbSatds.insert {
                             it[this.repo] = repoName
