@@ -12,7 +12,7 @@ internal class ComparerTest {
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/ComparerTest/$s")!!.readText()
 
     @Test
-    fun `x`() {
+    fun `no changes in the code should reject the satd`() {
         val c1list = findMethodsWithSatd(class1)
         val c2list = findMethodsByName(class2, setOf("method1"))
         assertEquals(1, c1list.size)
