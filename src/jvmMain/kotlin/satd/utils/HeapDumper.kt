@@ -2,12 +2,12 @@ package satd.utils
 
 import com.sun.management.HotSpotDiagnosticMXBean
 import satd.step1.Folders
-import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-/* Simone 14/12/13 16.57 */   object HeapDumper {
+/* Simone 14/12/13 16.57 */
+object HeapDumper {
     val heapdumpfile by lazy {
         val folder = Folders.heapdumps.toFile()
         folder.mkdirs()
@@ -20,31 +20,19 @@ import java.time.format.DateTimeFormatter
     // get the hotspot diagnostic MBean from the
 // platform MBean server
     // field to store the hotspot diagnostic MBean
-    @get:Synchronized
-    @Volatile
-    private var hotspotMBean: HotSpotDiagnosticMXBean? = null
-        get() {
-            if (field == null) {
-                val server = ManagementFactory.getPlatformMBeanServer()
-                field = try {
-                    ManagementFactory.newPlatformMXBeanProxy(
-                        server,
-                        HOTSPOT_BEAN_NAME, HotSpotDiagnosticMXBean::class.java
-                    )
-                } catch (e: IOException) {
-                    throw RuntimeException(e)
-                }
-            }
-            return field
-        }
 
-    @JvmStatic
+    private val hotspotMBean: HotSpotDiagnosticMXBean
+            by lazy(LazyThreadSafetyMode.NONE) {
+                ManagementFactory
+                    .newPlatformMXBeanProxy(
+                        ManagementFactory.getPlatformMBeanServer()
+                        , HOTSPOT_BEAN_NAME
+                        , HotSpotDiagnosticMXBean::class.java
+                    )
+            }
+
     fun dumpHeap(fileName: String?, live: Boolean) {
-        try {
-            hotspotMBean!!.dumpHeap(fileName, live)
-        } catch (exp: Exception) {
-            throw RuntimeException(exp)
-        }
+        hotspotMBean.dumpHeap(fileName, live)
     }
 
     fun main(args: Array<String>) { // default heap dump file name
@@ -62,12 +50,13 @@ import java.time.format.DateTimeFormatter
         dumpHeap(fileName, live)
     }
 
-    fun enable(){
+    fun enable() {
         enableJvmToHeapDumpOnOutOfMemory(heapdumpfile)
     }
-    fun enableJvmToHeapDumpOnOutOfMemory(dumpFilename: String?) {
-        hotspotMBean!!.setVMOption("HeapDumpOnOutOfMemoryError", "true")
-        hotspotMBean!!.setVMOption("HeapDumpPath", dumpFilename)
+
+    private fun enableJvmToHeapDumpOnOutOfMemory(dumpFilename: String?) {
+        hotspotMBean.setVMOption("HeapDumpOnOutOfMemoryError", "true")
+        hotspotMBean.setVMOption("HeapDumpPath", dumpFilename)
     }
 
 
