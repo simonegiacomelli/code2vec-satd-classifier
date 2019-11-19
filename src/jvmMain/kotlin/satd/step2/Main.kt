@@ -19,7 +19,6 @@ class Main {
 
         RepoList
 //            .tenRepos
-//            .androidRepos100
             .androidReposFull
 //            .take(2000)
             .stream()
