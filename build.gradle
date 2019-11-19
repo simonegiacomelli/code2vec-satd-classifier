@@ -44,6 +44,7 @@ kotlin {
                 implementation 'com.github.javaparser:javaparser-core:3.15.1'
                 implementation 'com.h2database:h2:1.4.200'
                 implementation 'org.jetbrains.exposed:exposed:0.17.6'
+                implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.3.50"
             }
         }
         jvmTest {
@@ -87,4 +88,9 @@ task showdatabase(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.PersistenceKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
     args = []
+}
+task oom(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.utils.OOMKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
