@@ -46,7 +46,7 @@ class Find(val git: Git) {
 
     fun trackSatd() {
         git.printStats()
-        blobSatd.cache.load()
+//        blobSatd.cache.load()
 
         for (child in git.log().all().call()) {
             stat.commitRate.spin()
@@ -58,10 +58,10 @@ class Find(val git: Git) {
             else visitEdge(child.newTreeIterator(), emptyTreeIterator, child, ObjectId.zeroId())
 
             stat.printSpin()
-            blobSatd.cache.storeSpin()
+//            blobSatd.cache.storeSpin()
         }
         stat.printForce()
-        blobSatd.cache.store()
+//        blobSatd.cache.store()
     }
 
     private fun visitEdge(
