@@ -51,7 +51,7 @@ object DbSatds : LongIdTable() {
     val new_clean = text("new_clean")
     val old_clean_len = integer("old_clean_len")
     val new_clean_len = integer("new_clean_len")
-    val clean_diff_ration = double("clean_diff_ration")
+    val clean_diff_ratio = double("clean_diff_ratio")
 //    init {
 //        index(true, repo, commit) // Unique index
 //    }

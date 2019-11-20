@@ -64,7 +64,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                                 val newCleanLen = "${req.newClean}".lines().size
                                 it[this.old_clean_len] = oldCleanLen
                                 it[this.new_clean_len] = newCleanLen
-                                it[this.clean_diff_ration] =
+                                it[this.clean_diff_ratio] =
                                     (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
                             }
                         }
