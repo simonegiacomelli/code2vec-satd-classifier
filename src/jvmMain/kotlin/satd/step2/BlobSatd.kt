@@ -45,46 +45,61 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             //now old and new contains matching methods instances
             oldSatd.forEach { old ->
                 val new = methods.get(old.name)!!
-                if (old.hasSatd && new.exists && !new.hasSatd
-                ) {
-                    val req = Requirements(old, new)
-                    if (req.accept()) {
-                        transaction {
-                            DbSatds.insert {
-                                it[this.repo] = repoName
-                                it[this.commit] = "${newCommitId.name}"
-                                it[this.old] = "${old.method}"
-                                it[this.new] = "${new.method}"
-                                it[this.pattern] = "${old.pattern}"
-                                it[this.old_len] = "${old.method}".lines().size
-                                it[this.new_len] = "${new.method}".lines().size
-                                it[this.commit_message] = newCommitId.fullMessage
+                if (old.hasSatd && new.exists && !new.hasSatd)
+                    candidateForDb(old, new, newCommitId)
+            }
+        }
 
-                                val oldClean = "${req.oldClean}"
-                                val newClean = "${req.newClean}"
-                                val oldCleanLen = oldClean.lines().size
-                                val newCleanLen = newClean.lines().size
+        private fun candidateForDb(
+            old: Method,
+            new: Method,
+            newCommitId: RevCommit
+        ) {
+            val req = Requirements(old, new)
+            if (!req.accept())
+                return
+            try {
+                transaction {
+                    DbSatds.insert {
+                        it[this.repo] = repoName
+                        it[this.commit] = "${newCommitId.name}"
+                        it[this.old] = "${old.method}"
+                        it[this.new] = "${new.method}"
+                        it[this.pattern] = "${old.pattern}"
+                        it[this.old_len] = "${old.method}".lines().size
+                        it[this.new_len] = "${new.method}".lines().size
+                        it[this.commit_message] = newCommitId.fullMessage
 
-                                it[this.old_clean] = oldClean
-                                it[this.new_clean] = newClean
-                                it[this.old_clean_len] = oldCleanLen
-                                it[this.new_clean_len] = newCleanLen
-                                it[this.clean_diff_ratio] =
-                                    (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
-                                it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
+                        val oldClean = "${req.oldClean}"
+                        val newClean = "${req.newClean}"
+                        val oldCleanLen = oldClean.lines().size
+                        val newCleanLen = newClean.lines().size
 
-                            }
-                        }
-                        stat.satdRate.spin()
+                        it[this.old_clean] = oldClean
+                        it[this.new_clean] = newClean
+                        it[this.old_clean_len] = oldCleanLen
+                        it[this.new_clean_len] = newCleanLen
+                        it[this.clean_diff_ratio] =
+                            (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                        it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
+
                     }
                 }
+                stat.satdRate.spin()
+            } catch (ex: Exception) {
+                val msg = ex.message.orEmpty()
+                val violation =
+                    msg.contains("Unique index", ignoreCase = true) || msg.contains("primary key", ignoreCase = true)
+                if (!violation)
+                    throw ex;
             }
         }
 
 
     }
+
     private fun String.sha1(): String {
-        val bytes = MessageDigest            .getInstance("SHA-1")
+        val bytes = MessageDigest.getInstance("SHA-1")
             .digest(toByteArray())
         return DatatypeConverter.printHexBinary(bytes).toUpperCase()
     }
