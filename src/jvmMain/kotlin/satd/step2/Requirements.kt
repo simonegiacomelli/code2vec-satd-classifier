@@ -5,20 +5,21 @@ import java.io.File
 
 class Requirements(om: Method, nm: Method) {
 
-    val old by lazy { om.method.clone() }
-    val new by lazy { nm.method.clone() }
+    val oldClean by lazy { cloneAndClean(om) }
+    val newClean by lazy { cloneAndClean(nm) }
 
-    fun accept(): Boolean {
-
-        removeComments(old)
-        removeComments(new)
-
-        return old != new
+    private fun cloneAndClean(om1: Method): MethodDeclaration {
+        val clone = om1.method.clone()
+        clone.setComment(null)
+        clone.allContainedComments.forEach { it.remove() }
+        return clone
     }
 
+    fun accept(): Boolean = oldClean != newClean
+
     private fun debug() {
-        writeToFile(old, "compare/old.java")
-        writeToFile(new, "compare/new.java")
+        writeToFile(oldClean, "compare/old.java")
+        writeToFile(newClean, "compare/new.java")
     }
 
     private fun writeToFile(m: MethodDeclaration, path: String) {
@@ -27,11 +28,5 @@ class Requirements(om: Method, nm: Method) {
             writeText("$m")
         }
     }
-
-    private fun removeComments(m: MethodDeclaration) {
-        m.setComment(null)
-        m.allContainedComments.forEach { it.remove() }
-    }
-
 
 }
