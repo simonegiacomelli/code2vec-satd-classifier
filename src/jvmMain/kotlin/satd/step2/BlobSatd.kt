@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.charset.Charset
 import java.security.MessageDigest
-import javax.xml.bind.DatatypeConverter
+import kotlin.experimental.and
 import kotlin.math.absoluteValue
 
 class BlobSatd(val repo: Repository, val stat: Stat) {
@@ -101,6 +101,6 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
     private fun String.sha1(): String {
         val bytes = MessageDigest.getInstance("SHA-1")
             .digest(toByteArray())
-        return DatatypeConverter.printHexBinary(bytes).toUpperCase()
+        return bytes.joinToString("") { String.format("%02X", (it.toInt() and 0xFF)) }
     }
 }
