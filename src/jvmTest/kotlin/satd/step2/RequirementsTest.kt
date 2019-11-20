@@ -3,26 +3,37 @@ package satd.step2
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 internal class RequirementsTest {
     val class1 by lazy { load("Class1.java") }
     val class2 by lazy { load("Class2.java") }
     val a1old by lazy { load("Android1_old.java") }
     val a1new by lazy { load("Android1_new.java") }
+    val case3old by lazy { load("Case3_old.java") }
+    val case3new by lazy { load("Case3_new.java") }
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/ComparerTest/$s")!!.readText()
 
     @Test
     fun `no changes in the code should reject the satd`() {
-        verify(class1, class2, "method1")
+        val target = instantiateTarget(class1, class2, "method1")
+        assertFalse(target.accept());
     }
 
     @Test
     fun `no changes in the code should reject the satd case from repo doshivikram_jchat4android`() {
-        verify(a1old, a1new, "onReceive")
+        val target = instantiateTarget(a1old, a1new, "onReceive")
+        assertFalse(target.accept());
     }
 
-    private fun verify(cold: String, cnew: String, name: String) {
+ @Test
+    fun `correct satd that disappear with code change should be accepted`() {
+        val target = instantiateTarget(case3old, case3new, "method1")
+        assertTrue(target.accept());
+    }
+
+    private fun instantiateTarget(cold: String, cnew: String, name: String): Requirements {
         val c1list = findMethodsWithSatd(cold)
         val c2list = findMethodsByName(cnew, setOf(name))
         assertEquals(1, c1list.size)
@@ -31,7 +42,6 @@ internal class RequirementsTest {
         val old = c1list.first()
         val new = c2list.first()
 
-        val target = Requirements(old, new);
-        assertFalse(target.accept());
+        return Requirements(old, new)
     }
 }
