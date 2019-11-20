@@ -41,13 +41,17 @@ fun setupDatabase() {
 object DbSatds : LongIdTable() {
     val pattern = varchar("pattern", 200)
     val commit_message = text("commit_message")
-    val satd = text("satd")
-    val fixed = text("fixed")
+    val old = text("old")
+    val new = text("new")
     val commit = varchar("commit", 50)
     val repo = varchar("repo", 200)
-    val satd_len = integer("satd_len").nullable()
-    val fixed_len = integer("fixed_len").nullable()
-
+    val old_len = integer("old_len")
+    val new_len = integer("new_len")
+    val old_clean = text("old_clean")
+    val new_clean = text("new_clean")
+    val old_clean_len = integer("old_clean_len")
+    val new_clean_len = integer("new_clean_len")
+    val clean_diff_ration = double("clean_diff_ration")
 //    init {
 //        index(true, repo, commit) // Unique index
 //    }

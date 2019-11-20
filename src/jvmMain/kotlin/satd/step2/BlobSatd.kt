@@ -7,6 +7,7 @@ import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.charset.Charset
+import kotlin.math.absoluteValue
 
 class BlobSatd(val repo: Repository, val stat: Stat) {
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
@@ -43,22 +44,32 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             oldSatd.forEach { old ->
                 val new = methods.get(old.name)!!
                 if (old.hasSatd && new.exists && !new.hasSatd
-                    && Requirements(old, new).accept()
                 ) {
-                    transaction {
-                        DbSatds.insert {
-                            it[this.repo] = repoName
-                            it[this.commit] = "${newCommitId.name}"
-                            it[this.satd] = "${old.method}"
-                            it[this.fixed] = "${new.method}"
-                            it[this.pattern] = "${old.pattern}"
-                            it[this.satd_len] = "${old.method}".lines().size
-                            it[this.fixed_len] = "${new.method}".lines().size
-                            it[this.commit_message] = newCommitId.fullMessage
+                    val req = Requirements(old, new)
+                    if (req.accept()) {
+                        transaction {
+                            DbSatds.insert {
+                                it[this.repo] = repoName
+                                it[this.commit] = "${newCommitId.name}"
+                                it[this.old] = "${old.method}"
+                                it[this.new] = "${new.method}"
+                                it[this.pattern] = "${old.pattern}"
+                                it[this.old_len] = "${old.method}".lines().size
+                                it[this.new_len] = "${new.method}".lines().size
+                                it[this.commit_message] = newCommitId.fullMessage
 
+                                it[this.old_clean] = "${req.oldClean}"
+                                it[this.new_clean] = "${req.newClean}"
+                                val oldCleanLen = "${req.oldClean}".lines().size
+                                val newCleanLen = "${req.newClean}".lines().size
+                                it[this.old_clean_len] = oldCleanLen
+                                it[this.new_clean_len] = newCleanLen
+                                it[this.clean_diff_ration] =
+                                    (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                            }
                         }
+                        stat.satdRate.spin()
                     }
-                    stat.satdRate.spin()
                 }
             }
         }
