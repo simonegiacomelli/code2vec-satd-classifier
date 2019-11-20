@@ -7,6 +7,8 @@ import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.charset.Charset
+import java.security.MessageDigest
+import javax.xml.bind.DatatypeConverter
 import kotlin.math.absoluteValue
 
 class BlobSatd(val repo: Repository, val stat: Stat) {
@@ -58,14 +60,19 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                                 it[this.new_len] = "${new.method}".lines().size
                                 it[this.commit_message] = newCommitId.fullMessage
 
-                                it[this.old_clean] = "${req.oldClean}"
-                                it[this.new_clean] = "${req.newClean}"
-                                val oldCleanLen = "${req.oldClean}".lines().size
-                                val newCleanLen = "${req.newClean}".lines().size
+                                val oldClean = "${req.oldClean}"
+                                val newClean = "${req.newClean}"
+                                val oldCleanLen = oldClean.lines().size
+                                val newCleanLen = newClean.lines().size
+
+                                it[this.old_clean] = oldClean
+                                it[this.new_clean] = newClean
                                 it[this.old_clean_len] = oldCleanLen
                                 it[this.new_clean_len] = newCleanLen
                                 it[this.clean_diff_ratio] =
                                     (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                                it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
+
                             }
                         }
                         stat.satdRate.spin()
@@ -76,5 +83,9 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
 
 
     }
-
+    private fun String.sha1(): String {
+        val bytes = MessageDigest            .getInstance("SHA-1")
+            .digest(toByteArray())
+        return DatatypeConverter.printHexBinary(bytes).toUpperCase()
+    }
 }
