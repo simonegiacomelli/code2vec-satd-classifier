@@ -12,32 +12,42 @@ import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.statements.Statement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
+import java.nio.file.Path
 import java.sql.Connection
 import java.sql.DriverManager
 
-fun main() {
-    setupDatabase()
-    Server.startWebServer(connection())
-}
+class Persistence(val databasePath: Path) {
 
-val databasePath get() = Folders.database_db1.resolve("h2satd")
-
-fun connection(): Connection {
-    Class.forName("org.h2.Driver")
-    return DriverManager.getConnection(
-        "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=19091",
-        "sa",
-        ""
-    )
-}
-
-fun setupDatabase() {
-    Database.connect(::connection)
-    transaction {
-        addLogger(StdOutSqlLogger)
-        SchemaUtils.createMissingTablesAndColumns(DbSatds)
+    fun connection(): Connection {
+        Class.forName("org.h2.Driver")
+        return DriverManager.getConnection(
+            "jdbc:h2:$databasePath};AUTO_SERVER=TRUE;AUTO_SERVER_PORT=19091",
+            "sa",
+            ""
+        )
     }
+
+    fun setupDatabase() {
+        Database.connect(::connection)
+        transaction {
+            addLogger(StdOutSqlLogger)
+            SchemaUtils.createMissingTablesAndColumns(DbSatds)
+        }
+    }
+
+    fun startWebServer() {
+        setupDatabase()
+        Server.startWebServer(connection())
+    }
+
 }
+
+val persistence = Persistence(Folders.database_db1.resolve("h2satd"))
+
+fun main() {
+    persistence.startWebServer()
+}
+
 
 object DbSatds : LongIdTable() {
     val pattern = varchar("pattern", 200)
@@ -61,7 +71,7 @@ class DbSatd(id: EntityID<Long>) : LongEntity(id) {
 }
 
 
-fun <T>  executeStatement(statement: Statement<T>) {
+fun <T> executeStatement(statement: Statement<T>) {
     transaction {
         statement.execute(this)
     }

@@ -22,7 +22,7 @@ class Find(val git: Git) {
 
     companion object {
         init {
-            setupDatabase()
+            persistence.setupDatabase()
         }
     }
 
