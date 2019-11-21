@@ -78,15 +78,15 @@ class DbSatd(id: EntityID<Long>) : LongEntity(id) {
 fun ignoreDuplicates(function: () -> Unit) {
     try {
         function()
-    } catch (ex: Exception) {
-//        if (ex.message.orEmpty()
-//                .run {
-//                    contains("Unique index", ignoreCase = true)
-//                            || contains("primary key", ignoreCase = true)
-//                }
-//        )
-//            throw ex;
-//        else
-//            logln("CATCHED EXCEPTION ${ex.message}")
+    } catch (ex: Throwable) {
+        if (!ex.message.orEmpty()
+                .run {
+                    contains("Unique index", ignoreCase = true)
+                            || contains("primary key", ignoreCase = true)
+                }
+        )
+            throw ex;
+        else
+            logln("IGNORED EXCEPTION ${ex.message}")
     }
 }

@@ -1,7 +1,6 @@
 package satd.step2
 
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
 import java.nio.file.Path
@@ -23,18 +22,28 @@ class PersistenceTest {
     fun `duplicate hash_code should be silently ignored (unique index violation)`() {
         val p = Persistence(newTempFolder())
         p.setupDatabase()
-        insertRecord("hash1")
-        insertRecord("hash2")
-        insertRecord("hash1")
+        ignoreDuplcatesInvoke("hash1")
+        ignoreDuplcatesInvoke("hash2")
+        ignoreDuplcatesInvoke("hash1")
 //        p.showInBrowser()
     }
 
-    private fun insertRecord(code_hash: String) {
+    @Test
+    fun `reasonable error should NOT be ignored`() {
+        val p = Persistence(newTempFolder())
+        p.setupDatabase()
+        ignoreDuplcatesInvoke("hash1", "commit1")
+        assertFails("the value should be too big to be accepted") {
+            ignoreDuplcatesInvoke("hash2", "x".repeat(20000))
+        }
+    }
+
+    private fun ignoreDuplcatesInvoke(code_hash: String, commitId: String = "commitid") {
         ignoreDuplicates {
             transaction {
                 DbSatds.insert {
                     it[this.repo] = "repo2"
-                    it[this.commit] = "commitid"
+                    it[this.commit] = commitId
                     it[this.old] = "bodyold"
                     it[this.new] = "bodynew"
                     it[this.pattern] = "fixme"
