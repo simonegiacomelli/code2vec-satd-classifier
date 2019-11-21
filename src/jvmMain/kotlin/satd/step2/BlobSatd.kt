@@ -5,6 +5,7 @@ import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.logln
 import java.nio.charset.Charset
@@ -60,8 +61,9 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             if (!req.accept())
                 return
             try {
-                transaction {
-                    DbSatds.insert {
+            val statement =
+                DbSatds.run {
+                    InsertStatement<Number>(this).also {
                         it[this.repo] = repoName
                         it[this.commit] = "${newCommitId.name}"
                         it[this.old] = "${old.method}"
@@ -86,6 +88,12 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
 
                     }
                 }
+
+                transaction {
+                    statement.execute(this)
+                }
+
+
                 stat.satdRate.spin()
             } catch (ex: Exception) {
                 if (ex.message.orEmpty()
