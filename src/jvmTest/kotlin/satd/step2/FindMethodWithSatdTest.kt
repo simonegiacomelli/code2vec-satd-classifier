@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-internal class SourceTest {
+internal class FindMethodWithSatdTest {
     val class1 by lazy { load("Class1.java") }
     val class2 by lazy { load("Class2.java") }
     val class2b by lazy { load("Class2b.java") }
