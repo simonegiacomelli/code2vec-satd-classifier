@@ -14,7 +14,7 @@ fun findMethodsWithSatd(content: String): List<Method> {
     val satdList = mutableSetOf<MethodWithSatd>()
     val methodList = mutableSetOf<MethodDeclaration>()
     /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
-    fun addMethod(method: MethodDeclaration, comment: Comment) {
+    fun addMethod(method: MethodDeclaration, comment: Comment): Boolean {
 
         val pattern = MethodWithSatd.match(comment.content)
         if (pattern != null)
@@ -22,27 +22,23 @@ fun findMethodsWithSatd(content: String): List<Method> {
                 satdList.add(MethodWithSatd(method, comment.content, pattern))
                 methodList.add(method)
             }
+        return pattern != null
     }
 
     val cu = JavaParser().parse(content)!!
     if (!cu.result.isPresent)
         return emptyList()
+
     cu.result.get().types.filterNotNull().forEach { type ->
+
         type.methods.forEach { method ->
-            method.accept(object : VoidVisitorAdapter<Node>() {
-                override fun visit(n: BlockComment, arg: Node?) {
-                    addMethod(method, n)
+            if (!method.comment.isPresent || !addMethod(method, method.comment.get()))
+                method.allContainedComments.forEach c@{
+                    if (addMethod(method, it))
+                        return@c
                 }
 
-                override fun visit(n: LineComment, arg: Node?) {
-                    addMethod(method, n)
-                }
 
-                override fun visit(n: JavadocComment, arg: Node?) {
-                    addMethod(method, n)
-                }
-
-            }, null)
         }
     }
     return satdList.toList()
