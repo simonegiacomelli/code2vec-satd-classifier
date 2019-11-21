@@ -6,6 +6,7 @@ import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import satd.utils.logln
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import kotlin.experimental.and
@@ -87,11 +88,15 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                 }
                 stat.satdRate.spin()
             } catch (ex: Exception) {
-                val msg = ex.message.orEmpty()
-                val violation =
-                    msg.contains("Unique index", ignoreCase = true) || msg.contains("primary key", ignoreCase = true)
-                if (!violation)
+                if (ex.message.orEmpty()
+                        .run {
+                            contains("Unique index", ignoreCase = true)
+                                    || contains("primary key", ignoreCase = true)
+                        }
+                )
                     throw ex;
+                else
+                    logln("CATCHED EXCEPTION ${ex.message}")
             }
         }
 
