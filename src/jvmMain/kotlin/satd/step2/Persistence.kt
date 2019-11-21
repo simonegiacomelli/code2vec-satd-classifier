@@ -52,7 +52,7 @@ object DbSatds : LongIdTable() {
     val old_clean_len = integer("old_clean_len")
     val new_clean_len = integer("new_clean_len")
     val clean_diff_ratio = double("clean_diff_ratio")
-    val code_hash = varchar("code_hash", 200)//.index(isUnique = true)
+    val code_hash = varchar("code_hash", 200).index(isUnique = true)
 }
 
 class DbSatd(id: EntityID<Long>) : LongEntity(id) {
