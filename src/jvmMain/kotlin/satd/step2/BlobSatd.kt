@@ -6,6 +6,7 @@ import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.statements.InsertStatement
+import org.jetbrains.exposed.sql.statements.Statement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.logln
 import java.nio.charset.Charset
@@ -61,37 +62,35 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             if (!req.accept())
                 return
             try {
-            val statement =
-                DbSatds.run {
-                    InsertStatement<Number>(this).also {
-                        it[this.repo] = repoName
-                        it[this.commit] = "${newCommitId.name}"
-                        it[this.old] = "${old.method}"
-                        it[this.new] = "${new.method}"
-                        it[this.pattern] = "${old.pattern}"
-                        it[this.old_len] = "${old.method}".lines().size
-                        it[this.new_len] = "${new.method}".lines().size
-                        it[this.commit_message] = newCommitId.fullMessage
+                val statement =
+                    DbSatds.run {
+                        InsertStatement<Number>(this).also {
+                            it[this.repo] = repoName
+                            it[this.commit] = "${newCommitId.name}"
+                            it[this.old] = "${old.method}"
+                            it[this.new] = "${new.method}"
+                            it[this.pattern] = "${old.pattern}"
+                            it[this.old_len] = "${old.method}".lines().size
+                            it[this.new_len] = "${new.method}".lines().size
+                            it[this.commit_message] = newCommitId.fullMessage
 
-                        val oldClean = "${req.oldClean}"
-                        val newClean = "${req.newClean}"
-                        val oldCleanLen = oldClean.lines().size
-                        val newCleanLen = newClean.lines().size
+                            val oldClean = "${req.oldClean}"
+                            val newClean = "${req.newClean}"
+                            val oldCleanLen = oldClean.lines().size
+                            val newCleanLen = newClean.lines().size
 
-                        it[this.old_clean] = oldClean
-                        it[this.new_clean] = newClean
-                        it[this.old_clean_len] = oldCleanLen
-                        it[this.new_clean_len] = newCleanLen
-                        it[this.clean_diff_ratio] =
-                            (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
-                        it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
+                            it[this.old_clean] = oldClean
+                            it[this.new_clean] = newClean
+                            it[this.old_clean_len] = oldCleanLen
+                            it[this.new_clean_len] = newCleanLen
+                            it[this.clean_diff_ratio] =
+                                (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                            it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
 
+                        }
                     }
-                }
 
-                transaction {
-                    statement.execute(this)
-                }
+                executeStatement(statement)
 
 
                 stat.satdRate.spin()

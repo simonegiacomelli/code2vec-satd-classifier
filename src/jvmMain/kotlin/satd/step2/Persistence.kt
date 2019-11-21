@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.statements.Statement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
 import java.sql.Connection
@@ -57,4 +58,11 @@ object DbSatds : LongIdTable() {
 
 class DbSatd(id: EntityID<Long>) : LongEntity(id) {
     companion object : LongEntityClass<DbSatd>(DbSatds)
+}
+
+
+fun <T>  executeStatement(statement: Statement<T>) {
+    transaction {
+        statement.execute(this)
+    }
 }
