@@ -12,6 +12,7 @@ import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.statements.Statement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
+import satd.utils.logln
 import java.nio.file.Path
 import java.sql.Connection
 import java.sql.DriverManager
@@ -74,19 +75,18 @@ class DbSatd(id: EntityID<Long>) : LongEntity(id) {
     companion object : LongEntityClass<DbSatd>(DbSatds)
 }
 
-
-fun <T> executeStatement(statement: Statement<T>) {
-    transaction {
-        statement.execute(this)
-    }
-}
-
-fun <T> executeStatementIgnoreDuplicates(statement: Statement<T>) {
+fun ignoreDuplicates(function: () -> Unit) {
     try {
-        transaction {
-            statement.execute(this)
-        }
+        function()
     } catch (ex: Exception) {
-
+//        if (ex.message.orEmpty()
+//                .run {
+//                    contains("Unique index", ignoreCase = true)
+//                            || contains("primary key", ignoreCase = true)
+//                }
+//        )
+//            throw ex;
+//        else
+//            logln("CATCHED EXCEPTION ${ex.message}")
     }
 }

@@ -59,7 +59,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             val req = Requirements(old, new)
             if (!req.accept())
                 return
-            try {
+            ignoreDuplicates{
                 transaction {
                     DbSatds.insert {
                         it[this.repo] = repoName
@@ -87,18 +87,11 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                     }
                 }
                 stat.satdRate.spin()
-            } catch (ex: Exception) {
-                if (ex.message.orEmpty()
-                        .run {
-                            contains("Unique index", ignoreCase = true)
-                                    || contains("primary key", ignoreCase = true)
-                        }
-                )
-                    throw ex;
-                else
-                    logln("CATCHED EXCEPTION ${ex.message}")
+
             }
+
         }
+
 
 
     }

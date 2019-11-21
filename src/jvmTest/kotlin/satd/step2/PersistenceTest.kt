@@ -1,6 +1,8 @@
 package satd.step2
 
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.statements.InsertStatement
+import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
 import java.nio.file.Path
 import java.time.LocalDateTime
@@ -28,9 +30,9 @@ class PersistenceTest {
     }
 
     private fun insertRecord(code_hash: String) {
-        val statement =
-            DbSatds.run {
-                InsertStatement<Number>(this).also {
+        ignoreDuplicates {
+            transaction {
+                DbSatds.insert {
                     it[this.repo] = "repo2"
                     it[this.commit] = "commitid"
                     it[this.old] = "bodyold"
@@ -46,11 +48,9 @@ class PersistenceTest {
                     it[this.new_clean_len] = 4
                     it[this.clean_diff_ratio] = 0.2
                     it[this.code_hash] = code_hash
-
                 }
             }
-
-        return executeStatementIgnoreDuplicates(statement)
+        }
     }
 
     private fun newTempFolder(): Path {
