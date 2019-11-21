@@ -13,5 +13,6 @@ class Folders {
         val heapdumps get() = data.resolve("heapdumps")
         val database_db1 get() = database.resolve("db1").toAbsolutePath().normalize()!!
         val guineaPigRepos get() = data.resolve("guinea_pig_repos")
+        val temp get() = data.resolve("temp")
     }
 }

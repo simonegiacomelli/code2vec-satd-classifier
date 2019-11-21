@@ -35,8 +35,12 @@ class Persistence(val databasePath: Path) {
         }
     }
 
-    fun startWebServer() {
+    fun showInBrowser() {
         setupDatabase()
+        startWebServer()
+    }
+
+    private fun startWebServer() {
         Server.startWebServer(connection())
     }
 
@@ -45,7 +49,7 @@ class Persistence(val databasePath: Path) {
 val persistence = Persistence(Folders.database_db1.resolve("h2satd"))
 
 fun main() {
-    persistence.startWebServer()
+    persistence.showInBrowser()
 }
 
 
@@ -74,5 +78,15 @@ class DbSatd(id: EntityID<Long>) : LongEntity(id) {
 fun <T> executeStatement(statement: Statement<T>) {
     transaction {
         statement.execute(this)
+    }
+}
+
+fun <T> executeStatementIgnoreDuplicates(statement: Statement<T>) {
+    try {
+        transaction {
+            statement.execute(this)
+        }
+    } catch (ex: Exception) {
+
     }
 }
