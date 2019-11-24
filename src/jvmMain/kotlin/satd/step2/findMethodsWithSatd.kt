@@ -4,6 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.comments.Comment
 import com.github.javaparser.ast.comments.JavadocComment
+import com.github.javaparser.javadoc.JavadocBlockTag
 import java.util.regex.Pattern
 
 private val satdToIgnore = "there is a problem"
@@ -28,7 +29,9 @@ fun findMethodsWithSatd(content: String): List<Method> {
 
         //we remove the "satdToIgnore" from the javadoc and re-check the satd
         parse.blockTags.removeAll(potentialFP)
-
+        parse.blockTags.addAll(potentialFP.map {
+            JavadocBlockTag("throws", it.toText().replace(satdToIgnore, ""))
+        })
         val ret = MethodWithSatd.match(parse.toText())
         return ret
     }

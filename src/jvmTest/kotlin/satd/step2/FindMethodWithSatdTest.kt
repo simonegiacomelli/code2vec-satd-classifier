@@ -16,6 +16,7 @@ internal class FindMethodWithSatdTest {
     val class5line by lazy { load("Class5line.java") }
     val fixmethod by lazy { load("Fixmethod.java") }
     val throwsInJavaDoc by lazy { load("SatdInJavaDocThrows.java") }
+    val throwsInJavaDocTricky by lazy { load("SatdInJavaDocThrowsTricky.java") }
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/SourceTest/$s")!!.readText()
 
@@ -71,6 +72,12 @@ internal class FindMethodWithSatdTest {
     fun `some patterns must not be detected if they are in javadoc throws clause`() {
         val target = findMethodsWithSatd(throwsInJavaDoc)
         assertEquals(0, target.size)
+    }
+
+    @Test
+    fun `pattern not to be found in javadoc should not cloud other pattern`() {
+        val target = findMethodsWithSatd(throwsInJavaDocTricky)
+        assertEquals(1, target.size)
     }
 
     //todo should I include this?
