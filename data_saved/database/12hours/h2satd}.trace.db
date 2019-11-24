@@ -1,0 +1,53 @@
+2019-11-24 17:21:51 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "SATD_LEN" not found; SQL statement:
+select pattern, count(*) as pattern_count FROM DBSATDS 
+where satd_len<50 and fixed_len < 50 
+group by pattern
+order by count(*) desc [42122-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:453)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:163)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:145)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:190)
+	at org.h2.expression.condition.ConditionAndOr.optimize(ConditionAndOr.java:135)
+	at org.h2.command.dml.Select.prepare(Select.java:1209)
+	at org.h2.command.Parser.prepareCommand(Parser.java:744)
+	at org.h2.engine.Session.prepareLocal(Session.java:657)
+	at org.h2.engine.Session.prepareCommand(Session.java:595)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1235)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:212)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:201)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1459)
+	at org.h2.server.web.WebApp.query(WebApp.java:1116)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1078)
+	at org.h2.server.web.WebApp$1.next(WebApp.java:1065)
+	at org.h2.server.web.WebThread.process(WebThread.java:178)
+	at org.h2.server.web.WebThread.run(WebThread.java:94)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2019-11-24 17:22:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT COUNT(*) FROM (
+SELECT * FROM DBSATDS 
+WHERE 
+  OLD_CLEAN_LEN<50 AND NEW_CLEAN_LEN < 50 AND CLEAN_DIFF_RATIO < 0.25
+ORDER BY ID DESC
+
+)
+
+SELECT[*] PATTERN, COUNT(*) AS PATTERN_COUNT FROM DBSATDS 
+WHERE OLD_LEN<50 AND NEW_LEN < 50 
+GROUP BY PATTERN
+ORDER BY COUNT(*) DESC"; SQL statement:
+select count(*) from (
+SELECT * FROM DBSATDS 
+where 
+  old_clean_len<50 and new_clean_len < 50 and clean_diff_ratio < 0.25
+order by id desc
+
+)
+
+select pattern, count(*) as pattern_count FROM DBSATDS 
+where old_len<50 and new_len < 50 
+group by pattern
+order by count(*) desc [42000-200]
