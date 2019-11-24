@@ -22,7 +22,7 @@ class Persistence(val databasePath: Path) {
     fun connection(): Connection {
         Class.forName("org.h2.Driver")
         return DriverManager.getConnection(
-            "jdbc:h2:$databasePath};AUTO_SERVER=TRUE;AUTO_SERVER_PORT=19091",
+            "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=19091",
             "sa",
             ""
         )
