@@ -10,7 +10,6 @@ order by id desc
 
 ');
 
-create table satd_by_pattern as
 
 select pattern, count(*) as pattern_count FROM DBSATDS 
 where old_len<50 and new_len < 50 
