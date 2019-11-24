@@ -2,7 +2,12 @@ Useful query
 
 
 call csvwrite('~/Documents/tesi/dbsatds.csv', '
-SELECT * FROM DBSATDS where satd_len<50 and fixed_len < 50 order by id desc
+
+SELECT * FROM DBSATDS 
+where 
+  old_clean_len<50 and new_clean_len < 50 and clean_diff_ratio < 0.25
+order by id desc
+
 ');
 
 create table satd_by_pattern as
