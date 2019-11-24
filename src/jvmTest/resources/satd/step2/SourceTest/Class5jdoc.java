@@ -3,7 +3,7 @@ package satd.step2;
 class Class5jdoc {
 
     /**
-     * HACK javadock
+     * HACK javadoc
      * @return
      */
     double method3() {

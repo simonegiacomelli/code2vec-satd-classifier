@@ -1,27 +1,56 @@
 package satd.step2
 
 import com.github.javaparser.JavaParser
-import com.github.javaparser.ast.Node
 import com.github.javaparser.ast.body.MethodDeclaration
-import com.github.javaparser.ast.comments.BlockComment
 import com.github.javaparser.ast.comments.Comment
 import com.github.javaparser.ast.comments.JavadocComment
-import com.github.javaparser.ast.comments.LineComment
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 import java.util.regex.Pattern
 
+private val satdToIgnore = "there is a problem"
+
 fun findMethodsWithSatd(content: String): List<Method> {
+
     val satdList = mutableSetOf<MethodWithSatd>()
     val methodList = mutableSetOf<MethodDeclaration>()
+    fun matchJavaDoc(comment: JavadocComment): String? {
+        val p1 = MethodWithSatd.match(comment.content) ?: return null
+        if (p1 != satdToIgnore) return p1
+
+        val parse = comment.parse()
+        //potential false positive
+        val potentialFP = parse
+            .blockTags
+            .filter { it.tagName == "throws" }
+            .filter { it.toText().contains(satdToIgnore) }
+
+        if (potentialFP.isEmpty())
+            return p1
+
+        //we remove the "satdToIgnore" from the javadoc and re-check the satd
+        parse.blockTags.removeAll(potentialFP)
+
+        val ret = MethodWithSatd.match(parse.toText())
+        return ret
+    }
+
+    fun matchSatd(comment: Comment): String? {
+        val pattern = if (comment !is JavadocComment)
+            MethodWithSatd.match(comment.content)
+        else
+            matchJavaDoc(comment)
+        return pattern
+    }
+
     /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
     fun addMethod(method: MethodDeclaration, comment: Comment): Boolean {
 
-        val pattern = MethodWithSatd.match(comment.content)
-        if (pattern != null)
+        val pattern = matchSatd(comment)
+        if (pattern != null) {
             if (!methodList.contains(method)) {
                 satdList.add(MethodWithSatd(method, comment.content, pattern))
                 methodList.add(method)
             }
+        }
         return pattern != null
     }
 

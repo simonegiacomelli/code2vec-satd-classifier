@@ -15,6 +15,7 @@ internal class FindMethodWithSatdTest {
     val class5jdoc by lazy { load("Class5jdoc.java") }
     val class5line by lazy { load("Class5line.java") }
     val fixmethod by lazy { load("Fixmethod.java") }
+    val throwsInJavaDoc by lazy { load("SatdInJavaDocThrows.java") }
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/SourceTest/$s")!!.readText()
 
@@ -57,12 +58,18 @@ internal class FindMethodWithSatdTest {
     @Test
     fun `method jdoc comment`() {
         val target = findMethodsWithSatd(class5jdoc)
-
         assertEquals(1, target.size)
     }
+
     @Test
     fun `comment fixmethod should not be matched`() {
         val target = findMethodsWithSatd(fixmethod)
+        assertEquals(0, target.size)
+    }
+
+    @Test
+    fun `some patterns must not be detected if they are in javadoc throws clause`() {
+        val target = findMethodsWithSatd(throwsInJavaDoc)
         assertEquals(0, target.size)
     }
 
