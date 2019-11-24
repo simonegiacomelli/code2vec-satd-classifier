@@ -7,7 +7,7 @@ import com.github.javaparser.ast.comments.JavadocComment
 import com.github.javaparser.javadoc.JavadocBlockTag
 import java.util.regex.Pattern
 
-private val satdToIgnore = "there is a problem"
+private const val satdToIgnore = "there is a problem"
 
 fun findMethodsWithSatd(content: String): List<Method> {
 
