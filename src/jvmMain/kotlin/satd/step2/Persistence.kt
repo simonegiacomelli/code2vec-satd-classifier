@@ -53,13 +53,11 @@ class Persistence(val databasePath: Path) {
 val persistence = Persistence(Folders.database_db1.resolve("h2satd"))
 
 fun main(args: Array<String>) {
-    //persistence.showInBrowser()
     val p = if (args.isEmpty())
         persistence
     else {
         val databasePath = Paths.get(args.first())
-        val get = Paths.get(args.first() + ".mv.db")
-        if (!get.toFile().exists())
+        if (!databasePath.toFile().exists())
             throw IllegalArgumentException("Path [$get] not found!")
         Persistence(databasePath)
     }
