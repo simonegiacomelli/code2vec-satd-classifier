@@ -45,6 +45,9 @@ kotlin {
                 implementation 'com.h2database:h2:1.4.200'
                 implementation 'org.jetbrains.exposed:exposed:0.17.6'
                 implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.3.60"
+
+
+                implementation 'org.webjars.bower:diff2html:2.11.2'
             }
         }
         jvmTest {
