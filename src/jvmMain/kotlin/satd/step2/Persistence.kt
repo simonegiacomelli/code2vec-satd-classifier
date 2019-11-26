@@ -57,8 +57,9 @@ fun main(args: Array<String>) {
         persistence
     else {
         val databasePath = Paths.get(args.first())
-        if (!databasePath.toFile().exists())
-            throw IllegalArgumentException("Path [$databasePath] not found!")
+        val fullPath = Paths.get(args.first() + ".mv.db")
+        if (!fullPath.toFile().exists())
+            throw IllegalArgumentException("Path [$fullPath] not found!")
         Persistence(databasePath)
     }
     p.showInBrowser()
