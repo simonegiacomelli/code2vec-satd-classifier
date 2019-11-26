@@ -58,7 +58,7 @@ fun main(args: Array<String>) {
     else {
         val databasePath = Paths.get(args.first())
         if (!databasePath.toFile().exists())
-            throw IllegalArgumentException("Path [$get] not found!")
+            throw IllegalArgumentException("Path [$databasePath] not found!")
         Persistence(databasePath)
     }
     p.showInBrowser()
