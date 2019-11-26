@@ -64,3 +64,34 @@ Caused by: java.lang.StackOverflowError
         at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
         at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
         at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+
+[...]
+
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:6804/8192
+ForkJoinPool.commonPool-worker-3                   Cloning https://github.com/mmjindal2555/SmartDoc
+ForkJoinPool.commonPool-worker-3                   Cloning https://github.com/Mauker1/MaterialSearchView
+
+> Task :step2 FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':step2'.
+> Process 'command '/usr/lib/jvm/java-11-openjdk-amd64/bin/java'' finished with non-zero exit value 1
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 20h 4m 45s
+8 actionable tasks: 3 executed, 5 up-to-date
