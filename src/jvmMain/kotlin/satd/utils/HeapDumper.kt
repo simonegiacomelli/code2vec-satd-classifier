@@ -3,18 +3,17 @@ package satd.utils
 import com.sun.management.HotSpotDiagnosticMXBean
 import satd.step1.Folders
 import java.lang.management.ManagementFactory
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 /* Simone 14/12/13 16.57 */
 object HeapDumper {
     val heapdumpfile by lazy {
         val folder = Folders.heapdumps.toFile()
         folder.mkdirs()
-        val format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd--HH-mm-ss"))
+        val format = dateTimeToStr()
         val file = folder.resolve("dump-$format.hprof").absoluteFile.toString()
         file
     }
+
     // This is the name of the HotSpot Diagnostic MBean
     private const val HOTSPOT_BEAN_NAME = "com.sun.management:type=HotSpotDiagnostic"
     // get the hotspot diagnostic MBean from the
