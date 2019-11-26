@@ -96,8 +96,6 @@ fun ignoreDuplicates(function: () -> Unit) {
                             || contains("primary key", ignoreCase = true)
                 }
         )
-            throw ex;
-        else
-            logln("IGNORED EXCEPTION ${ex.message}")
+            throw ex
     }
 }
