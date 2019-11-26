@@ -1,0 +1,97 @@
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8124/8192
+playbar_android-sdk                                commit#:120/144 source#:3963  satd#:7 satd/sec: 0.1 source/sec:0.6 mem:8170/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8095/8192
+wangliyang206_NewRecyclingAndroid                  commit#:294/379 source#:1208  satd#:0 satd/sec: 0.0 source/sec:1.0 mem:8105/8192
+robotoworks_mechanoid                              commit#:372/564 source#:2036  satd#:0 satd/sec: 0.0 source/sec:0.6 mem:8106/8192
+wangliyang206_NewRecyclingAndroid                  commit#:299/379 source#:1212  satd#:0 satd/sec: 0.0 source/sec:0.4 mem:8095/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8109/8192
+playbar_android-sdk                                commit#:120/144 source#:3965  satd#:7 satd/sec: 0.1 source/sec:0.1 mem:8131/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8140/8192
+wangliyang206_NewRecyclingAndroid                  commit#:300/379 source#:1219  satd#:0 satd/sec: 0.0 source/sec:1.1 mem:8143/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8156/8192
+wangliyang206_NewRecyclingAndroid                  commit#:300/379 source#:1223  satd#:0 satd/sec: 0.0 source/sec:0.4 mem:8151/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8163/8192
+wangliyang206_NewRecyclingAndroid                  commit#:302/379 source#:1225  satd#:0 satd/sec: 0.0 source/sec:0.4 mem:8167/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8168/8192
+playbar_android-sdk                                commit#:120/144 source#:3969  satd#:7 satd/sec: 0.1 source/sec:0.4 mem:8185/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8159/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8171/8192
+JetBrains_android                                  commit#:48552/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8178/8192
+wangliyang206_NewRecyclingAndroid                  commit#:302/379 source#:1227  satd#:0 satd/sec: 0.0 source/sec:0.4 mem:8181/8192
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8182/8192
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8186/8192
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8179/8192
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8184/8192
+wangliyang206_NewRecyclingAndroid                  commit#:302/379 source#:1228  satd#:0 satd/sec: 0.0 source/sec:0.1 mem:8182/8192
+wangliyang206_NewRecyclingAndroid                  commit#:302/379 source#:1229  satd#:0 satd/sec: 0.0 source/sec:0.1 mem:8187/8192
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8187/8192
+wangliyang206_NewRecyclingAndroid                  commit#:304/379 source#:1230  satd#:0 satd/sec: 0.0 source/sec:0.1 mem:8187/8192
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:8088/8192
+Exception in thread "main" java.lang.StackOverflowError
+        at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+        at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+        at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+        at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+        at java.base/java.util.concurrent.ForkJoinTask.getThrowableException(ForkJoinTask.java:603)
+        at java.base/java.util.concurrent.ForkJoinTask.reportException(ForkJoinTask.java:678)
+        at java.base/java.util.concurrent.ForkJoinTask.invoke(ForkJoinTask.java:737)
+        at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateParallel(ReduceOps.java:919)
+        at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:233)
+        at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:578)
+        at kotlin.streams.jdk8.StreamsKt.toList(Streams.kt:60)
+        at satd.step2.MainKt.main(Main.kt:25)
+        at satd.step2.MainKt.main(Main.kt)
+Caused by: java.lang.StackOverflowError
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+
+[...]
+
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+        at com.github.javaparser.ast.visitor.VoidVisitorAdapter.visit(VoidVisitorAdapter.java:97)
+        at com.github.javaparser.ast.expr.BinaryExpr.accept(BinaryExpr.java:146)
+JetBrains_android                                  commit#:48553/64208 source#:93679  satd#:111 satd/sec: 0.1 source/sec:0.1 mem:6804/8192
+ForkJoinPool.commonPool-worker-3                   Cloning https://github.com/mmjindal2555/SmartDoc
+ForkJoinPool.commonPool-worker-3                   Cloning https://github.com/Mauker1/MaterialSearchView
+
+> Task :step2 FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':step2'.
+> Process 'command '/usr/lib/jvm/java-11-openjdk-amd64/bin/java'' finished with non-zero exit value 1
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 20h 4m 45s
+8 actionable tasks: 3 executed, 5 up-to-date

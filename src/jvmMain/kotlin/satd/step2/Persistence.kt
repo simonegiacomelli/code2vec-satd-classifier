@@ -9,13 +9,16 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.statements.Statement
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
 import satd.utils.logln
+import java.lang.IllegalArgumentException
+import java.nio.file.FileSystems
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
+
 
 class Persistence(val databasePath: Path) {
 
@@ -49,8 +52,16 @@ class Persistence(val databasePath: Path) {
 
 val persistence = Persistence(Folders.database_db1.resolve("h2satd"))
 
-fun main() {
-    persistence.showInBrowser()
+fun main(args: Array<String>) {
+    val p = if (args.isEmpty())
+        persistence
+    else {
+        val databasePath = Paths.get(args.first())
+        if (!databasePath.toFile().exists())
+            throw IllegalArgumentException("Path [$get] not found!")
+        Persistence(databasePath)
+    }
+    p.showInBrowser()
 }
 
 
