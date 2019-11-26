@@ -13,6 +13,7 @@ import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
 import satd.utils.printStats
+import java.util.*
 
 
 /**
@@ -45,8 +46,16 @@ class Find(val git: Git) {
     val emptyTreeIterator = EmptyTreeIterator()
 
     fun trackSatd() {
+        try {
+            trackSatdInternal()
+        } catch (ex: Throwable) {
+            Exceptions(ex, repoName).handle()
+            throw ex
+        }
+    }
+
+    fun trackSatdInternal() {
         git.printStats()
-//        blobSatd.cache.load()
 
         for (child in git.log().all().call()) {
             stat.commitRate.spin()
@@ -58,10 +67,8 @@ class Find(val git: Git) {
             else visitEdge(child.newTreeIterator(), emptyTreeIterator, child, ObjectId.zeroId())
 
             stat.printSpin()
-//            blobSatd.cache.storeSpin()
         }
         stat.printForce()
-//        blobSatd.cache.store()
     }
 
     private fun visitEdge(
