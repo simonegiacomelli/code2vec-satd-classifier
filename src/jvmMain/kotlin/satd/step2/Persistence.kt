@@ -39,12 +39,7 @@ class Persistence(val databasePath: Path) {
         }
     }
 
-    fun showInBrowser() {
-        setupDatabase()
-        startWebServer()
-    }
-
-    private fun startWebServer() {
+    fun startWebServer() {
         Server.startWebServer(connection())
     }
 
@@ -62,7 +57,7 @@ fun main(args: Array<String>) {
             throw IllegalArgumentException("Path [$fullPath] not found!")
         Persistence(databasePath)
     }
-    p.showInBrowser()
+    p.startWebServer()
 }
 
 
