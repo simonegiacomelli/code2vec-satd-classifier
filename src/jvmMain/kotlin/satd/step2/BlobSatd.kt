@@ -6,10 +6,8 @@ import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.utils.logln
 import java.nio.charset.Charset
 import java.security.MessageDigest
-import kotlin.experimental.and
 import kotlin.math.absoluteValue
 
 class BlobSatd(val repo: Repository, val stat: Stat) {
@@ -59,7 +57,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             val req = Requirements(old, new)
             if (!req.accept())
                 return
-            ignoreDuplicates{
+            ignoreDuplicates {
                 transaction {
                     DbSatds.insert {
                         it[this.repo] = repoName
@@ -80,10 +78,11 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                         it[this.new_clean] = newClean
                         it[this.old_clean_len] = oldCleanLen
                         it[this.new_clean_len] = newCleanLen
-                        it[this.clean_diff_ratio] =
-                            (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                        val clDiffRatio = (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                        it[this.clean_diff_ratio] = clDiffRatio
                         it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
-
+                        val acc = oldCleanLen < 50 && newCleanLen < 50 && clDiffRatio < 0.25
+                        it[this.accept] = if (acc) 1 else 0
                     }
                 }
                 stat.satdRate.spin()
@@ -91,7 +90,6 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             }
 
         }
-
 
 
     }
