@@ -15,7 +15,7 @@ fun main() {
         throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
 
     RepoList
-        .androidReposStackOverflow
+        .androidReposFull
 //            .take(2000)
         .stream()
         .parallel()
