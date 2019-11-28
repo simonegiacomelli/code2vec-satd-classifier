@@ -1,4 +1,4 @@
-#this is a comment
+# a line that starts with an hash is ignored
 hack
 retarded
 at a loss
