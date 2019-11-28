@@ -12,11 +12,10 @@ internal class FindMethodWithSatdTest {
     val class3 by lazy { load("Class3.java") }
     val class4 by lazy { load("Class4.java") }
     val class5block by lazy { load("Class5block.java") }
-    val class5jdoc by lazy { load("Class5jdoc.java") }
     val class5line by lazy { load("Class5line.java") }
     val fixmethod by lazy { load("Fixmethod.java") }
     val throwsInJavaDoc by lazy { load("SatdInJavaDocThrows.java") }
-    val throwsInJavaDocTricky by lazy { load("SatdInJavaDocThrowsTricky.java") }
+
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/SourceTest/$s")!!.readText()
 
@@ -57,12 +56,6 @@ internal class FindMethodWithSatdTest {
     }
 
     @Test
-    fun `method jdoc comment`() {
-        val target = findMethodsWithSatd(class5jdoc)
-        assertEquals(1, target.size)
-    }
-
-    @Test
     fun `comment fixmethod should not be matched`() {
         val target = findMethodsWithSatd(fixmethod)
         assertEquals(0, target.size)
@@ -75,9 +68,9 @@ internal class FindMethodWithSatdTest {
     }
 
     @Test
-    fun `pattern not to be found in javadoc should not cloud other pattern`() {
-        val target = findMethodsWithSatd(throwsInJavaDocTricky)
-        assertEquals(1, target.size)
+    fun `no satd detection in JavaDoc`() {
+        val target = findMethodsWithSatd(noSatdDetectionInJavaDoc)
+        assertEquals(0, target.size)
     }
 
     //todo should I include this?
@@ -90,3 +83,21 @@ internal class FindMethodWithSatdTest {
     //TODO detect failed parsing of incorrect java source
     //TODO add method name correctenss check
 }
+
+
+val noSatdDetectionInJavaDoc = """
+    class Class1 {
+        /**
+         * some comment fixme, it is hacky and ugly
+         *
+         * @throws IOException If there is a problem opening the file representing
+         *                     the bookmark.
+         */
+        public void loadAutoBookmark() throws IOException {
+            autoBookmark = Bookmark.getInstance(book.getPath());
+            audioOffset = autoBookmark.getPosition();
+            book.setCurrentIndex(autoBookmark.getNccIndex());
+            book.goTo(book.current());
+        }
+    }
+""".trimIndent()

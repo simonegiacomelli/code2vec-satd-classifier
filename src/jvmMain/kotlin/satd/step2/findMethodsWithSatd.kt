@@ -13,34 +13,10 @@ fun findMethodsWithSatd(content: String): List<Method> {
 
     val satdList = mutableSetOf<MethodWithSatd>()
     val methodList = mutableSetOf<MethodDeclaration>()
-    fun matchJavaDoc(comment: JavadocComment): String? {
-        val p1 = MethodWithSatd.match(comment.content) ?: return null
-        if (p1 != satdToIgnore) return p1
-
-        val parse = comment.parse()
-        //potential false positive
-        val potentialFP = parse
-            .blockTags
-            .filter { it.tagName == "throws" }
-            .filter { it.toText().contains(satdToIgnore) }
-
-        if (potentialFP.isEmpty())
-            return p1
-
-        //we remove the "satdToIgnore" from the javadoc and re-check the satd
-        parse.blockTags.removeAll(potentialFP)
-        parse.blockTags.addAll(potentialFP.map {
-            JavadocBlockTag("throws", it.toText().replace(satdToIgnore, ""))
-        })
-        val ret = MethodWithSatd.match(parse.toText())
-        return ret
-    }
 
     fun matchSatd(comment: Comment): String? {
-        val pattern = if (comment !is JavadocComment)
-            MethodWithSatd.match(comment.content)
-        else
-            matchJavaDoc(comment)
+        if (comment is JavadocComment) return null
+        val pattern = MethodWithSatd.match(comment.content)
         return pattern
     }
 
