@@ -6,19 +6,19 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class RequirementsTest {
-    val class1 by lazy { load("Class1.java") }
-    val class2 by lazy { load("Class2.java") }
-    val a1old by lazy { load("Android1_old.java") }
-    val a1new by lazy { load("Android1_new.java") }
+    val class1 by lazy { load("satd/step2/ComparerTest/Class1.java") }
+    val class2 by lazy { load("satd/step2/ComparerTest/Class2.java") }
+    val a1old by lazy { load("satd/step2/ComparerTest/Android1_old.java") }
+    val a1new by lazy { load("satd/step2/ComparerTest/Android1_new.java") }
 
-    val case3old by lazy { load("Case3_old.java") }
-    val case3new by lazy { load("Case3_new.java") }
+    val case3old by lazy { load("satd/step2/ComparerTest/Case3_old.java") }
+    val case3new by lazy { load("satd/step2/ComparerTest/Case3_new.java") }
 
-    val stringCaseOld by lazy { load("StringCaseOld.java") }
-    val stringCaseNew by lazy { load("StringCaseNew.java") }
+    val stringCaseOld by lazy { load("satd/step2/ComparerTest/StringCaseOld.java") }
+    val stringCaseNew by lazy { load("satd/step2/ComparerTest/StringCaseNew.java") }
 
 
-    private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/ComparerTest/$s")!!.readText()
+    private fun load(s: String) = this::class.java.classLoader.getResource("$s")!!.readText()
 
     @Test
     fun `no changes in the code should reject the satd`() {
