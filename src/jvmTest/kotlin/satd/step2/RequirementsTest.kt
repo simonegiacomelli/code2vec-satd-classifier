@@ -114,7 +114,7 @@ val stringCase3Old = """
 
     class Class1 {
         void method1(int code) {
-            //fixme from emtpy string to null
+            // fixme from empty string to null
             if (cod > 20)
                 System.out.println(String.format("", code));
             for(int i = 0; i<20;i++)
