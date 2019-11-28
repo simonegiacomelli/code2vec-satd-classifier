@@ -2,8 +2,6 @@ package satd.step2
 
 import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.body.MethodDeclaration
-import com.github.javaparser.ast.comments.Comment
-import com.github.javaparser.ast.comments.JavadocComment
 import java.util.regex.Pattern
 
 private const val satdToIgnore = "there is a problem"
@@ -13,20 +11,13 @@ fun findMethodsWithSatd(content: String): List<Method> {
     val satdList = mutableSetOf<MethodWithSatd>()
     val methodList = mutableSetOf<MethodDeclaration>()
 
-    fun matchSatd(comment: Comment): String? {
-        if (comment is JavadocComment) return null
-
-        val pattern = MethodWithSatd.match(comment.content)
-        return pattern
-    }
-
     /* this collection of MethodDeclaration should not be needed. we should rely only on the previous collection */
-    fun addMethod(method: MethodDeclaration, comment: Comment): Boolean {
+    fun addMethod(method: MethodDeclaration, comment: String): Boolean {
 
-        val pattern = matchSatd(comment)
+        val pattern = MethodWithSatd.match(comment)
         if (pattern != null) {
             if (!methodList.contains(method)) {
-                satdList.add(MethodWithSatd(method, comment.content, pattern))
+                satdList.add(MethodWithSatd(method, comment, pattern))
                 methodList.add(method)
             }
         }
@@ -40,10 +31,12 @@ fun findMethodsWithSatd(content: String): List<Method> {
     cu.result.get().types.filterNotNull().forEach { type ->
 
         type.methods.forEach { method ->
-            method.allContainedComments.forEach c@{
-                if (addMethod(method, it))
-                    return@c
-            }
+            val g = method.allContainedComments.filterNotNull()
+                .map { it.content.orEmpty().trim() }
+                .map { it.split(" ").filter { it.trim() != "*" }.map { it.trim() }.joinToString(" ") }
+                .joinToString(" ")
+
+            addMethod(method, g)
         }
     }
     return satdList.toList()
