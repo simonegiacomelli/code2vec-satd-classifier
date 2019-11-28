@@ -8,8 +8,6 @@ import kotlin.test.assertTrue
 class RequirementsTest {
     val class1 by lazy { load("satd/step2/ComparerTest/Class1.java") }
     val class2 by lazy { load("satd/step2/ComparerTest/Class2.java") }
-    val a1old by lazy { load("satd/step2/ComparerTest/Android1_old.java") }
-    val a1new by lazy { load("satd/step2/ComparerTest/Android1_new.java") }
 
     val case3old by lazy { load("satd/step2/ComparerTest/Case3_old.java") }
     val case3new by lazy { load("satd/step2/ComparerTest/Case3_new.java") }
@@ -23,12 +21,6 @@ class RequirementsTest {
     @Test
     fun `no changes in the code should reject the satd`() {
         val target = instantiateTarget(class1, class2, "method1")
-        assertFalse(target.accept());
-    }
-
-    @Test
-    fun `no changes in the code should reject the satd case from repo doshivikram_jchat4android`() {
-        val target = instantiateTarget(a1old, a1new, "onReceive")
         assertFalse(target.accept());
     }
 
