@@ -11,7 +11,6 @@ internal class FindMethodWithSatdTest {
     val class2b by lazy { load("Class2b.java") }
     val class3 by lazy { load("Class3.java") }
     val class4 by lazy { load("Class4.java") }
-    val class5block by lazy { load("Class5block.java") }
     val class5line by lazy { load("Class5line.java") }
     val fixmethod by lazy { load("Fixmethod.java") }
     val throwsInJavaDoc by lazy { load("SatdInJavaDocThrows.java") }
@@ -50,12 +49,6 @@ internal class FindMethodWithSatdTest {
     }
 
     @Test
-    fun `method block comment`() {
-        val target = findMethodsWithSatd(class5block)
-        assertEquals(1, target.size)
-    }
-
-    @Test
     fun `comment fixmethod should not be matched`() {
         val target = findMethodsWithSatd(fixmethod)
         assertEquals(0, target.size)
@@ -70,6 +63,12 @@ internal class FindMethodWithSatdTest {
     @Test
     fun `no satd detection in JavaDoc`() {
         val target = findMethodsWithSatd(noSatdDetectionInJavaDoc)
+        assertEquals(0, target.size)
+    }
+
+    @Test
+    fun `no satd detection in method comment`() {
+        val target = findMethodsWithSatd(noSatdDetectionInMethodComment)
         assertEquals(0, target.size)
     }
 
@@ -92,6 +91,21 @@ val noSatdDetectionInJavaDoc = """
          *
          * @throws IOException If there is a problem opening the file representing
          *                     the bookmark.
+         */
+        public void loadAutoBookmark() throws IOException {
+            autoBookmark = Bookmark.getInstance(book.getPath());
+            audioOffset = autoBookmark.getPosition();
+            book.setCurrentIndex(autoBookmark.getNccIndex());
+            book.goTo(book.current());
+        }
+    }
+    
+""".trimIndent()
+val noSatdDetectionInMethodComment = """
+    class Class1 {
+        /*
+         * some comment fixme, it is hacky and ugly
+         *
          */
         public void loadAutoBookmark() throws IOException {
             autoBookmark = Bookmark.getInstance(book.getPath());

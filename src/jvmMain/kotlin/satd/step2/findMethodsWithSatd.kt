@@ -4,7 +4,6 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.comments.Comment
 import com.github.javaparser.ast.comments.JavadocComment
-import com.github.javaparser.javadoc.JavadocBlockTag
 import java.util.regex.Pattern
 
 private const val satdToIgnore = "there is a problem"
@@ -16,6 +15,7 @@ fun findMethodsWithSatd(content: String): List<Method> {
 
     fun matchSatd(comment: Comment): String? {
         if (comment is JavadocComment) return null
+
         val pattern = MethodWithSatd.match(comment.content)
         return pattern
     }
@@ -40,13 +40,10 @@ fun findMethodsWithSatd(content: String): List<Method> {
     cu.result.get().types.filterNotNull().forEach { type ->
 
         type.methods.forEach { method ->
-            if (!method.comment.isPresent || !addMethod(method, method.comment.get()))
-                method.allContainedComments.forEach c@{
-                    if (addMethod(method, it))
-                        return@c
-                }
-
-
+            method.allContainedComments.forEach c@{
+                if (addMethod(method, it))
+                    return@c
+            }
         }
     }
     return satdList.toList()
