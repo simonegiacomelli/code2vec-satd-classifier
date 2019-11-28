@@ -11,9 +11,7 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step1.Folders
-import satd.utils.logln
 import java.lang.IllegalArgumentException
-import java.nio.file.FileSystems
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.sql.Connection
