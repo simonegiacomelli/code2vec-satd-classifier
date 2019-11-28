@@ -74,8 +74,14 @@ internal class FindMethodWithSatdTest {
     }
 
     @Test
-    fun `a satd split on multiple lines should be detected`() {
+    fun `a satd split on multiple line block comments should be detected`() {
         val target = findMethodsWithSatd(satdWithCarriageReturn)
+        assertEquals(1, target.size)
+    }
+
+    @Test
+    fun `a satd split on in a block comment with multiple lines should be detected`() {
+        val target = findMethodsWithSatd(satdWithMultiLineBlockComment)
         assertEquals(1, target.size)
     }
 
@@ -134,6 +140,24 @@ val satdWithCarriageReturn = """
             // this indicates a more 
             // fundamental problem temporary 
             // crutch
+            if (cod > 20)
+                System.out.println(String.format("", code));
+            for(int i = 0; i<20;i++)
+                Class2.method2();
+        }
+    }
+""".trimIndent()
+
+val satdWithMultiLineBlockComment = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            /* this comments contains 2 satd
+             this indicates a more 
+             fundamental problem temporary 
+             crutch
+             */
             if (cod > 20)
                 System.out.println(String.format("", code));
             for(int i = 0; i<20;i++)

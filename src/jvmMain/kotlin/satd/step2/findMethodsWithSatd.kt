@@ -4,8 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.body.MethodDeclaration
 import java.util.regex.Pattern
 
-private const val satdToIgnore = "there is a problem"
-
+private val multipleSpaces = "\\s+".toRegex()
 fun findMethodsWithSatd(content: String): List<Method> {
 
     val satdList = mutableSetOf<MethodWithSatd>()
@@ -33,10 +32,10 @@ fun findMethodsWithSatd(content: String): List<Method> {
         type.methods.forEach { method ->
             val g = method.allContainedComments.filterNotNull()
                 .map { it.content.orEmpty().trim() }
-                .map { it.split(" ").filter { it.trim() != "*" }.map { it.trim() }.joinToString(" ") }
+                .map { it.split(" ").map { it.trim() }.filter { it != "*" }.joinToString(" ") }
                 .joinToString(" ")
 
-            addMethod(method, g)
+            addMethod(method, g.replace(multipleSpaces, " "))
         }
     }
     return satdList.toList()
