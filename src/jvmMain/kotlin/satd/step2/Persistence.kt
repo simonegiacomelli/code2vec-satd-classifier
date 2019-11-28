@@ -75,6 +75,7 @@ object DbSatds : LongIdTable() {
     val clean_diff_ratio = double("clean_diff_ratio")
     val code_hash = varchar("code_hash", 200).index(isUnique = true)
     val accept = integer("accept")
+    val parent_count = integer("parent_count")
 }
 
 class DbSatd(id: EntityID<Long>) : LongEntity(id) {

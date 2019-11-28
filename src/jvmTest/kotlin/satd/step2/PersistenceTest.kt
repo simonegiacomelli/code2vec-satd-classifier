@@ -58,6 +58,7 @@ class PersistenceTest {
                     it[this.clean_diff_ratio] = 0.2
                     it[this.code_hash] = code_hash
                     it[this.accept] = 1
+                    it[this.parent_count] = 1
                 }
             }
         }

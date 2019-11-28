@@ -83,6 +83,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                         it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
                         val acc = oldCleanLen < 50 && newCleanLen < 50 && clDiffRatio < 0.25
                         it[this.accept] = if (acc) 1 else 0
+                        it[this.parent_count] = newCommitId.parentCount
                     }
                 }
                 stat.satdRate.spin()
