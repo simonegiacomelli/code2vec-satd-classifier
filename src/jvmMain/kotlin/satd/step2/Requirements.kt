@@ -20,8 +20,8 @@ class Requirements(om: Method, nm: Method) {
         //all non null String literals are set to ""
         clone.findAll(StringLiteralExpr::class.java)
             .forEach {
-                if (it.asString() != null)
-                    it.setString("")
+                if (it.asString() != null && it.asString().isNotEmpty())
+                    it.setString("--##string##--")
             }
 
         return clone

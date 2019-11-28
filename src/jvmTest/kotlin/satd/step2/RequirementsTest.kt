@@ -10,10 +10,13 @@ class RequirementsTest {
     val class2 by lazy { load("Class2.java") }
     val a1old by lazy { load("Android1_old.java") }
     val a1new by lazy { load("Android1_new.java") }
+
     val case3old by lazy { load("Case3_old.java") }
     val case3new by lazy { load("Case3_new.java") }
+
     val stringCaseOld by lazy { load("StringCaseOld.java") }
     val stringCaseNew by lazy { load("StringCaseNew.java") }
+
 
     private fun load(s: String) = this::class.java.classLoader.getResource("satd/step2/ComparerTest/$s")!!.readText()
 
@@ -36,9 +39,21 @@ class RequirementsTest {
     }
 
     @Test
-    fun `a method that changes only in strings should be rejected`() {
+    fun `a method that changes only betweeen non empty strings should be rejected`() {
         val target = instantiateTarget(stringCaseOld, stringCaseNew, "method1")
         assertFalse(target.accept());
+    }
+
+    @Test
+    fun `a method that change from empty string to non empty string instances should be accepted`() {
+        val target = instantiateTarget(stringCase2Old, stringCase2New, "method1")
+        assertTrue(target.accept());
+    }
+
+    @Test
+    fun `a method that change from empty string to null string instances should be accepted`() {
+        val target = instantiateTarget(stringCase3Old, stringCase3New, "method1")
+        assertTrue(target.accept());
     }
 
     private fun instantiateTarget(cold: String, cnew: String, name: String): Requirements {
@@ -53,3 +68,82 @@ class RequirementsTest {
         return Requirements(old, new)
     }
 }
+
+
+val stringCase2Old = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            //fixme - test case from emtpy string to null
+            if (cod > 20)
+                System.out.println(String.format("", code));
+            for (int i = 0; i < 20; i++)
+                method2();
+        }
+
+        double method2() {
+            int offset = 10;
+            return java.lang.Math.random() + offset;
+        }
+
+    }
+""".trimIndent()
+
+val stringCase2New = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            if (cod > 20)
+                System.out.println(String.format("hello", code));
+            for(int i = 0; i<20;i++)
+                method2();
+        }
+
+        double method2() {
+            int offset = 10;
+            return java.lang.Math.random() + offset;
+        }
+
+    }
+""".trimIndent()
+
+val stringCase3Old = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            //fixme from emtpy string to null
+            if (cod > 20)
+                System.out.println(String.format("", code));
+            for(int i = 0; i<20;i++)
+                method2();
+        }
+
+        double method2() {
+            int offset = 10;
+            return java.lang.Math.random() + offset;
+        }
+
+    }
+""".trimIndent()
+
+val stringCase3New = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            if (cod > 20)
+                System.out.println(String.format(null, code));
+            for(int i = 0; i<20;i++)
+                method2();
+        }
+
+        double method2() {
+            int offset = 10;
+            return java.lang.Math.random() + offset;
+        }
+
+    }
+""".trimIndent()
