@@ -48,12 +48,6 @@ class RequirementsTest {
         assertTrue(target.accept());
     }
 
-    @Test
-    fun `a satd split on multiple lines should be detected`() {
-        val target = instantiateTarget(satdWithCarriageReturnOld, satdWithCarriageReturnNew, "method1")
-        assertTrue(target.accept());
-    }
-
     private fun instantiateTarget(cold: String, cnew: String, name: String): Requirements {
         val c1list = findMethodsWithSatd(cold)
         val c2list = findMethodsByName(cnew, setOf(name))
@@ -146,33 +140,3 @@ val stringCase3New = """
     }
 """.trimIndent()
 
-
-val satdWithCarriageReturnOld = """
-    package satd.step2;
-
-    class Class1 {
-        void method1(int code) {
-            // this comments contains 2 satd
-            // this indicates a more 
-            // fundamental problem temporary 
-            // crutch
-            if (cod > 20)
-                System.out.println(String.format("", code));
-            for(int i = 0; i<20;i++)
-                Class2.method2();
-        }
-    }
-""".trimIndent()
-
-val satdWithCarriageReturnNew = """
-    package satd.step2;
-
-    class Class1 {
-        void method1(int code) {
-            if (cod > 20)
-                System.out.println(String.format(null, code));
-            for(int i = 0; i<20;i++)
-                Class2.method2();
-        }
-    }
-""".trimIndent()

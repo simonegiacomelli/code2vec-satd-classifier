@@ -3,6 +3,7 @@ package satd.step2
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 
 internal class FindMethodWithSatdTest {
@@ -72,6 +73,13 @@ internal class FindMethodWithSatdTest {
         assertEquals(0, target.size)
     }
 
+    @Test
+    fun `a satd split on multiple lines should be detected`() {
+        val target = findMethodsWithSatd(satdWithCarriageReturn)
+        assertEquals(1, target.size)
+    }
+
+
     //todo should I include this?
     //@Test
     fun `method line comment`() {
@@ -112,6 +120,24 @@ val noSatdDetectionInMethodComment = """
             audioOffset = autoBookmark.getPosition();
             book.setCurrentIndex(autoBookmark.getNccIndex());
             book.goTo(book.current());
+        }
+    }
+""".trimIndent()
+
+
+val satdWithCarriageReturn = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            // this comments contains 2 satd
+            // this indicates a more 
+            // fundamental problem temporary 
+            // crutch
+            if (cod > 20)
+                System.out.println(String.format("", code));
+            for(int i = 0; i<20;i++)
+                Class2.method2();
         }
     }
 """.trimIndent()
