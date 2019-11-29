@@ -85,6 +85,12 @@ internal class FindMethodWithSatdTest {
         assertEquals(1, target.size)
     }
 
+    @Test
+    fun `a satd split by statements should NOT be detected`() {
+        val target = findMethodsWithSatd(noRealSatd)
+        assertEquals(1, target.size)
+    }
+
 
     //todo should I include this?
     //@Test
@@ -160,6 +166,24 @@ val satdWithMultiLineBlockComment = """
              */
             if (cod > 20)
                 System.out.println(String.format("", code));
+            for(int i = 0; i<20;i++)
+                Class2.method2();
+        }
+    }
+""".trimIndent()
+
+
+val noRealSatd = """
+    package satd.step2;
+
+    class Class1 {
+        void method1(int code) {
+            /* this comments contains 2 satd
+             code shoud considered more fundamental 
+             */
+            if (cod > 20)
+                System.out.println(String.format("", code));
+            // problem would arise if XYZ
             for(int i = 0; i<20;i++)
                 Class2.method2();
         }
