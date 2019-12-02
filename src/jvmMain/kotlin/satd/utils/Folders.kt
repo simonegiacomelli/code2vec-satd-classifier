@@ -1,7 +1,6 @@
 package satd.utils
 
 import java.io.File
-import java.lang.Exception
 import java.nio.file.Paths
 import java.util.*
 import kotlin.reflect.KProperty
@@ -10,16 +9,18 @@ object config {
     private val prop = Properties()
 
 
-    init {
-        File("config.properties").apply {
-            if (exists())
-                inputStream()
-                    .use {
-                        logln("Loading $absolutePath")
-                        prop.load(it)
-                    }
-
-        }
+    fun loadArgs(args: Array<String>) {
+        File(if (args.isEmpty()) "config.properties" else args[0])
+            .apply {
+                if (exists())
+                    inputStream()
+                        .use {
+                            logln("Loading: $absolutePath")
+                            prop.load(it)
+                        }
+                else
+                    logln("Config file does not exists: $absolutePath does")
+            }
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): String {

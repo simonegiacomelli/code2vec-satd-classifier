@@ -3,8 +3,9 @@ package satd.step2
 import satd.utils.*
 import kotlin.streams.toList
 
-fun main() {
+fun main(args: Array<String>) {
     logln("Starting")
+    config.loadArgs(args)
     HeapDumper.enable()
 
     if (!Folders.database_db1.toFile().deleteRecursively())
@@ -23,4 +24,3 @@ fun main() {
     logln("Done")
 
 }
-
