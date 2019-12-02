@@ -1,26 +1,75 @@
 package satd.step2
 
 import org.eclipse.jgit.api.Git
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import satd.utils.dateTimeToStr
 
 fun main() {
-    val folder = Folders.diff.resolve(dateTimeToStr()).toFile()
-    folder.mkdir()
+    class Main {
+        fun ResultRow.filename(): String {
+            val it = this
+            return "${it[DbSatds.commit]}_${it[DbSatds.code_hash]}_${it[DbSatds.id]}.java"
+        }
 
-    val git = Git.init().setDirectory(folder).call()!!
+        val ResultRow.header: String
+            get() {
+                val it = this
+                return "pattern: ${it[DbSatds.pattern]}\n" +
+                        "commit message: ${it[DbSatds.commit_message]}\n" +
+                        "\n"
+            }
 
-    folder.resolve("pre.java").writeText("ciao Simone, come stai?")
-    git.add().addFilepattern(".").call()
-    git.commit().setMessage("files with satd").call()
-    folder.resolve("pre.java").writeText("ciao Simo!")
-    git.commit().setMessage("files with satd").call()
-    git.add().addFilepattern(".").call()
 
-    Runtime.getRuntime().exec(
-        "diff2html -s line -f html -d word -i command -o preview -- -M HEAD~1"
-        , null
-        , folder
-    )
+        fun go() {
+            val folder = Folders.diff.resolve(dateTimeToStr()).toFile()
+            folder.mkdir()
 
+            persistence.setupDatabase()
+
+//            if (true)
+//                return;
+            val git = Git.init().setDirectory(folder).call()!!
+
+            foreachRow {
+                val content =
+                    "${it.header}${it[DbSatds.old]}"
+                folder.resolve(it.filename()).writeText(content)
+            }
+
+            git.add().addFilepattern(".").call()
+            git.commit().setMessage("files with satd").call()
+
+            foreachRow {
+                val content = "${it.header}${it[DbSatds.new]}"
+                folder.resolve(it.filename()).writeText(content)
+            }
+
+            git.commit().setMessage("files with satd").call()
+            git.add().addFilepattern(".").call()
+
+            Runtime.getRuntime().exec(
+                "diff2html -s side -- -U1000000 -M HEAD~1"
+                , null
+                , folder
+            )
+        }
+
+        private fun foreachRow(function: (ResultRow) -> Unit) {
+            transaction {
+                DbSatds
+                    .select {
+                        DbSatds.accept.eq(1)
+                    }
+                    .forEach {
+
+                        function(it)
+                    }
+            }
+        }
+    }
+
+    Main().go()
 }
