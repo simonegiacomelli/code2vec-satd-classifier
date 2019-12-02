@@ -4,7 +4,7 @@ import java.io.File
 import java.util.*
 import kotlin.reflect.KProperty
 
-object config {
+class Config {
     private val prop = Properties()
 
 
@@ -28,3 +28,5 @@ object config {
 
     val repos_path by this
 }
+
+val config = Config()
