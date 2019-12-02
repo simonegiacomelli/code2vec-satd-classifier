@@ -1,6 +1,6 @@
 package satd.step2
 
-import satd.step1.Folders
+import satd.utils.Folders
 import satd.utils.AntiSpin
 import java.util.*
 

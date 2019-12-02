@@ -2,7 +2,7 @@ package satd.step2
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.step1.Folders
+import satd.utils.Folders
 import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

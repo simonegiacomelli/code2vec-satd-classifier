@@ -1,10 +1,6 @@
 package satd.step2
 
-import satd.utils.Repo
-import satd.utils.RepoList
-import satd.step1.*
-import satd.utils.HeapDumper
-import satd.utils.logln
+import satd.utils.*
 import kotlin.streams.toList
 
 fun main() {

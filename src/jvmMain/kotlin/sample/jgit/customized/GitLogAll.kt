@@ -1,7 +1,7 @@
 package sample.jgit.customized
 
 import org.eclipse.jgit.api.Git
-import satd.step1.Folders
+import satd.utils.Folders
 
 class GitLogAll {
     companion object {

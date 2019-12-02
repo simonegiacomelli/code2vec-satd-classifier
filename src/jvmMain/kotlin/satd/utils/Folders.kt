@@ -1,4 +1,4 @@
-package satd.step1
+package satd.utils
 
 import java.nio.file.Paths
 

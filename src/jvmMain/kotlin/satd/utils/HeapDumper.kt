@@ -1,7 +1,6 @@
 package satd.utils
 
 import com.sun.management.HotSpotDiagnosticMXBean
-import satd.step1.Folders
 import java.lang.management.ManagementFactory
 
 /* Simone 14/12/13 16.57 */

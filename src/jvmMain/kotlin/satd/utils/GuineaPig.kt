@@ -1,7 +1,6 @@
 package satd.utils
 
 import org.eclipse.jgit.api.Git
-import satd.step1.Folders
 
 abstract class GuineaPig(group: String, name: String) : AutoCloseable {
     val workTree = Folders.guineaPigRepos.resolve(group).resolve(name).toFile()
