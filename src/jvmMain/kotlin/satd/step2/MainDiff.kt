@@ -11,13 +11,14 @@ fun main() {
     class Main {
         fun ResultRow.filename(): String {
             val it = this
-            return "${it[DbSatds.commit]}_${it[DbSatds.code_hash]}_${it[DbSatds.id]}.java"
+            return "${it[DbSatds.id].toString().padStart(6, '0')}_${it[DbSatds.commit]}_${it[DbSatds.code_hash]}.java"
         }
 
         val ResultRow.header: String
             get() {
                 val it = this
                 return "pattern: ${it[DbSatds.pattern]}\n" +
+                        "repo: ${it[DbSatds.repo]}\n" +
                         "commit message: ${it[DbSatds.commit_message]}\n" +
                         "\n"
             }
