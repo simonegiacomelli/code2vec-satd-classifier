@@ -3,7 +3,7 @@ package satd.utils
 import java.nio.file.Paths
 
 
-class FolderConf(val config: config) {
+class FolderConf(val config: Config) {
     val data get() = Paths.get("./data")
 
     val repos get() = config.run { if (repos_path.isBlank()) data.resolve("repos") else Paths.get(repos_path) }
