@@ -39,27 +39,25 @@ class PersistenceTest {
     }
 
     private fun ignoreDuplcatesInvoke(code_hash: String, commitId: String = "commitid") {
-        ignoreDuplicates {
-            transaction {
-                DbSatds.insert {
-                    it[this.repo] = "repo2"
-                    it[this.commit] = commitId
-                    it[this.old] = "bodyold"
-                    it[this.new] = "bodynew"
-                    it[this.pattern] = "fixme"
-                    it[this.old_len] = 1
-                    it[this.new_len] = 2
-                    it[this.commit_message] = "commit message1"
+        ignoreDuplicatesTransaction {
+            DbSatds.insert {
+                it[this.repo] = "repo2"
+                it[this.commit] = commitId
+                it[this.old] = "bodyold"
+                it[this.new] = "bodynew"
+                it[this.pattern] = "fixme"
+                it[this.old_len] = 1
+                it[this.new_len] = 2
+                it[this.commit_message] = "commit message1"
 
-                    it[this.old_clean] = "old clean"
-                    it[this.new_clean] = "new clean"
-                    it[this.old_clean_len] = 3
-                    it[this.new_clean_len] = 4
-                    it[this.clean_diff_ratio] = 0.2
-                    it[this.code_hash] = code_hash
-                    it[this.accept] = 1
-                    it[this.parent_count] = 1
-                }
+                it[this.old_clean] = "old clean"
+                it[this.new_clean] = "new clean"
+                it[this.old_clean_len] = 3
+                it[this.new_clean_len] = 4
+                it[this.clean_diff_ratio] = 0.2
+                it[this.code_hash] = code_hash
+                it[this.accept] = 1
+                it[this.parent_count] = 1
             }
         }
     }

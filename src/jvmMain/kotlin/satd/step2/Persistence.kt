@@ -82,9 +82,11 @@ class DbSatd(id: EntityID<Long>) : LongEntity(id) {
     companion object : LongEntityClass<DbSatd>(DbSatds)
 }
 
-fun ignoreDuplicates(function: () -> Unit) {
+fun ignoreDuplicatesTransaction(function: () -> Unit) {
     try {
-        function()
+        transaction(4, 0) {
+            function()
+        }
     } catch (ex: Throwable) {
         if (!ex.message.orEmpty()
                 .run {

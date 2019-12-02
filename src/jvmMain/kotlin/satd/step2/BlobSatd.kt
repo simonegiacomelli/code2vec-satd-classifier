@@ -57,34 +57,32 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             val req = Requirements(old, new)
             if (!req.accept())
                 return
-            ignoreDuplicates {
-                transaction {
-                    DbSatds.insert {
-                        it[this.repo] = repoName
-                        it[this.commit] = "${newCommitId.name}"
-                        it[this.old] = "${old.method}"
-                        it[this.new] = "${new.method}"
-                        it[this.pattern] = "${old.pattern}"
-                        it[this.old_len] = "${old.method}".lines().size
-                        it[this.new_len] = "${new.method}".lines().size
-                        it[this.commit_message] = newCommitId.fullMessage
+            ignoreDuplicatesTransaction {
+                DbSatds.insert {
+                    it[this.repo] = repoName
+                    it[this.commit] = "${newCommitId.name}"
+                    it[this.old] = "${old.method}"
+                    it[this.new] = "${new.method}"
+                    it[this.pattern] = "${old.pattern}"
+                    it[this.old_len] = "${old.method}".lines().size
+                    it[this.new_len] = "${new.method}".lines().size
+                    it[this.commit_message] = newCommitId.fullMessage
 
-                        val oldClean = "${req.oldClean}"
-                        val newClean = "${req.newClean}"
-                        val oldCleanLen = oldClean.lines().size
-                        val newCleanLen = newClean.lines().size
+                    val oldClean = "${req.oldClean}"
+                    val newClean = "${req.newClean}"
+                    val oldCleanLen = oldClean.lines().size
+                    val newCleanLen = newClean.lines().size
 
-                        it[this.old_clean] = oldClean
-                        it[this.new_clean] = newClean
-                        it[this.old_clean_len] = oldCleanLen
-                        it[this.new_clean_len] = newCleanLen
-                        val clDiffRatio = (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
-                        it[this.clean_diff_ratio] = clDiffRatio
-                        it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
-                        val acc = oldCleanLen < 50 && newCleanLen < 50 && clDiffRatio < 0.25
-                        it[this.accept] = if (acc) 1 else 0
-                        it[this.parent_count] = newCommitId.parentCount
-                    }
+                    it[this.old_clean] = oldClean
+                    it[this.new_clean] = newClean
+                    it[this.old_clean_len] = oldCleanLen
+                    it[this.new_clean_len] = newCleanLen
+                    val clDiffRatio = (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
+                    it[this.clean_diff_ratio] = clDiffRatio
+                    it[this.code_hash] = "$oldClean\n------\n$newClean".sha1()
+                    val acc = oldCleanLen < 50 && newCleanLen < 50 && clDiffRatio < 0.25
+                    it[this.accept] = if (acc) 1 else 0
+                    it[this.parent_count] = newCommitId.parentCount
                 }
                 stat.satdRate.spin()
 
