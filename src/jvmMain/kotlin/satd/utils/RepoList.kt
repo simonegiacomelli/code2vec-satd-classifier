@@ -11,7 +11,6 @@ class RepoList {
         val androidReposStackOverflow by lazy { repoUrlList("satd/urls/android-repo-urls-stackoverflow.txt") }
 
         private fun repoTxtResource(resource: String): URL {
-
             return this::class.java.classLoader.getResource(resource)!!
         }
 
