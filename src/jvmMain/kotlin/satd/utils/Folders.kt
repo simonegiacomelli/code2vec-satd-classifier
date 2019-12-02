@@ -10,6 +10,7 @@ class FolderConf(val config: Config) {
 
     val satd get() = data.resolve("satd")
     val log get() = data.resolve("log")
+    val diff get() = data.resolve("diff")
     val cache get() = data.resolve("cache")
     val database get() = data.resolve("database")
     val heapdumps get() = data.resolve("heapdumps")
