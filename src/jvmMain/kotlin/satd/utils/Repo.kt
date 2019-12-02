@@ -8,9 +8,12 @@ import java.io.File
 import java.net.URL
 
 class Repo(val url: URL) {
-
+    private val parts = url.path.drop(1).split('/')
+    val userName = parts[0]
+    val repoName = parts[1]
+    val friendlyName = "${userName}_$repoName"
     private val reposPath get() = Folders.repos
-    val friendlyName = url.file.drop(1).replace('/', '_')
+
     val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$friendlyName")
     val failedClones = Folders.log.resolve("failed_clones")
