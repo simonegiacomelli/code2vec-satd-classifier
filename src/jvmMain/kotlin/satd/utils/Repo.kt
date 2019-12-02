@@ -15,7 +15,7 @@ class Repo(val url: URL) {
     private val reposPath get() = Folders.repos
 
     val textProgressMonitor = TextProgressMonitor(url.toString())
-    val folder = File("$reposPath/$friendlyName")
+    val folder = File("$reposPath/$userName/$repoName")
     val failedClones = Folders.log.resolve("failed_clones")
     var exception: Exception? = null
     val failed get() = exception != null
