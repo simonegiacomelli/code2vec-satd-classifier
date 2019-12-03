@@ -42,10 +42,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package satd.step1
+package satd.utils
 
 import org.eclipse.jgit.lib.BatchingProgressMonitor
-import satd.utils.logln
 
 /**
  * A simple progress reporter printing on a stream.
