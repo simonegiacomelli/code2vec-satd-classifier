@@ -1,6 +1,6 @@
 package satd.utils
 
-class AntiSpin(val windowMillis: Int = 1000, val callback: () -> Unit) {
+class AntiSpin(val windowMillis: Int = 1000, val callback: (() -> Unit) = {}) {
     val time: () -> Long = System::currentTimeMillis
 
     private fun currentSecond(): Int {
@@ -10,11 +10,12 @@ class AntiSpin(val windowMillis: Int = 1000, val callback: () -> Unit) {
     }
 
     var lastSecond = -1
-    fun spin() {
+    fun spin(callbackp: (() -> Unit) = {}) {
         val currentSecond = currentSecond()
         if (lastSecond != currentSecond) {
             lastSecond = currentSecond
             callback()
+            callbackp()
         }
     }
 }

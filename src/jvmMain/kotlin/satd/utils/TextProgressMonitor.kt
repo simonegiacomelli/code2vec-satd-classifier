@@ -50,6 +50,9 @@ import org.eclipse.jgit.lib.BatchingProgressMonitor
  * A simple progress reporter printing on a stream.
  */
 class TextProgressMonitor(val prepend: String) : BatchingProgressMonitor() {
+    companion object {
+        val delayMillis = 5000
+    }
 
     /**
      * {@inheritDoc}
@@ -79,13 +82,17 @@ class TextProgressMonitor(val prepend: String) : BatchingProgressMonitor() {
         s.append(workCurr)
     }
 
+    val ouas = AntiSpin(delayMillis)
     /**
      * {@inheritDoc}
      */
     override fun onUpdate(taskName: String, cmp: Int, totalWork: Int, pcnt: Int) {
-        val s = StringBuilder()
-        format(s, taskName, cmp, totalWork, pcnt)
-        send(s)
+        ouas.spin {
+            val s = StringBuilder()
+            format(s, taskName, cmp, totalWork, pcnt)
+            send(s)
+        }
+
     }
 
     /**
