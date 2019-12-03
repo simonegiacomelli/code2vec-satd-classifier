@@ -95,3 +95,9 @@ task oom(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.utils.OOMKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+
+task guinea(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.utils.GuineaKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
