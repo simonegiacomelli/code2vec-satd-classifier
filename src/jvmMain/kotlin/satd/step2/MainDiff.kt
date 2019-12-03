@@ -2,6 +2,7 @@ package satd.step2
 
 import org.eclipse.jgit.api.Git
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
@@ -62,7 +63,7 @@ fun main() {
             transaction {
                 DbSatds
                     .select {
-                        DbSatds.accept.eq(1)
+                        DbSatds.accept.eq(1) and DbSatds.parent_count.eq(1)
                     }
                     .forEach {
 
