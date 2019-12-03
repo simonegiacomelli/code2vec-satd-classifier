@@ -11,14 +11,16 @@ fun main(args: Array<String>) {
     if (!Folders.database_db1.toFile().deleteRecursively())
         throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
 
-    RepoList
+    val urls = RepoList
         .androidReposFull
 //            .take(2000)
+    Stat.totRepo = urls.size
+    urls
         .stream()
         .parallel()
         .map { Repo(it).clone() }
         .filter { !it.failed }
-        .map { Find(it.newGit()).trackSatd() }
+        .map { Find(it).trackSatd() }
         .toList()
 
     logln("Done")

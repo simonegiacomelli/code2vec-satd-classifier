@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import satd.utils.dateTimeToStr
+import java.nio.file.Paths
 
 fun main() {
     class Main {
@@ -29,7 +30,7 @@ fun main() {
             val folder = Folders.diff.resolve(dateTimeToStr()).toFile()
             folder.mkdir()
 
-            persistence.setupDatabase()
+            Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd")).setupDatabase()
 
 //            if (true)
 //                return;

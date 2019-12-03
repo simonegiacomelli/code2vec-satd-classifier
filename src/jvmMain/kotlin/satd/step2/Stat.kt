@@ -1,14 +1,23 @@
 package satd.step2
 
+import kotlinx.atomicfu.AtomicInt
 import satd.utils.AntiSpin
 import satd.utils.Rate
+import satd.utils.Repo
+import java.util.concurrent.atomic.AtomicInteger
 
-class Stat(repoName: String, commitCount: Int) {
+class Stat(repo: Repo, commitCount: Int) {
+    companion object {
+        var totRepo: Int = 0
+        val repoDone = AtomicInteger(0)
+    }
+
     /**
      * every invocation will print stats
      */
-    fun printForce() {
+    fun done() {
         ratePrinter.callback()
+        repoDone.incrementAndGet()
     }
 
     /**
@@ -28,8 +37,8 @@ class Stat(repoName: String, commitCount: Int) {
     val ratePrinter =
         AntiSpin(10000) {
             println(
-                "${repoName.padEnd(50)} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
-                        "satd/sec: $satdRate source/sec:$sourceRate ${mem()}"
+                "${repo.friendlyName.padEnd(50)} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
+                        "satd/sec: $satdRate source/sec:$sourceRate ${mem()} totRepos:${repoDone.get()}/$totRepo"
             )
         }
 

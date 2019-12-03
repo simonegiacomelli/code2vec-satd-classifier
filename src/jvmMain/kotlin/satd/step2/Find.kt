@@ -12,14 +12,15 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
+import satd.utils.Repo
 import satd.utils.printStats
-import java.util.*
 
 
 /**
  * Find satd through commits
  */
-class Find(val git: Git) {
+class Find(val repo: Repo) {
+    val git: Git = repo.newGit()
 
     companion object {
         init {
@@ -36,10 +37,10 @@ class Find(val git: Git) {
     private val AnyObjectId.esc get() = "\"$this\""
     private val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
 
-    val repo = git.repository
-    val repoName = repo.workTree.name
-    val stat = Stat(repoName, commitCount = git.log().all().call().count())
-    val blobSatd = BlobSatd(repo, stat)
+    val repository = git.repository
+    val repoName = repository.workTree.name
+    val stat = Stat(repo, commitCount = git.log().all().call().count())
+    val blobSatd = BlobSatd(repository, stat)
 
     val reader = git.repository.newObjectReader()
 
@@ -68,7 +69,7 @@ class Find(val git: Git) {
 
             stat.printSpin()
         }
-        stat.printForce()
+        stat.done()
     }
 
     private fun visitEdge(
@@ -100,20 +101,4 @@ class Find(val git: Git) {
 
 }
 
-class FindMain {
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val git = satd_gp1().apply { rebuild() }.git
-//            val git = Git.open(Folders.repos.resolve("PhilJay_MPAndroidChart").toFile())
-//            val git = Git.open(Folders.repos.resolve("square_retrofit").toFile())
-//            val git = Git.open(Folders.repos.resolve("google_guava").toFile())
-//            val git = Git.open(Folders.repos.resolve("elastic_elasticsearch").toFile())
-            git.printStats()
-//    val commits = Collector(git.repository).commits()
-            val g = Find(git).apply { trackSatd() }
-//            DotGraph(g.allSatds, git.repository.workTree.name).full()
-        }
-    }
-}
 
