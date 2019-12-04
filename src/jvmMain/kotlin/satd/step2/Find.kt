@@ -22,12 +22,6 @@ import satd.utils.printStats
 class Find(val repo: Repo) {
     val git: Git = repo.newGit()
 
-    companion object {
-        init {
-            persistence.setupDatabase()
-        }
-    }
-
     // some utility extension methods
     private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
 
@@ -48,7 +42,10 @@ class Find(val repo: Repo) {
 
     fun trackSatd() {
         try {
+            git.printStats()
             trackSatdInternal()
+            stat.done()
+            DbRepos.done(repo.urlstr)
         } catch (ex: Throwable) {
             Exceptions(ex, repoName).handle()
             throw ex
@@ -56,7 +53,7 @@ class Find(val repo: Repo) {
     }
 
     fun trackSatdInternal() {
-        git.printStats()
+
 
         for (child in git.log().all().call()) {
             stat.commitRate.spin()
@@ -69,7 +66,7 @@ class Find(val repo: Repo) {
 
             stat.printSpin()
         }
-        stat.done()
+
     }
 
     private fun visitEdge(

@@ -5,7 +5,8 @@ import org.eclipse.jgit.api.ResetCommand
 import java.io.File
 import java.net.URL
 
-class Repo(val url: URL) {
+class Repo(val urlstr: String) {
+    val url = URL(urlstr)
     private val parts = url.path.drop(1).split('/')
     val userName = parts[0]
     val repoName = parts[1]

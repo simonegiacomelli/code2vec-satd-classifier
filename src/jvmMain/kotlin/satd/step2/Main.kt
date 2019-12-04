@@ -8,14 +8,15 @@ fun main(args: Array<String>) {
     config.loadArgs(args)
     HeapDumper.enable()
 
-    if (!Folders.database_db1.toFile().deleteRecursively())
-        throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
+//    if (!Folders.database_db1.toFile().deleteRecursively())
+//        throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
 
-    val urls = RepoList
+    persistence.setupDatabase()
+
+    RepoList
         .androidReposFull
-//            .take(2000)
-    Stat.totRepo = urls.size
-    urls
+        .also { Stat.totRepo = it.size }
+        .subtract(DbRepos.allDone().also { Stat.repoDone.getAndSet(it.size) })
         .stream()
         .parallel()
         .map { Repo(it).clone() }

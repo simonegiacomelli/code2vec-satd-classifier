@@ -1,14 +1,8 @@
 package satd.step2
 
 import org.h2.tools.Server
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.LongEntity
-import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.LongIdTable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import java.lang.IllegalArgumentException
@@ -33,7 +27,7 @@ class Persistence(val databasePath: Path) {
         Database.connect(::connection)
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.createMissingTablesAndColumns(DbSatds)
+            SchemaUtils.createMissingTablesAndColumns(DbSatds, DbRepos)
         }
     }
 
@@ -78,9 +72,18 @@ object DbSatds : LongIdTable() {
     val parent_count = integer("parent_count")
 }
 
-class DbSatd(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<DbSatd>(DbSatds)
+object DbRepos : LongIdTable() {
+    val url = varchar("url", 200).index(isUnique = true)
+
+    fun allDone(): List<String> = transaction { slice(url).selectAll().map { it[url] } }
+    fun done(urlstr: String) {
+        transaction { DbRepos.insert { it[url] = urlstr } }
+    }
 }
+
+//class DbSatd(id: EntityID<Long>) : LongEntity(id) {
+//    companion object : LongEntityClass<DbSatd>(DbSatds)
+//}
 
 fun ignoreDuplicatesTransaction(function: () -> Unit) {
     try {
@@ -97,3 +100,4 @@ fun ignoreDuplicatesTransaction(function: () -> Unit) {
             throw ex
     }
 }
+

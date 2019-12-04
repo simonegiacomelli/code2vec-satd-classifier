@@ -26,6 +26,7 @@ class RepoList {
                 } catch (ex: MalformedURLException) {
                     throw Exception("Offending url [$it]", ex)
                 }
+                it
             }
 
         @JvmStatic
