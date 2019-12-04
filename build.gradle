@@ -101,3 +101,9 @@ task guinea(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.utils.GuineaKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+
+task removedb(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainRemoveDbKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
