@@ -25,21 +25,42 @@ fun main() {
                         "\n"
             }
 
+        val pers = Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd"))
+        val workFolder = Folders.diff.resolve(dateTimeToStr()).toFile()
+        val repoFolder = workFolder.resolve("repo")
+        val folderStr: String
+            get() {
+                val r = workFolder.toString()
+                return r
+            }
+        val git by lazy { Git.init().setDirectory(repoFolder).call()!! }
 
         fun go() {
-            val folder = Folders.diff.resolve(dateTimeToStr()).toFile()
-            folder.mkdir()
 
-            Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd")).setupDatabase()
+            repoFolder.mkdirs()
+            pers.setupDatabase()
 
-//            if (true)
-//                return;
-            val git = Git.init().setDirectory(folder).call()!!
+            diff2html()
 
+            pers.connection().apply {
+                sql.split("\nGO\n")
+                    .forEach {
+                        println("executing [$it]")
+                        createStatement().apply {
+                            execute(it)
+                            close()
+                        }
+                    }
+
+            }
+            pers.startWebServer()
+        }
+
+        private fun diff2html() {
             foreachRow {
                 val content =
                     "${it.header}${it[DbSatds.old]}"
-                folder.resolve(it.filename()).writeText(content)
+                repoFolder.resolve(it.filename()).writeText(content)
             }
 
             git.add().addFilepattern(".").call()
@@ -47,16 +68,16 @@ fun main() {
 
             foreachRow {
                 val content = "${it.header}${it[DbSatds.new]}"
-                folder.resolve(it.filename()).writeText(content)
+                repoFolder.resolve(it.filename()).writeText(content)
             }
 
             git.commit().setMessage("files with satd").call()
             git.add().addFilepattern(".").call()
 
             Runtime.getRuntime().exec(
-                "diff2html -s side -- -U1000000 -M HEAD~1"
+                "diff2html --file ../diff.html  -s side -- -U1000000 -M HEAD~1"
                 , null
-                , folder
+                , repoFolder
             )
         }
 
@@ -72,7 +93,38 @@ fun main() {
                     }
             }
         }
+
+
+        val sql = """
+call csvwrite('$folderStr/dbsatds.csv', '
+
+SELECT * FROM DBSATDS 
+where 
+  accept = 1 and parent_count = 1
+order by id desc
+
+')
+
+GO
+
+DROP TABLE SATD_BY_pattern if exists
+
+GO
+
+create table satd_by_pattern as
+select pattern, count(*) as pattern_count FROM DBSATDS 
+where accept = 1 and parent_count = 1
+group by pattern
+order by count(*) desc
+
+GO
+
+call csvwrite('$folderStr/satd_by_pattern.csv'
+,'select * from satd_by_pattern')
+
+"""
     }
 
     Main().go()
 }
+
