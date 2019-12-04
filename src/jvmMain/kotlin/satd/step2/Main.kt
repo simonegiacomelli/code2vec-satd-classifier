@@ -8,9 +8,6 @@ fun main(args: Array<String>) {
     config.loadArgs(args)
     HeapDumper.enable()
 
-//    if (!Folders.database_db1.toFile().deleteRecursively())
-//        throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
-
     persistence.setupDatabase()
 
     RepoList
