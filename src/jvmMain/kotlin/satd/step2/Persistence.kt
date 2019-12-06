@@ -84,10 +84,12 @@ object DbRepos : LongIdTable() {
     }
 
     fun failed(urlstr: String, ex: Throwable) {
-        DbRepos.insert {
-            it[url] = urlstr
-            it[success] = 0
-            it[message] = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
+        transaction {
+            DbRepos.insert {
+                it[url] = urlstr
+                it[success] = 0
+                it[message] = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
+            }
         }
     }
 }

@@ -19,6 +19,14 @@ class PersistenceTest {
     }
 
     @Test
+
+    fun `failed should be successfull`() {
+        val p = Persistence(newTempFolder())
+        p.setupDatabase()
+        DbRepos.failed("https://example.com", Exception("just a test"))
+    }
+
+    @Test
     fun `duplicate hash_code should be silently ignored (unique index violation)`() {
         val p = Persistence(newTempFolder())
         p.setupDatabase()
