@@ -20,7 +20,7 @@ import satd.utils.printStats
  * Find satd through commits
  */
 class Find(val repo: Repo) {
-    val git: Git = repo.newGit()
+
 
     // some utility extension methods
     private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
@@ -31,12 +31,10 @@ class Find(val repo: Repo) {
     private val AnyObjectId.esc get() = "\"$this\""
     private val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
 
-    val repository = git.repository
-    val repoName = repository.workTree.name
-    val stat = Stat(repo, commitCount = git.log().all().call().count())
-    val blobSatd = BlobSatd(repository, stat)
-
-    val reader = git.repository.newObjectReader()
+    val git: Git by lazy { repo.newGit() }
+    val stat by lazy { Stat(repo, commitCount = git.log().all().call().count()) }
+    val blobSatd by lazy { BlobSatd(git.repository, stat) }
+    val reader by lazy { git.repository.newObjectReader() }
 
     val emptyTreeIterator = EmptyTreeIterator()
 
@@ -47,7 +45,7 @@ class Find(val repo: Repo) {
             stat.done()
             DbRepos.done(repo.urlstr)
         } catch (ex: Throwable) {
-            Exceptions(ex, repoName).handle()
+            Exceptions(ex, git.repository.workTree.name).handle()
             throw ex
         }
     }
