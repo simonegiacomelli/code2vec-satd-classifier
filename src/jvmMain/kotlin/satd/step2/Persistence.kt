@@ -74,7 +74,8 @@ object DbSatds : LongIdTable() {
 
 object DbRepos : LongIdTable() {
     val url = varchar("url", 200).index(isUnique = true)
-
+    val success = integer("success").default(1)
+    val message = text("message").default("")
     fun allDone(): List<String> = transaction { slice(url).selectAll().map { it[url] } }
     fun done(urlstr: String) {
         transaction { DbRepos.insert { it[url] = urlstr } }
