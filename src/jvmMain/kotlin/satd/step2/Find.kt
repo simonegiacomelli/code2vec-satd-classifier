@@ -45,6 +45,7 @@ class Find(val repo: Repo) {
             stat.done()
             DbRepos.done(repo.urlstr)
         } catch (ex: Throwable) {
+            DbRepos.failed(repo.urlstr, ex)
             Exceptions(ex, git.repository.workTree.name).handle()
             throw ex
         }

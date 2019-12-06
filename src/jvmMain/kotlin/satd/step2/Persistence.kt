@@ -5,6 +5,8 @@ import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.lang.IllegalArgumentException
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -79,6 +81,14 @@ object DbRepos : LongIdTable() {
     fun allDone(): List<String> = transaction { slice(url).selectAll().map { it[url] } }
     fun done(urlstr: String) {
         transaction { DbRepos.insert { it[url] = urlstr } }
+    }
+
+    fun failed(urlstr: String, ex: Throwable) {
+        DbRepos.insert {
+            it[url] = urlstr
+            it[success] = 0
+            it[message] = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
+        }
     }
 }
 
