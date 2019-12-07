@@ -1,5 +1,6 @@
 package satd.utils
 
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.joda.time.DateTime
 import java.io.File
@@ -8,8 +9,15 @@ import java.io.StringWriter
 import java.net.URL
 import java.util.concurrent.ForkJoinPool
 
+class GithubUrlsTxtFile {
+    val folder by lazy { Folders.database.resolve("github").toFile().apply { mkdirs() } }
+    val txt by lazy { folder.resolve("_urls.txt") }
+}
+
+val urls = GithubUrlsTxtFile()
 
 fun main() {
+    urls.txt.delete()
     //2010-2013
     val u01 = "2010-01-01..2013-12-31"
     qryGithubFullscanDateRange(dt(2010, 1, 1), dt(2013, 12, 31))
@@ -58,24 +66,39 @@ class DateRange(val s: DateTime, val e: DateTime) {
 }
 
 private fun qryGithubFullscanDateRange(s: DateTime, e: DateTime) {
-    val g = Folders.database.resolve("github").toFile()
-    g.mkdirs()
 
     val dtr = DateRange(s, e)
-    val jsonFile = g.resolve("${dtr.fs}.json")
+    val jsonFile = urls.folder.resolve("${dtr.fs}.json")
 
     var page = 1
     qryGitbubDtr(dtr, jsonFile, page)
 
-    val json = jsonFile.readLines().drop(1).joinToString("\n")
-    val jsonObject = JsonParser.parseString(json).asJsonObject
-
+    val jsonObject = toJsonObject(jsonFile)
+    accumulateUrls(jsonObject)
     var totalCount = jsonObject.get("total_count").asInt - 100
     while (totalCount > 0) {
         page++
-        qryGitbubDtr(dtr, g.resolve("${dtr.fs}--p$page.json"), page)
+        urls.folder.resolve("${dtr.fs}--p$page.json").also {
+            qryGitbubDtr(dtr, it, page)
+            accumulateUrls(toJsonObject(it))
+        }
         totalCount -= 100
     }
+}
+
+fun accumulateUrls(jo: JsonObject) {
+    jo.getAsJsonArray("items")
+        .forEach {
+            val html_url = it.asJsonObject.get("html_url").asString
+            urls.txt.appendText("$html_url\n")
+        }
+
+}
+
+private fun toJsonObject(jsonFile: File): JsonObject {
+    val json = jsonFile.readLines().drop(1).joinToString("\n")
+    val jsonObject = JsonParser.parseString(json).asJsonObject!!
+    return jsonObject
 }
 
 private fun qryGitbubDtr(dtr: DateRange, jsonFile: File, page: Int) {
