@@ -28,6 +28,7 @@ fun main(args: Array<String>) {
             .sorted()
             .also { Stat.totRepo = it.size }
             .subtract(DbRepos.allDone().also { Stat.repoDone.getAndSet(it.size) })
+            .take(10)
             .stream()
             .parallel()
             .map { Repo(it).clone() }
