@@ -67,6 +67,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                 else
                     DbSatds.insert {
                         it[this.repo] = repoName
+                        it[this.url] = stat.repo.urlstr
                         it[this.commit] = "${newCommitId.name}"
                         it[this.old] = "${old.method}"
                         it[this.new] = "${new.method}"

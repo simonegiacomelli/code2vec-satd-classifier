@@ -73,6 +73,7 @@ object DbSatds : LongIdTable() {
     val code_hash = varchar("code_hash", 200).index(isUnique = true)
     val accept = integer("accept")
     val parent_count = integer("parent_count")
+    val url = varchar("url", 400).default("")
 
     fun existsCodeHash(code_hash_str: String) = DbSatds.select { code_hash eq code_hash_str }.count() > 0
 }
