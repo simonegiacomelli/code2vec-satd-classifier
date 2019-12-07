@@ -6,7 +6,7 @@ import satd.utils.Rate
 import satd.utils.Repo
 import java.util.concurrent.atomic.AtomicInteger
 
-class Stat(repo: Repo, commitCount: Int) {
+class Stat(val repo: Repo, commitCount: Int) {
     companion object {
         var totRepo: Int = 0
         val repoDone = AtomicInteger(0)

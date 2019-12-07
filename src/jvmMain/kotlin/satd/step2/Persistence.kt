@@ -73,6 +73,8 @@ object DbSatds : LongIdTable() {
     val code_hash = varchar("code_hash", 200).index(isUnique = true)
     val accept = integer("accept")
     val parent_count = integer("parent_count")
+
+    fun existsCodeHash(code_hash_str: String) = DbSatds.select { code_hash eq code_hash_str }.count() > 0
 }
 
 object DbRepos : LongIdTable() {
@@ -93,7 +95,6 @@ object DbRepos : LongIdTable() {
                 it[url] = urlstr
                 it[success] = 0
                 it[module] = modules
-
                 it[message] = exstr
             }
         }
@@ -104,19 +105,4 @@ object DbRepos : LongIdTable() {
 //    companion object : LongEntityClass<DbSatd>(DbSatds)
 //}
 
-fun ignoreDuplicatesTransaction(function: () -> Unit) {
-    try {
-        transaction(4, 0) {
-            function()
-        }
-    } catch (ex: Throwable) {
-        if (!ex.message.orEmpty()
-                .run {
-                    contains("Unique index", ignoreCase = true)
-                            || contains("primary key", ignoreCase = true)
-                }
-        )
-            throw ex
-    }
-}
 
