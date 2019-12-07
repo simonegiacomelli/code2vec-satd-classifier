@@ -12,11 +12,18 @@ import java.util.concurrent.ForkJoinPool
 fun main() {
     //2010-2013
     val u01 = "2010-01-01..2013-12-31"
+    qryGithubFullscanDateRange(dt(2010, 1, 1), dt(2013, 12, 31))
+
     //2014
-    val u02 = "2014-01-01..2014-12-31"
+    //val u02 = "2014-01-01..2014-12-31"
+    qryGithubFullscanDateRange(dt(2014, 1, 1), dt(2014, 12, 31))
+
     //2015
-    val u2015a = "2015-01-01..2015-06-30"
-    val u2015b = "2015-07-01..2015-12-31"
+    //val u2015a = "2015-01-01..2015-06-30"
+    //val u2015b = "2015-07-01..2015-12-31"
+    qryGithubFullscanDateRange(dt(2015, 1, 1), dt(2015, 6, 30))
+    qryGithubFullscanDateRange(dt(2015, 7, 1), dt(2015, 12, 31))
+
     //2016
     github2016()
     githubYearBy15Days(2017)
@@ -24,6 +31,7 @@ fun main() {
     githubYearBy15Days(2019)
 }
 
+private fun dt(year: Int, month: Int, day: Int) = DateTime(year, month, day, 1, 1)
 private fun github2016() {
     for (i in 0..5) {
         val s = DateTime(2016, 1 + (i * 2), 1, 1, 1)
