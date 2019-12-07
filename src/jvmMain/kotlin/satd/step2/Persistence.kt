@@ -5,6 +5,7 @@ import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
+import satd.utils.logln
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.IllegalArgumentException
@@ -85,12 +86,15 @@ object DbRepos : LongIdTable() {
     }
 
     fun failed(urlstr: String, ex: Throwable, modules: String) {
+        val exstr = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
+        logln("$urlstr FAILED $modules [$exstr]")
         transaction {
             DbRepos.insert {
                 it[url] = urlstr
                 it[success] = 0
                 it[module] = modules
-                it[message] = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
+
+                it[message] = exstr
             }
         }
     }
