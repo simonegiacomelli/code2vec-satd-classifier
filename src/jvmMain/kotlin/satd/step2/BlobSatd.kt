@@ -63,7 +63,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                 val newClean = "${req.newClean}"
                 val codeHashStr = "$oldClean\n------\n$newClean".sha1()
                 if (DbSatds.existsCodeHash(codeHashStr))
-                    logln("${stat.repo.urlstr} skipping duplicate satd; it already has code hash $codeHashStr")
+                    logln("${stat.repo.urlstr} DUPLICATE satd skipping; it already has code hash $codeHashStr")
                 else
                     DbSatds.insert {
                         it[this.repo] = repoName

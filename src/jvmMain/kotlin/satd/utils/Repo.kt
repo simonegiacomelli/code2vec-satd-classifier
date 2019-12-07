@@ -33,7 +33,7 @@ class Repo(val urlstr: String) {
     }
 
     private fun cloneInternal() {
-        logln("Cloning ${url}")
+        logln("${url} CLONING")
 
         if (folder.exists()) {
             if (!repoOk(folder))
@@ -70,7 +70,7 @@ class Repo(val urlstr: String) {
 
             return true
         } catch (ex: Exception) {
-            logln("exception on ${repoFolder} ${ex}")
+            logln("$urlstr REFRESH failed [${ex}]")
             return false
         }
     }
