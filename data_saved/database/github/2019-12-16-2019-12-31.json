@@ -1,0 +1,2 @@
+https://api.github.com/search/repositories?q=language:Java+topic:android+is:public+created:2019-12-16..2019-12-31&page=1&per_page=100
+{"total_count":0,"incomplete_results":false,"items":[]}
