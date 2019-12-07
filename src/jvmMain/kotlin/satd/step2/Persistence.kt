@@ -89,7 +89,7 @@ object DbRepos : LongIdTable() {
 
     fun failed(urlstr: String, ex: Throwable, modules: String) {
         val exstr = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
-        logln("$urlstr FAILED $modules [$exstr]")
+        logln("$urlstr FAILED $modules [${exstr.substringBefore('\n')}]")
         transaction {
             DbRepos.insert {
                 it[url] = urlstr
