@@ -4,6 +4,7 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import satd.step2.DbRepos
 import java.io.File
+import java.lang.IllegalStateException
 import java.net.URL
 
 class Repo(val urlstr: String) {
@@ -33,19 +34,32 @@ class Repo(val urlstr: String) {
     }
 
     private fun cloneInternal() {
-        logln("${url} CLONING")
+
 
         if (folder.exists()) {
-            if (!repoOk(folder))
+            logln("$urlstr ALREAD EXISTS checking integrity")
+            if (!repoOk(folder)) {
+                logln("$urlstr INTEGRITY CHECK failed. removing...")
                 folder.deleteRecursively()
+                if (folder.exists()) {
+                    DbRepos.failed(
+                        urlstr,
+                        IllegalStateException("$folder"),
+                        "Repo.clone() -  folder.deleteRecursively()"
+                    )
+                    return
+                }
+            }
         }
 
-        if (!folder.exists())
+        if (!folder.exists()) {
+            logln("$urlstr CLONING")
             Git.cloneRepository()
                 .setURI(url.toExternalForm())
                 .setDirectory(folder)
-//                .setProgressMonitor(textProgressMonitor)
+                //                .setProgressMonitor(textProgressMonitor)
                 .call()
+        }
     }
 
     private fun repoOk(repoFolder: File): Boolean {

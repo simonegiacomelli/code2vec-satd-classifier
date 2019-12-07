@@ -84,6 +84,7 @@ object DbRepos : LongIdTable() {
     val message = text("message").default("")
     fun allDone(): List<String> = transaction { slice(url).selectAll().map { it[url] } }
     fun done(urlstr: String) {
+        logln("$urlstr SUCCESS")
         transaction { DbRepos.insert { it[url] = urlstr } }
     }
 

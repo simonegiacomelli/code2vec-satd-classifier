@@ -13,7 +13,8 @@ import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
 import satd.utils.Repo
-import satd.utils.printStats
+import satd.utils.logln
+import satd.utils.stats
 
 
 /**
@@ -39,8 +40,9 @@ class Find(val repo: Repo) {
     val emptyTreeIterator = EmptyTreeIterator()
 
     fun trackSatd() {
+
         try {
-            git.printStats()
+            logln("${repo.urlstr} SATD Find.trackSatd() ${git.stats()}")
             trackSatdInternal()
             stat.done()
             DbRepos.done(repo.urlstr)

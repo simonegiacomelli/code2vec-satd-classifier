@@ -4,6 +4,7 @@ import kotlinx.atomicfu.AtomicInt
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.Repo
+import satd.utils.logln
 import java.util.concurrent.atomic.AtomicInteger
 
 class Stat(val repo: Repo, commitCount: Int) {
@@ -36,8 +37,8 @@ class Stat(val repo: Repo, commitCount: Int) {
 
     val ratePrinter =
         AntiSpin(10000) {
-            println(
-                "${repo.friendlyName.padEnd(50)} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
+            logln(
+                "${repo.urlstr} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
                         "satd/sec: $satdRate source/sec:$sourceRate ${mem()} totRepos:${repoDone.get()}/$totRepo"
             )
         }

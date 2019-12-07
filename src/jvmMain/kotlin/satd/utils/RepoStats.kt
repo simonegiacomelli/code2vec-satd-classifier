@@ -2,12 +2,7 @@ package satd.utils
 
 import org.eclipse.jgit.api.Git
 
-
-fun Git.printStats() {
-    println("${stats()}")
-}
-
-data class RepoStats(val path: String, val commitCount: Int, val sizeMB: Long)
+data class RepoStats(val commitCount: Int, val sizeMB: Long, val path: String)
 
 fun Git.stats(): RepoStats {
     val commitCount = this.log().all().call().count()
