@@ -27,6 +27,7 @@ class Config {
     }
 
     val repos_path by this
+    val thread_count by this
 }
 
 val config = Config()

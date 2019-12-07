@@ -11,7 +11,7 @@ private val logfile by lazy {
 @Synchronized
 fun logln(line: String) {
     val name = Thread.currentThread().name
-    val message = "${name.padEnd(50)} $line"
+    val message = "${name.padEnd(4)} $line"
     println(message)
     logfile.println(message)
 }
