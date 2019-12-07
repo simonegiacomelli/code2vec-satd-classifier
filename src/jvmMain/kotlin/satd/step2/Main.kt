@@ -16,12 +16,10 @@ fun main(args: Array<String>) {
         .subtract(DbRepos.allDone().also { Stat.repoDone.getAndSet(it.size) })
         .stream()
         .parallel()
-        .map {
-            DbRepos.failed(it,RuntimeException("FAKE"),"testing")
-        }
-//        .map { Repo(it).clone() }
-//        .filter { !it.failed }
-//        .map { Find(it).trackSatd() }
+//        .map { DbRepos.failed(it, RuntimeException("FAKE"), "testing") }
+        .map { Repo(it).clone() }
+        .filter { !it.failed }
+        .map { Find(it).trackSatd() }
         .toList()
 
     logln("Done")
