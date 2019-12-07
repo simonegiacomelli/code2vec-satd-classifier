@@ -2,7 +2,6 @@ package satd.step2
 
 import satd.utils.*
 import java.util.concurrent.ForkJoinPool
-import java.util.concurrent.ForkJoinWorkerThread
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
