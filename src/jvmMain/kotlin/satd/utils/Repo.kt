@@ -37,18 +37,11 @@ class Repo(val urlstr: String) {
 
 
         if (folder.exists()) {
-            logln("$urlstr ALREAD EXISTS checking integrity")
+            logln("$urlstr ALREADY EXISTS checking integrity")
             if (!repoOk(folder)) {
                 logln("$urlstr INTEGRITY CHECK failed. removing...")
                 folder.deleteRecursively()
-                if (folder.exists()) {
-                    DbRepos.failed(
-                        urlstr,
-                        IllegalStateException("$folder"),
-                        "Repo.clone() -  folder.deleteRecursively()"
-                    )
-                    return
-                }
+                if (folder.exists()) throw IllegalStateException("folder.deleteRecursively() $folder")
             }
         }
 
