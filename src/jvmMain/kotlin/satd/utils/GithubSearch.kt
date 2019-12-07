@@ -1,10 +1,12 @@
 package satd.utils
 
+import com.google.gson.JsonParser
 import org.joda.time.DateTime
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.net.URL
 import java.util.concurrent.ForkJoinPool
+
 
 fun main() {
     //2010-2013
@@ -49,10 +51,16 @@ private fun qryGithubDateRange(s: DateTime, e: DateTime) {
     val jsonFile = g.resolve("$dts-$dte.json")
 
     println(url + (if (jsonFile.exists()) " skipping, file already exists" else ""))
-    if (jsonFile.exists()) return
-    val content = URL(url).readText()
-    jsonFile.writeText("$url\n$content")
-    Thread.sleep(10000)
+    if (!jsonFile.exists()) {
+        val content = URL(url).readText()
+        jsonFile.writeText("$url\n$content")
+        Thread.sleep(10000)
+    }
+
+    val json = jsonFile.readLines().drop(1).joinToString("\n")
+    val jsonObject = JsonParser.parseString(json).asJsonObject
+//    println(jsonObject)
+    println("${jsonFile.name} ${jsonObject.get("total_count")}")
 }
 
 private fun githubApiCallOneYear() {
