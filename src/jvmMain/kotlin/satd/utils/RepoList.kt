@@ -14,7 +14,7 @@ class RepoList {
             return this::class.java.classLoader.getResource(resource)!!
         }
 
-        private fun repoUrlList(resource: String) = repoTxtResource(resource)
+        private fun repoUrlList(resource: String): List<String> = repoTxtResource(resource)
             .readText()
             .split('\n')
             .map { it.trim() }
