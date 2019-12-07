@@ -12,6 +12,8 @@ fun main(args: Array<String>) {
 
     RepoList
         .androidReposFull
+        .union(RepoList.androidReposFull2)
+        .sorted()
         .also { Stat.totRepo = it.size }
         .subtract(DbRepos.allDone().also { Stat.repoDone.getAndSet(it.size) })
         .stream()
