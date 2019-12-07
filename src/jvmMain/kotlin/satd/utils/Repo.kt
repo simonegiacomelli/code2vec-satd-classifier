@@ -2,6 +2,7 @@ package satd.utils
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
+import satd.step2.DbRepos
 import java.io.File
 import java.net.URL
 
@@ -26,9 +27,7 @@ class Repo(val urlstr: String) {
         } catch (ex: Exception) {
             exception = ex
             failedClones.toFile().mkdirs()
-            failedClones.resolve("$friendlyName.txt")
-                .toFile()
-                .writeText("$url\n$ex")
+            DbRepos.failed(urlstr, ex, "Repo.clone()")
         }
         return this
     }

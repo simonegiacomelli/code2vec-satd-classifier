@@ -23,7 +23,7 @@ class PersistenceTest {
     fun `failed should be successfull`() {
         val p = Persistence(newTempFolder())
         p.setupDatabase()
-        DbRepos.failed("https://example.com", Exception("just a test"))
+        DbRepos.failed("https://example.com", Exception("just a test"),"PersistenceTest....")
     }
 
     @Test
