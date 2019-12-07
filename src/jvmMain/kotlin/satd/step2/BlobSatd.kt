@@ -85,7 +85,8 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                         val clDiffRatio = (oldCleanLen - newCleanLen).absoluteValue.toDouble() / newCleanLen
                         it[this.clean_diff_ratio] = clDiffRatio
                         it[this.code_hash] = codeHashStr
-                        val acc = oldCleanLen < 50 && newCleanLen < 50 && clDiffRatio < 0.25
+                        val acc =
+                            oldCleanLen < 50 && newCleanLen < 50 && clDiffRatio < 0.25 && newCommitId.parentCount == 1
                         it[this.accept] = if (acc) 1 else 0
                         it[this.parent_count] = newCommitId.parentCount
                     }
