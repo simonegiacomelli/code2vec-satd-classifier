@@ -18,7 +18,6 @@ class Stat(val repo: Repo, commitCount: Int) {
      */
     fun done() {
         ratePrinter.callback()
-        repoDone.incrementAndGet()
     }
 
     /**

@@ -85,12 +85,14 @@ object DbRepos : LongIdTable() {
     fun allDone(): List<String> = transaction { slice(url).selectAll().map { it[url] } }
     fun done(urlstr: String) {
         logln("$urlstr SUCCESS")
+        Stat.repoDone.incrementAndGet()
         transaction { DbRepos.insert { it[url] = urlstr } }
     }
 
     fun failed(urlstr: String, ex: Throwable, modules: String) {
         val exstr = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
         logln("$urlstr FAILED $modules [${exstr.substringBefore('\n')}]")
+        Stat.repoDone.incrementAndGet()
         transaction(4, 0) {
             DbRepos.insert {
                 it[url] = urlstr
