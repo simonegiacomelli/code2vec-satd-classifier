@@ -3,8 +3,15 @@ package satd.utils
 import org.eclipse.jgit.api.Git
 import satd.step2.DbRepos
 import java.io.File
-import java.lang.IllegalStateException
+import java.io.IOException
 import java.net.URL
+import java.nio.file.Files
+import java.nio.file.Files.isRegularFile
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.function.Consumer
+import java.util.stream.Collectors
+
 
 class Repo(val urlstr: String) {
     val url = URL(urlstr)
@@ -66,11 +73,6 @@ class Repo(val urlstr: String) {
                     .setForce(true)
                     .call()
 
-//                git.reset()
-//                    .setMode(ResetCommand.ResetType.HARD)
-//                    .setProgressMonitor(textProgressMonitor)
-//                    .call()
-
                 git.fetch()
                     .setProgressMonitor(textProgressMonitor)
                     .call()
@@ -92,6 +94,23 @@ class Repo(val urlstr: String) {
             if (it != null) DbRepos.failed(urlstr, it, "Repo.clone()")
         }
         return this
+    }
+
+    fun removeCheckout() {
+        if (!folder.exists())
+            return
+
+        var count = 0;
+        folder.listFiles()
+            .filter { it.name != ".git" }
+            .forEach {
+                count++;
+                if (it.isFile)
+                    assert(it.delete())
+                else
+                    assert(it.deleteRecursively())
+            }
+        logln("removed $count entries for $urlstr")
     }
 
 
