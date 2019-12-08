@@ -3,7 +3,7 @@ package satd.utils
 private val logfile by lazy {
     val f = Folders.log.toFile().resolve("run")
     f.mkdirs()
-    f.resolve(dateTimeToStr() + ".txt").printWriter()
+    f.resolve(dateTimeToStr() + pid + ".txt").printWriter()
 }
 
 @Synchronized

@@ -4,9 +4,10 @@ import satd.utils.*
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
-    logln("Starting")
+    logln("Starting pid: $pid")
     config.load()
     HeapDumper.enable()
+    Diagnosis.installALRM()
 
     persistence.setupDatabase()
     repoRate.startStatAsync()
