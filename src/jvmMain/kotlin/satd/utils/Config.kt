@@ -11,6 +11,9 @@ class Config {
         load("config.properties")
         load("config_$hostname.properties")
         if (args.isNotEmpty()) load(args[0])
+        prop.forEach {
+            logln("configuration properties: ${it.key}=${it.value}")
+        }
         initialized.value
     }
 
