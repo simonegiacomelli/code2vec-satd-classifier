@@ -50,6 +50,6 @@ class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis
     }
 
     override fun toString(): String {
-        return "${rate()}"
+        return "%.3f".format(rate())
     }
 }
