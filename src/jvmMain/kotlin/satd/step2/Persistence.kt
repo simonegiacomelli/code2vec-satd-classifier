@@ -100,7 +100,7 @@ class RepoRate {
 
     @Synchronized
     private fun logStat() {
-        logln("totRepos:${repoDone.get()}/$totRepo repo/sec ${rate()}")
+        logln("totRepos:${repoDone.get()}/$totRepo repo/sec ${rate()} $mem")
     }
 
     fun startStatAsync() {
@@ -114,6 +114,16 @@ class RepoRate {
             name = "stat"
         }.start()
     }
+
+    val rt = Runtime.getRuntime()
+    val mb = 1024 * 1024
+
+    private val mem :String get()  {
+        val used = (rt.totalMemory() - rt.freeMemory()) / mb
+        val m = rt.maxMemory() / mb
+        return "mem:$used/$m"
+    }
+
 }
 
 val repoRate = RepoRate()
