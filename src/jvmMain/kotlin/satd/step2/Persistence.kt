@@ -5,6 +5,7 @@ import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
+import satd.utils.Rate
 import satd.utils.logln
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -13,6 +14,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
+import java.util.concurrent.atomic.AtomicInteger
 
 
 class Persistence(val databasePath: Path) {
@@ -78,6 +80,44 @@ object DbSatds : LongIdTable() {
     fun existsCodeHash(code_hash_str: String) = DbSatds.select { code_hash eq code_hash_str }.count() > 0
 }
 
+class RepoRate {
+    companion object {
+        var totRepo: Int = 0
+        val repoDone = AtomicInteger(0)
+    }
+
+
+    private val rate = Rate(60)
+
+    @Synchronized
+    fun spin() {
+        rate.spin()
+        repoDone.incrementAndGet()
+    }
+
+    @Synchronized
+    fun rate(): Double = rate.rate()
+
+    @Synchronized
+    private fun logStat() {
+        logln("totRepos:${repoDone.get()}/$totRepo repo/sec ${rate()}")
+    }
+
+    fun startStatAsync() {
+        Thread {
+            while (true) {
+                Thread.sleep(10000)
+                logStat()
+            }
+        }.apply {
+            isDaemon = true
+            name = "stat"
+        }.start()
+    }
+}
+
+val repoRate = RepoRate()
+
 object DbRepos : LongIdTable() {
     val url = varchar("url", 200).index(isUnique = true)
     val success = integer("success").default(1)
@@ -86,14 +126,14 @@ object DbRepos : LongIdTable() {
     fun allDone(): List<String> = transaction { slice(url).selectAll().map { it[url] } }
     fun done(urlstr: String) {
         logln("$urlstr SUCCESS")
-        Stat.repoDone.incrementAndGet()
+        repoRate.spin()
         transaction { DbRepos.insert { it[url] = urlstr } }
     }
 
     fun failed(urlstr: String, ex: Throwable, modules: String) {
         val exstr = StringWriter().also { ex.printStackTrace(PrintWriter(it)) }.toString()
         logln("$urlstr FAILED $modules [${exstr.substringBefore('\n')}]")
-        Stat.repoDone.incrementAndGet()
+        repoRate.spin()
         transaction(4, 0) {
             DbRepos.insert {
                 it[url] = urlstr

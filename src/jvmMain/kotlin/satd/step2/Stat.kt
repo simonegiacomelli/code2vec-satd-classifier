@@ -8,10 +8,6 @@ import satd.utils.logln
 import java.util.concurrent.atomic.AtomicInteger
 
 class Stat(val repo: Repo, commitCount: Int) {
-    companion object {
-        var totRepo: Int = 0
-        val repoDone = AtomicInteger(0)
-    }
 
     /**
      * every invocation will print stats
@@ -38,7 +34,7 @@ class Stat(val repo: Repo, commitCount: Int) {
         AntiSpin(10000) {
             logln(
                 "${repo.urlstr} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
-                        "satd/sec: $satdRate source/sec:$sourceRate ${mem()} totRepos:${repoDone.get()}/$totRepo"
+                        "satd/sec: $satdRate source/sec:$sourceRate ${mem()}"
             )
         }
 

@@ -10,6 +10,8 @@ fun main(args: Array<String>) {
     HeapDumper.enable()
 
     persistence.setupDatabase()
+    repoRate.startStatAsync()
+
     val pool = ForkJoinPool(
         config.thread_count.toIntOrNull() ?: 10,
         { pool: ForkJoinPool? ->
@@ -26,8 +28,8 @@ fun main(args: Array<String>) {
             .androidReposFull
             .union(RepoList.androidReposFull2)
             .sorted()
-            .also { Stat.totRepo = it.size }
-            .subtract(DbRepos.allDone().also { Stat.repoDone.getAndSet(it.size) })
+            .also { RepoRate.totRepo = it.size }
+            .subtract(DbRepos.allDone().also { RepoRate.repoDone.getAndSet(it.size) })
             .take(config.batch_size.toIntOrNull() ?: 1000)
             .stream()
             .parallel()
