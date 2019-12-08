@@ -6,12 +6,13 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class RepoRate {
     fun alreadyDone(size: Int) {
-        repoDone.getAndSet(size)
+        alreadyDone = size
         logStat()
     }
 
     var totRepo: Int = 0
-    val repoDone = AtomicInteger(0)
+    private var alreadyDone = 0
+    private val repoDone = AtomicInteger(0)
 
 
     private val rate = Rate(60)
@@ -27,7 +28,7 @@ class RepoRate {
 
     @Synchronized
     private fun logStat() {
-        logln("totRepos:${repoDone.get()}/$totRepo repo/sec ${rateStr()} $mem")
+        logln("totRepos:${repoDone.get() + alreadyDone}/$totRepo this run:${repoDone.get()} repo/sec ${rateStr()} $mem")
     }
 
     fun startStatAsync() {
