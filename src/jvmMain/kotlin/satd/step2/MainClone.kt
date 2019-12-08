@@ -1,15 +1,13 @@
 package satd.step2
 
 import satd.utils.*
-import java.util.concurrent.ForkJoinPool
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
-    logln("Starting")
+    logln("Starting clone only")
     config.loadArgs(args)
     HeapDumper.enable()
 
-    persistence.setupDatabase()
     repoRate.startStatAsync()
 
     val pool = forkJoinPool()
@@ -21,15 +19,13 @@ fun main(args: Array<String>) {
             .union(RepoList.androidReposFull2)
             .sorted()
             .also { RepoRate.totRepo = it.size }
-            .subtract(DbRepos.allDone().also { RepoRate.repoDone.getAndSet(it.size) })
-            .take(config.batch_size.toIntOrNull() ?: 1000)
             .stream()
             .parallel()
-            .map { Repo(it).clone() }
-            .filter { !it.failed }
-            .map { Find(it).trackSatd() }
+            .map { Repo(it).clone(); repoRate.spin() }
             .toList()
     }.get()
-    logln("Done")
+
+    logln("Done cloning")
 
 }
+

@@ -107,3 +107,8 @@ task removedb(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.MainRemoveDbKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+task clone(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainCloneKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}

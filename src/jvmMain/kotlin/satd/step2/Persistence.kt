@@ -5,7 +5,6 @@ import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
-import satd.utils.Rate
 import satd.utils.logln
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -14,7 +13,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
-import java.util.concurrent.atomic.AtomicInteger
 
 
 class Persistence(val databasePath: Path) {
@@ -79,54 +77,6 @@ object DbSatds : LongIdTable() {
 
     fun existsCodeHash(code_hash_str: String) = DbSatds.select { code_hash eq code_hash_str }.count() > 0
 }
-
-class RepoRate {
-    companion object {
-        var totRepo: Int = 0
-        val repoDone = AtomicInteger(0)
-    }
-
-
-    private val rate = Rate(60)
-
-    @Synchronized
-    fun spin() {
-        rate.spin()
-        repoDone.incrementAndGet()
-    }
-
-    @Synchronized
-    fun rate(): Double = rate.rate()
-
-    @Synchronized
-    private fun logStat() {
-        logln("totRepos:${repoDone.get()}/$totRepo repo/sec ${rate()} $mem")
-    }
-
-    fun startStatAsync() {
-        Thread {
-            while (true) {
-                Thread.sleep(10000)
-                logStat()
-            }
-        }.apply {
-            isDaemon = true
-            name = "stat"
-        }.start()
-    }
-
-    val rt = Runtime.getRuntime()
-    val mb = 1024 * 1024
-
-    private val mem :String get()  {
-        val used = (rt.totalMemory() - rt.freeMemory()) / mb
-        val m = rt.maxMemory() / mb
-        return "mem:$used/$m"
-    }
-
-}
-
-val repoRate = RepoRate()
 
 object DbRepos : LongIdTable() {
     val url = varchar("url", 200).index(isUnique = true)
