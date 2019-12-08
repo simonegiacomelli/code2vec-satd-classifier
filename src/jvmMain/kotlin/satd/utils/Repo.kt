@@ -17,7 +17,6 @@ class Repo(val urlstr: String) {
 
     val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$userName/$repoName")
-    val failedClones = Folders.log.resolve("failed_clones")
     var exception: Exception? = null
     val failed get() = exception != null
     fun newGit() = open(folder)
@@ -27,8 +26,6 @@ class Repo(val urlstr: String) {
             cloneInternal()
         } catch (ex: Exception) {
             exception = ex
-            failedClones.toFile().mkdirs()
-            DbRepos.failed(urlstr, ex, "Repo.clone()")
         }
         return this
     }
@@ -53,6 +50,7 @@ class Repo(val urlstr: String) {
                 .setDirectory(folder)
                 //                .setProgressMonitor(textProgressMonitor)
                 .call()
+            logln("$urlstr CLONING DONE")
         }
     }
 
@@ -83,6 +81,13 @@ class Repo(val urlstr: String) {
     fun open(repoFolder: File): Git {
         val git = Git.open(repoFolder)!!
         return git
+    }
+
+    fun reportFailed(): Repo {
+        exception.also {
+            if (it != null) DbRepos.failed(urlstr, it, "Repo.clone()")
+        }
+        return this
     }
 
 
