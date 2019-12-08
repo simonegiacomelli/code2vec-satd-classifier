@@ -31,8 +31,10 @@ class Repo(val urlstr: String) {
     }
 
     private fun cloneInternal() {
-        if (folder.exists() && integrityMarker.exists())
+        if (folder.exists() && integrityMarker.exists()) {
+            logln("$urlstr EXISTS and marked ok")
             return
+        }
         if (folder.exists()) {
             logln("$urlstr ALREADY EXISTS checking integrity")
             if (repoOk()) {
