@@ -5,10 +5,13 @@ import satd.utils.logln
 import java.util.concurrent.atomic.AtomicInteger
 
 class RepoRate {
-    companion object {
-        var totRepo: Int = 0
-        val repoDone = AtomicInteger(0)
+    fun alreadyDone(size: Int) {
+        repoDone.getAndSet(size)
+        logStat()
     }
+
+    var totRepo: Int = 0
+    val repoDone = AtomicInteger(0)
 
 
     private val rate = Rate(60)
@@ -42,11 +45,12 @@ class RepoRate {
     val rt = Runtime.getRuntime()
     val mb = 1024 * 1024
 
-    private val mem :String get()  {
-        val used = (rt.totalMemory() - rt.freeMemory()) / mb
-        val m = rt.maxMemory() / mb
-        return "mem:$used/$m"
-    }
+    private val mem: String
+        get() {
+            val used = (rt.totalMemory() - rt.freeMemory()) / mb
+            val m = rt.maxMemory() / mb
+            return "mem:$used/$m"
+        }
 
 }
 

@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
             .androidReposFull
             .union(RepoList.androidReposFull2)
             .sorted()
-            .also { RepoRate.totRepo = it.size }
+            .also { repoRate.totRepo = it.size }
             .stream()
             .parallel()
             .map { Repo(it).clone(); repoRate.spin() }

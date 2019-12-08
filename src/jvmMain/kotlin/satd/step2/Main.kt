@@ -19,8 +19,8 @@ fun main(args: Array<String>) {
             .androidReposFull
             .union(RepoList.androidReposFull2)
             .sorted()
-            .also { RepoRate.totRepo = it.size }
-            .subtract(DbRepos.allDone().also { RepoRate.repoDone.getAndSet(it.size) })
+            .also { repoRate.totRepo = it.size }
+            .subtract(DbRepos.allDone().also { repoRate.alreadyDone(it.size) })
             .take(config.batch_size.toIntOrNull() ?: 1000)
             .stream()
             .parallel()
