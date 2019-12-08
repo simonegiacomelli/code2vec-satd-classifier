@@ -8,18 +8,23 @@ class Config {
     private val prop = Properties()
     private val initialized = lazy { true }
     fun loadArgs(args: Array<String>) {
-        File(if (args.isEmpty()) "config.properties" else args[0])
-            .apply {
-                if (exists())
-                    inputStream()
-                        .use {
-                            logln("Loading: $absolutePath")
-                            prop.load(it)
-                        }
-                else
-                    logln("Config file does not exists: $absolutePath does")
-            }
+        load("config.properties")
+        load("config_$hostname.properties")
+        if (args.isNotEmpty()) load(args[0])
         initialized.value
+    }
+
+    private fun load(filename: String) {
+        File(filename).apply {
+            if (exists())
+                inputStream()
+                    .use {
+                        logln("Loading: $absolutePath")
+                        prop.load(it)
+                    }
+            else
+                logln("Config file does not exists: $absolutePath does")
+        }
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
