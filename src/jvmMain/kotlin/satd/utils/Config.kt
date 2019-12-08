@@ -39,6 +39,7 @@ class Config {
     val repos_path by this
     val thread_count by this
     val batch_size by this
+    val if_repo_exists_check_integrity by this
 }
 
 val config = Config()
