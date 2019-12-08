@@ -8,7 +8,12 @@ import java.util.concurrent.ForkJoinPool
 
 
 fun main() {
-   println("hostname = $hostname")
+    RepoList.androidReposFull2
+        .sorted()
+        .joinToString("\n")
+        .also {
+            Folders.data.resolve("androidReposFull2.txt").toFile().writeText(it)
+        }
 }
 
 private fun exceptionToString() {

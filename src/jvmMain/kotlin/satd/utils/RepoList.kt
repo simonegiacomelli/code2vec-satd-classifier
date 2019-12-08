@@ -29,12 +29,13 @@ class RepoList {
                 }
                 it
             }
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            androidReposFull.forEach {
-                println(it)
-            }
-        }
     }
+}
+
+fun main(args: Array<String>) {
+    RepoList.androidReposFull2
+        .sorted()
+        .forEach {
+            println(it)
+        }
 }
