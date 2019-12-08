@@ -1,7 +1,6 @@
 package satd.utils
 
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.api.ResetCommand
 import satd.step2.DbRepos
 import java.io.File
 import java.lang.IllegalStateException
@@ -17,6 +16,7 @@ class Repo(val urlstr: String) {
 
     val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$userName/$repoName")
+    val integrityMarker = File("$reposPath/$userName/$repoName.repo-ok.txt")
     var exception: Exception? = null
     val failed get() = exception != null
     fun newGit() = open(folder)
@@ -31,27 +31,29 @@ class Repo(val urlstr: String) {
     }
 
     private fun cloneInternal() {
+        if (folder.exists() && integrityMarker.exists())
+            return
         if (folder.exists()) {
-            if (config.if_repo_exists_check_integrity.toIntOrNull() ?: 0 == 0)
-                return
             logln("$urlstr ALREADY EXISTS checking integrity")
-            if (!repoOk()) {
-                logln("$urlstr INTEGRITY CHECK failed. removing...")
-                folder.deleteRecursively()
-                if (folder.exists()) throw IllegalStateException("folder.deleteRecursively() $folder")
+            if (repoOk()) {
+                integrityMarker.writeText("")
+                return
             }
+            logln("$urlstr INTEGRITY CHECK failed. removing...")
+            folder.deleteRecursively()
+            if (folder.exists()) throw IllegalStateException("folder.deleteRecursively() $folder")
+
         }
 
-        if (!folder.exists()) {
-            logln("$urlstr CLONING")
-            Git.cloneRepository()
-                .setNoCheckout(true)
-                .setURI(url.toExternalForm())
-                .setDirectory(folder)
-                //                .setProgressMonitor(textProgressMonitor)
-                .call()
-            logln("$urlstr CLONING DONE")
-        }
+        logln("$urlstr CLONING")
+        Git.cloneRepository()
+            .setNoCheckout(true)
+            .setURI(url.toExternalForm())
+            .setDirectory(folder)
+            .setProgressMonitor(textProgressMonitor)
+            .call()
+        integrityMarker.writeText("")
+        logln("$urlstr CLONING DONE")
     }
 
     private fun repoOk(): Boolean {

@@ -7,17 +7,16 @@ import kotlin.reflect.KProperty
 class Config {
     private val prop = Properties()
     private val initialized = lazy { true }
-    fun loadArgs(args: Array<String>) {
-        load("config.properties")
-        load("config_$hostname.properties")
-        if (args.isNotEmpty()) load(args[0])
+    fun load() {
+        loadConfFile("config.properties")
+        loadConfFile("config_$hostname.properties")
         prop.forEach {
             logln("configuration properties: ${it.key}=${it.value}")
         }
         initialized.value
     }
 
-    private fun load(filename: String) {
+    private fun loadConfFile(filename: String) {
         File(filename).apply {
             if (exists())
                 inputStream()
@@ -39,7 +38,6 @@ class Config {
     val repos_path by this
     val thread_count by this
     val batch_size by this
-    val if_repo_exists_check_integrity by this
 }
 
 val config = Config()

@@ -5,7 +5,7 @@ import kotlin.streams.toList
 
 fun main(args: Array<String>) {
     logln("Starting clone only")
-    config.loadArgs(args)
+    config.load()
     HeapDumper.enable()
 
     repoRate.startStatAsync()

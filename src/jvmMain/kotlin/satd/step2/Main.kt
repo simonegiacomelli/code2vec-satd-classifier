@@ -1,12 +1,11 @@
 package satd.step2
 
 import satd.utils.*
-import java.util.concurrent.ForkJoinPool
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
     logln("Starting")
-    config.loadArgs(args)
+    config.load()
     HeapDumper.enable()
 
     persistence.setupDatabase()
