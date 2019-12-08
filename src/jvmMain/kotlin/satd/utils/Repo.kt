@@ -50,7 +50,7 @@ class Repo(val urlstr: String) {
             .setNoCheckout(true)
             .setURI(url.toExternalForm())
             .setDirectory(folder)
-            .setProgressMonitor(textProgressMonitor)
+//            .setProgressMonitor(textProgressMonitor)
             .call()
         integrityMarker.writeText("")
         logln("$urlstr CLONING DONE")
