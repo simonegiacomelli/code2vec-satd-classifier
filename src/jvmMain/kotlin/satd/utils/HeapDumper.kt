@@ -31,6 +31,7 @@ object HeapDumper {
 
     fun dumpHeap(fileName: String?, live: Boolean) {
         hotspotMBean.dumpHeap(fileName, live)
+        println("Heap dump done")
     }
 
     fun main(args: Array<String>) { // default heap dump file name

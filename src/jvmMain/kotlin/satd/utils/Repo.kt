@@ -3,14 +3,7 @@ package satd.utils
 import org.eclipse.jgit.api.Git
 import satd.step2.DbRepos
 import java.io.File
-import java.io.IOException
 import java.net.URL
-import java.nio.file.Files
-import java.nio.file.Files.isRegularFile
-import java.nio.file.Path
-import java.nio.file.Paths
-import java.util.function.Consumer
-import java.util.stream.Collectors
 
 
 class Repo(val urlstr: String) {
