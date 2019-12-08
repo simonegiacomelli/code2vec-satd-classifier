@@ -38,7 +38,7 @@ class Repo(val urlstr: String) {
 
         if (folder.exists()) {
             logln("$urlstr ALREADY EXISTS checking integrity")
-            if (!repoOk(folder)) {
+            if (!repoOk()) {
                 logln("$urlstr INTEGRITY CHECK failed. removing...")
                 folder.deleteRecursively()
                 if (folder.exists()) throw IllegalStateException("folder.deleteRecursively() $folder")
@@ -48,6 +48,7 @@ class Repo(val urlstr: String) {
         if (!folder.exists()) {
             logln("$urlstr CLONING")
             Git.cloneRepository()
+                .setNoCheckout(true)
                 .setURI(url.toExternalForm())
                 .setDirectory(folder)
                 //                .setProgressMonitor(textProgressMonitor)
@@ -55,26 +56,23 @@ class Repo(val urlstr: String) {
         }
     }
 
-    private fun repoOk(repoFolder: File): Boolean {
+    private fun repoOk(): Boolean {
         try {
-            val git = open(repoFolder)
-            git.clean()
-                .setCleanDirectories(true)
-                .setForce(true)
-                .call()
+            newGit().use { git ->
+                git.clean()
+                    .setCleanDirectories(true)
+                    .setForce(true)
+                    .call()
 
+//                git.reset()
+//                    .setMode(ResetCommand.ResetType.HARD)
+//                    .setProgressMonitor(textProgressMonitor)
+//                    .call()
 
-
-            git.reset()
-                .setMode(ResetCommand.ResetType.HARD)
-                .setProgressMonitor(textProgressMonitor)
-                .call()
-
-            git.pull()
-                .setProgressMonitor(textProgressMonitor)
-                .call()
-
-
+                git.fetch()
+                    .setProgressMonitor(textProgressMonitor)
+                    .call()
+            }
             return true
         } catch (ex: Exception) {
             logln("$urlstr REFRESH failed [${ex}]")

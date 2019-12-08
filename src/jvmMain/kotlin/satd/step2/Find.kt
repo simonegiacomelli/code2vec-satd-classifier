@@ -40,7 +40,6 @@ class Find(val repo: Repo) {
     val emptyTreeIterator = EmptyTreeIterator()
 
     fun trackSatd() {
-
         try {
             logln("${repo.urlstr} SATD Find.trackSatd() ${git.stats()}")
             trackSatdInternal()
@@ -49,6 +48,11 @@ class Find(val repo: Repo) {
         } catch (ex: Throwable) {
             DbRepos.failed(repo.urlstr, ex, "Find.trackSatd()")
             Exceptions(ex, git.repository.workTree.name).handle()
+        } finally {
+            try {
+                git.close()
+            } catch (ex: Throwable) {
+            }
         }
     }
 
