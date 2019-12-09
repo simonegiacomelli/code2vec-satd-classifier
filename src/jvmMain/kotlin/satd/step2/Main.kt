@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
     pool.submit {
         RepoList
             .androidReposFull
-//            .union(RepoList.androidReposFull2)
+            .union(RepoList.androidReposFull2)
             .sorted()
             .also { repoRate.totRepo = it.size }
             .subtract(DbRepos.allDone().also { repoRate.alreadyDone(it.size) })
