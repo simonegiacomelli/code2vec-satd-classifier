@@ -25,7 +25,8 @@ fun main() {
                         "\n"
             }
 
-        val pers = Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd"))
+//        val pers = Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd"))
+        val pers = persistence
         val workFolder = Folders.diff.resolve(dateTimeToStr()).toFile()
         val repoFolder = workFolder.resolve("repo")
         val folderStr: String
@@ -53,7 +54,7 @@ fun main() {
                     }
 
             }
-            pers.startWebServer()
+            //pers.startWebServer()
         }
 
         private fun diff2html() {

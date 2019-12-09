@@ -39,7 +39,7 @@ class Find(val repo: Repo) {
 
     fun trackSatd() {
         try {
-            logln("${repo.urlstr} SATD Find.trackSatd() ${git.stats()}")
+            logln("${repo.urlstr} SATD Find.trackSatd()") // ${git.stats()}
             trackSatdInternal()
             stat.done()
             blobSatd.repoIsCompleted()
