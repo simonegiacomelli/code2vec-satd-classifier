@@ -1,0 +1,7 @@
+Currently there is a cache mechanism in BlobSatd, at the end of a complete repository scan it stores which objectId has at least a satd inside
+So, if a following scan will happen again, it will load and exploit the cache to parse only those sources we already know contains a satd
+
+A much faster cache would store which commits contains a satd-nonSatd pair; thanks to this we can avoid the very expensive operation
+of the two tree diff (see DiffFormatter usage in this project)
+
+Beware the two caches are not compatible.
