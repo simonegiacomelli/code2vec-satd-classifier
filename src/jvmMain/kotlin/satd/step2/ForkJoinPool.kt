@@ -3,6 +3,9 @@ package satd.step2
 import satd.utils.config
 import java.util.concurrent.ForkJoinPool
 
+//maybe using System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "10");
+//will save some code?
+
 fun forkJoinPool(): ForkJoinPool {
     val pool = ForkJoinPool(
         config.thread_count.toIntOrNull() ?: 10,
