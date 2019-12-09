@@ -117,3 +117,8 @@ task removeCheckout(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.MainRemoveCheckoutKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+task redoFailed(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainRedoFailedKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
