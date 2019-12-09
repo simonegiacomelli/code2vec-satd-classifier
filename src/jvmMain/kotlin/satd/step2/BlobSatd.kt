@@ -14,15 +14,10 @@ import kotlin.math.absoluteValue
 class BlobSatd(val repo: Repository, val stat: Stat) {
     val allSatds = mutableMapOf<ObjectId, SourceInfo>()
     val repoName = repo.workTree.name
-//    val cache = CacheSpin("containsSatd", repoName)
 
     fun processedSatds(objectId: ObjectId): SourceInfo =
         allSatds.getOrPut(objectId) {
             stat.sourceRate.spin()
-            //val containsSatd = cache[objectId.name]
-//            val satdMethods = if (containsSatd != "0") findMethodsWithSatd(objectId.content()) else emptyList()
-//            if (containsSatd == null)
-//                cache[objectId.name] = if (satdMethods.isEmpty()) "0" else "1"
             val satdMethods = findMethodsWithSatd(objectId.content())
             SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
         }

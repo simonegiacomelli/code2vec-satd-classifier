@@ -4,7 +4,6 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.diff.DiffEntry.ChangeType.*
 import org.eclipse.jgit.diff.DiffFormatter
-import org.eclipse.jgit.lib.AbbreviatedObjectId
 import org.eclipse.jgit.lib.AnyObjectId
 import org.eclipse.jgit.lib.ObjectId
 import org.eclipse.jgit.revwalk.RevCommit
@@ -26,7 +25,6 @@ class Find(val repo: Repo) {
     // some utility extension methods
     private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
 
-    private fun AbbreviatedObjectId.source() = blobSatd.processedSatds(this.toObjectId())
     private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
 
     private val AnyObjectId.esc get() = "\"$this\""
@@ -89,7 +87,9 @@ class Find(val repo: Repo) {
                 .forEach {
                     stat.ratePrinter.spin()
                     when (it.changeType) {
-                        MODIFY -> it.newId.source().link(it.oldId.source(), parentCommit, childCommit)
+                        MODIFY ->
+                            blobSatd.processedSatds(it.newId.toObjectId())
+                                .link(blobSatd.processedSatds(it.oldId.toObjectId()), parentCommit, childCommit)
                         COPY, RENAME, ADD, DELETE -> {
                             /* should not matter to our satd tracking */
                         }

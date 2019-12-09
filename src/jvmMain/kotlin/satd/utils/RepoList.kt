@@ -9,6 +9,7 @@ class RepoList {
         val tenRepos by lazy { repoUrlList("satd/step1/repo-urls.txt") }
         val androidReposFull by lazy { repoUrlList("satd/urls/android-repo-urls.txt") }
         val androidReposFull2 by lazy { repoUrlList("satd/urls/android-repo-urls2.txt") }
+        val androidReposOOM by lazy { repoUrlList("satd/urls/android-repo-oom-urls.txt") }
         val androidReposStackOverflow by lazy { repoUrlList("satd/urls/android-repo-urls-stackoverflow.txt") }
 
         private fun repoTxtResource(resource: String): URL {
