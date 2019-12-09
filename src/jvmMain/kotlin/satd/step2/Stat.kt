@@ -30,7 +30,7 @@ class Stat(val repo: Repo, commitCount: Int) {
     val ratePrinter =
         AntiSpin(10000) {
             logln(
-                "${repo.urlstr} commit#:${commitRate.spinCount}/$commitCount source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
+                "${repo.urlstr} commit#:${commitRate.spinCount}/$commitCount commit/sec:$commitRate source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
                         "satd/sec: $satdRate source/sec:$sourceRate"
             )
         }

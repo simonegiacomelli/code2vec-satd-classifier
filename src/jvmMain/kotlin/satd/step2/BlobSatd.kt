@@ -6,18 +6,47 @@ import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import satd.utils.Folders
 import satd.utils.logln
 import java.nio.charset.Charset
 import java.security.MessageDigest
 import kotlin.math.absoluteValue
+import kotlin.reflect.KFunction1
 
 class BlobSatd(val repo: Repository, val stat: Stat) {
     val repoName = repo.workTree.name
+    val cache = Cache(Folders.cache.resolve("repos/${stat.repo.userName}/${stat.repo.repoName}.txt").toFile())
 
-    fun processedSatds(objectId: ObjectId): SourceInfo {
-        val satdMethods = findMethodsWithSatd(objectId.content())
+    private fun processedSatdsYesCache(objectId: ObjectId): SourceInfo {
         stat.sourceRate.spin()
-        return  SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
+        if (cache[objectId.name] != "1")
+            return SourceInfo(objectId, mutableMapOf())
+
+        val satdMethods = findMethodsWithSatd(objectId.content())
+        return SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
+    }
+
+    private fun processedSatdsNoCache(objectId: ObjectId): SourceInfo {
+        stat.sourceRate.spin()
+        val satdMethods = findMethodsWithSatd(objectId.content())
+        if (satdMethods.isNotEmpty())
+            cache[objectId.name] = "1"
+        return SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
+    }
+
+    val processedSatds = determineProcessStrategy()
+
+    fun repoIsCompleted() {
+        cache.store()
+    }
+
+    private fun determineProcessStrategy(): KFunction1<ObjectId, SourceInfo> {
+        if (cache.exists()) {
+            cache.load()
+            return ::processedSatdsYesCache
+        }
+
+        return ::processedSatdsNoCache
     }
 
     private fun ObjectId.content() = repo.open(this).bytes.toString(Charset.forName("UTF-8"))
@@ -29,6 +58,10 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             //we are not interested in the previous state of a method with satd
 
             val oldSatd = oldSource.methods.values.filter { it.hasSatd }
+
+            if (oldSatd.isEmpty())
+                return
+
             val oldNamesWithSatd = oldSatd.map { it.name }.toSet()
             val missingNewMethodsNames = oldNamesWithSatd.subtract(methods.keys)
 

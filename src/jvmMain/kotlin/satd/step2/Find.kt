@@ -42,6 +42,7 @@ class Find(val repo: Repo) {
             logln("${repo.urlstr} SATD Find.trackSatd() ${git.stats()}")
             trackSatdInternal()
             stat.done()
+            blobSatd.repoIsCompleted()
             DbRepos.done(repo.urlstr)
         } catch (ex: Throwable) {
             DbRepos.failed(repo.urlstr, ex, "Find.trackSatd()")

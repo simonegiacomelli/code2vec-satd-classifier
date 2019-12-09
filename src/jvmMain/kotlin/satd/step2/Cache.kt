@@ -1,14 +1,12 @@
 package satd.step2
 
-import satd.utils.Folders
 import satd.utils.AntiSpin
+import java.io.File
 import java.util.*
 
-open class Cache(type: String, context: String) {
+open class Cache(val file: File) {
 
-    val folder = Folders.cache.resolve(type)
-    val filename = folder.resolve("$context.txt").toFile()
-
+    val folder = file.parentFile
     val map = mutableMapOf<String, String>()
 
 
@@ -19,8 +17,8 @@ open class Cache(type: String, context: String) {
     }
 
     fun store() {
-        folder.toFile().mkdirs()
-        filename.bufferedWriter().use {
+        folder.mkdirs()
+        file.bufferedWriter().use {
             //write header
             it.appendln("size=${map.size} //${Date()}")
             it.appendln()
@@ -31,8 +29,8 @@ open class Cache(type: String, context: String) {
 
     fun load() {
         map.clear()
-        if (filename.exists()) {
-            filename
+        if (exists()) {
+            file
                 .bufferedReader()
                 .useLines {
                     val seq = it.dropWhile { line -> line != "" }.drop(1)
@@ -45,10 +43,12 @@ open class Cache(type: String, context: String) {
         }
     }
 
+    fun exists() = file.exists()
+
 
 }
 
-class CacheSpin(type: String, context: String) : Cache(type, context) {
+class CacheSpin(file: File) : Cache(file) {
     private val antiSpin = AntiSpin(windowMillis = 10000) { store() }
     fun storeSpin() = antiSpin.spin()
 }
