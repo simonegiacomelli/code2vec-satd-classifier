@@ -82,7 +82,7 @@ task step1(type: JavaExec, dependsOn: [jvmJar]) {
 task step2(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step2.MainKt"
-    jvmArgs = ['-Xms1g', '-Xmx8g']
+    //jvmArgs = ['-Xms1g', '-Xmx8g']
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
 task showdatabase(type: JavaExec, dependsOn: [jvmJar]) {
