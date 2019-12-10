@@ -26,7 +26,7 @@ fun main() {
             .toList()
     }.get()
 
-    logln("Done cloning")
+    logln("Done stats")
 
 }
 
