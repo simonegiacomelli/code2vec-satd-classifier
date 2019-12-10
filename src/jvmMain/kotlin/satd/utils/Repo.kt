@@ -2,6 +2,7 @@ package satd.utils
 
 import org.eclipse.jgit.api.Git
 import satd.step2.DbRepos
+import satd.step2.Exceptions
 import satd.step2.repoRate
 import java.io.File
 import java.net.URL
@@ -108,11 +109,14 @@ class Repo(val urlstr: String) {
     }
 
     fun stat() {
-        if (integrityMarker.exists()) {
-            newGit().use { RepoStatsFile.append(urlstr, it.stats()) }
-            repoRate.spin()
+        try {
+            if (integrityMarker.exists()) {
+                newGit().use { RepoStatsFile.append(urlstr, it.stats()) }
+                repoRate.spin()
+            }
+        } catch (ex: Exception) {
+            logln("exception $urls ${ex.javaClass.name} ${ex.message}")
         }
-
     }
 
 
