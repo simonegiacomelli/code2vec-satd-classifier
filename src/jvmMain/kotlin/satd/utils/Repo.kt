@@ -106,5 +106,10 @@ class Repo(val urlstr: String) {
         logln("removed $count entries for $urlstr")
     }
 
+    fun stat() {
+        assert(integrityMarker.exists())
+        newGit().use { RepoStatsFile.append(urlstr, it.stats()) }
+    }
+
 
 }

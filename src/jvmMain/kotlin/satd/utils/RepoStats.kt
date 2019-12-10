@@ -2,6 +2,22 @@ package satd.utils
 
 import org.eclipse.jgit.api.Git
 
+object RepoStatsFile {
+    val file = Folders.database.resolve("repo-stats.csv").toFile()
+
+    fun reset() {
+        file.parentFile.mkdirs()
+        file.delete()
+        assert(!file.exists())
+    }
+
+    @Synchronized
+    fun append(urlstr: String, rs: RepoStats) {
+        rs.run { file.appendText("$urlstr,$commitCount,$sizeMB\n") }
+    }
+
+}
+
 data class RepoStats(val commitCount: Int, val sizeMB: Long)
 
 fun Git.stats(): RepoStats {
