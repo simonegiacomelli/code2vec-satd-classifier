@@ -4,7 +4,7 @@ import satd.utils.*
 import kotlin.streams.toList
 
 fun main() {
-    logln("Starting repo stat")
+    loglnStart("repoStats")
     config.load()
 
     repoRate.startStatAsync()

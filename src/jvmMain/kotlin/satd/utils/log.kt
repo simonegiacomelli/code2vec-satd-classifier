@@ -1,9 +1,14 @@
 package satd.utils
 
+private var appname = ""
+fun loglnStart(name: String) {
+    appname = name
+}
+
 private val logfile by lazy {
     val f = Folders.log.toFile().resolve("run")
     f.mkdirs()
-    f.resolve("${dateTimeToStr()}-p$pid.txt").printWriter()
+    f.resolve("$appname${dateTimeToStr()}-p$pid.txt").printWriter()
 }
 
 @Synchronized
