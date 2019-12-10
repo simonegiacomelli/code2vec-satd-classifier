@@ -27,7 +27,7 @@ class RepoRate {
     fun rateStr() = rate.toString()
 
     @Synchronized
-    private fun logStat() {
+    fun logStat() {
         logln("totRepos:${repoDone.get() + alreadyDone}/$totRepo this run:${repoDone.get()} repo/sec ${rateStr()} $mem")
     }
 
