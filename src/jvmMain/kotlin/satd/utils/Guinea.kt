@@ -1,19 +1,12 @@
 package satd.utils
 
-import satd.utils.RepoList.Companion.androidReposFull
-import satd.utils.RepoList.Companion.androidReposFull2
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.concurrent.ForkJoinPool
 
 
 fun main() {
-    RepoList.androidReposFull2
-        .sorted()
-        .joinToString("\n")
-        .also {
-            Folders.data.resolve("androidReposFull2.txt").toFile().writeText(it)
-        }
+
 }
 
 private fun exceptionToString() {

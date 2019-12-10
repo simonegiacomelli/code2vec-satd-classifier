@@ -33,11 +33,3 @@ class RepoList {
             }
     }
 }
-
-fun main(args: Array<String>) {
-    RepoList.androidReposFull2
-        .sorted()
-        .forEach {
-            println(it)
-        }
-}
