@@ -24,15 +24,40 @@ class RepoList {
             .filter { !it.startsWith("#") }
             .filter { it.isNotEmpty() }
             .map {
-                try {
-                    URL(it)
-                } catch (ex: MalformedURLException) {
-                    throw Exception("Offending url [$it]", ex)
-                }
+                checkUrl(it)
                 it
             }
 
-        fun get() = androidReposFull.union(androidReposFull2).sorted()
+        private fun checkUrl(url: String) {
+            try {
+                URL(url)
+            } catch (ex: MalformedURLException) {
+                throw Exception("Offending url [$url]", ex)
+            }
+        }
 
+        fun get() = csv("satd/urls/android-50-thousand.csv").sortedBy { it.commits }.map { it.url }
+
+        fun csv(resource: String): List<RepoCsvRow> {
+            return repoTxtResource(resource)
+                .readText()
+                .split("\n")
+                .drop(1)
+                .filter { !it.startsWith("#") }
+                .filter { it.isNotEmpty() }
+                .map {
+                    val p = it.split(",")
+                    checkUrl(p[0])
+                    val row = RepoCsvRow(p[0])
+                    row.commits = p[1].toInt()
+                    row.sizeMB = p[2].toInt()
+                    row
+                }
+        }
     }
+}
+
+data class RepoCsvRow(val url: String) {
+    var commits: Int = -1
+    var sizeMB: Int = -1
 }
