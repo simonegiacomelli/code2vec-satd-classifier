@@ -17,9 +17,7 @@ fun main(args: Array<String>) {
     logln("Using pool: $pool")
     pool.submit {
         RepoList
-            .androidReposFull
-            .union(RepoList.androidReposFull2)
-            .sorted()
+            .get()
             .also { repoRate.totRepo = it.size }
             .subtract(DbRepos.allDone().also { repoRate.alreadyDone(it.size) })
             .take(config.batch_size.toIntOrNull() ?: 1000)

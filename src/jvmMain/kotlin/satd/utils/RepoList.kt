@@ -31,5 +31,8 @@ class RepoList {
                 }
                 it
             }
+
+        fun get() = androidReposFull.union(androidReposFull2).sorted()
+
     }
 }
