@@ -7,9 +7,11 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import satd.utils.dateTimeToStr
+import satd.utils.loglnStart
 import java.nio.file.Paths
 
 fun main() {
+    loglnStart("diff")
     class Main {
         fun ResultRow.filename(): String {
             val it = this

@@ -4,6 +4,7 @@ import satd.utils.*
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
+    loglnStart("main")
     logln("Starting pid: $pid")
     config.load()
     HeapDumper.enable()

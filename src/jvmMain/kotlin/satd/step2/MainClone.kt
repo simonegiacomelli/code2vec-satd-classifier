@@ -4,7 +4,7 @@ import satd.utils.*
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
-    logln("Starting clone only")
+    loglnStart("clone")
     config.load()
     HeapDumper.enable()
 

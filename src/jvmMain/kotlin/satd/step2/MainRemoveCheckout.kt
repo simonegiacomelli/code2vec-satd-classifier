@@ -4,7 +4,7 @@ import satd.utils.*
 import kotlin.streams.toList
 
 fun main(args: Array<String>) {
-    logln("Removing checkout")
+    loglnStart("removeCheckout")
     config.load()
     HeapDumper.enable()
 
