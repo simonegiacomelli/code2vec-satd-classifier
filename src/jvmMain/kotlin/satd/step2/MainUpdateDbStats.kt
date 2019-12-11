@@ -4,28 +4,29 @@ import satd.utils.*
 import kotlin.streams.toList
 
 fun main() {
-    loglnStart("repoStats")
+    loglnStart("UpdateDbStats")
+    logln("Starting pid: $pid")
     config.load()
+
+    persistence.setupDatabase()
 
     repoRate.startStatAsync()
 
     val pool = forkJoinPool()
 
-    RepoStatsFile.reset()
-
     logln("Using pool: $pool")
     pool.submit {
         RepoList
-            .getUrls()
+            .get()
             .also { repoRate.totRepo = it.size }
             .stream()
             .parallel()
-            .map { Repo(it).stat(); }
+            .map { DbRepos.updateStats(it); repoRate.spin() }
             .toList()
     }.get()
+
     repoRate.logStat()
 
-    logln("Done stats")
+    logln("Done")
 
 }
-

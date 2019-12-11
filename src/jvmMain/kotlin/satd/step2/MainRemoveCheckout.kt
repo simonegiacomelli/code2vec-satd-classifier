@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     logln("Using pool: $pool")
     pool.submit {
         RepoList
-            .get()
+            .getUrls()
             .also { repoRate.totRepo = it.size }
             .stream()
             .parallel()

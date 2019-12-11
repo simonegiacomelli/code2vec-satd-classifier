@@ -122,3 +122,8 @@ task repoStats(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.MainRepoStatsKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+task updateDbStats(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainUpdateDbStatsKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}

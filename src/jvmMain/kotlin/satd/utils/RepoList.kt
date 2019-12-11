@@ -36,7 +36,8 @@ class RepoList {
             }
         }
 
-        fun get() = csv("satd/urls/android-50-thousand.csv").sortedBy { it.commits }.map { it.url }
+        fun get() = csv("satd/urls/android-50-thousand.csv")
+        fun getUrls() = get().sortedBy { it.commits }.map { it.url }
 
         fun csv(resource: String): List<RepoCsvRow> {
             return repoTxtResource(resource)
