@@ -47,6 +47,18 @@ internal class RateTest {
         assertEquals(3.0, target.rate())
     }
 
+    @Test
+    fun noSpin() {
+        val clock = FakeClock()
+        val target = Rate(1, clock::get)
+
+        target.spin()
+        clock.time += 1001
+
+
+        assertEquals(0.0, target.rate())
+    }
+
     class FakeClock {
         var time = 0L
         fun get() = time

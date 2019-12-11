@@ -24,6 +24,11 @@ class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis
 
     fun spin() {
         spinCount++
+        update()
+        counter[0]++
+    }
+
+    private fun update() {
         val currentSecond = currentSecond()
 
         secs = currentSecond - trackedSecond
@@ -32,9 +37,6 @@ class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis
 
         val exceedSize = counter.size - windowSecs
         repeat(exceedSize) { counter.removeLast() }
-
-        counter[0]++
-
         trackedSecond = currentSecond
     }
 
@@ -45,6 +47,7 @@ class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis
     }
 
     fun rate(): Double {
+        update()
         if (counter.isEmpty()) return .0
         return counter.sum().toDouble() / counter.size
     }
