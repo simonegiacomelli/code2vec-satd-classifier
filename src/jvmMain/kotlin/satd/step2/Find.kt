@@ -11,6 +11,7 @@ import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.util.io.DisabledOutputStream
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 import org.eclipse.jgit.treewalk.EmptyTreeIterator
+import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
 import satd.utils.Repo
 import satd.utils.logln
 import satd.utils.stats
@@ -80,6 +81,7 @@ class Find(val repo: Repo) {
     ) {
         DiffFormatter(DisabledOutputStream.INSTANCE).use { formatter ->
             formatter.setRepository(git.repository)
+            formatter.pathFilter = PathSuffixFilter.create(".java")
             val entries = formatter.scan(parentIterator, childIterator)
 
             entries
