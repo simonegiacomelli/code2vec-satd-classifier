@@ -8,7 +8,7 @@ import java.util.concurrent.ForkJoinPool
 
 fun forkJoinPool(): ForkJoinPool {
     val pool = ForkJoinPool(
-        config.thread_count.toIntOrNull() ?: 10,
+        config.thread_count.toIntOrNull() ?: ForkJoinPool.commonPool().parallelism,
         { pool: ForkJoinPool? ->
             val w =
                 ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool)

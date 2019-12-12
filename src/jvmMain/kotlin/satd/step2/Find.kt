@@ -24,7 +24,8 @@ class Find(val repo: Repo) {
 
 
     // some utility extension methods
-    private fun RevCommit.newTreeIterator() = CanonicalTreeParser().apply { reset(reader, tree) }
+    private fun RevCommit.newTreeIterator() =
+        CanonicalTreeParser().apply { reset(/*reader*/git.repository.newObjectReader(), tree) }
 
     private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
 
@@ -58,8 +59,7 @@ class Find(val repo: Repo) {
 
     fun trackSatdInternal() {
 
-
-        for (child in git.log().all().call()) {
+        git.log().all().call().toList().stream().parallel().forEach { child ->
             stat.commitRate.spin()
             if (child.parents.isNotEmpty())
                 child.parents.forEach {
