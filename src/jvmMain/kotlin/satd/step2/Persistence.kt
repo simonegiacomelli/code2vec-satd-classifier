@@ -76,6 +76,7 @@ object DbSatds : LongIdTable() {
     val repo = varchar("repo", 200)
     val old_len = integer("old_len")
     val new_len = integer("new_len")
+    //clean means: without comments
     val old_clean = text("old_clean")
     val new_clean = text("new_clean")
     val old_clean_len = integer("old_clean_len")
