@@ -1,18 +1,42 @@
 package satd.step2
 
 import com.github.javaparser.JavaParser
-import org.eclipse.jgit.api.Git
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
-import satd.utils.dateTimeToStr
 import satd.utils.loglnStart
-import java.nio.file.Paths
+
+enum class types {
+    training, validation, test
+}
 
 fun main() {
     loglnStart("gen-dataset")
+    class Dataset(val count: Int, val train: Double, val test: Double) {
+
+        val trainCount = (count * train).toInt()
+        val testCount = (count * test).toInt()
+        val validationCount = (count - (trainCount + testCount))
+
+        val seq = genSeq().shuffled()
+
+        private fun genSeq(): List<types> {
+
+            assert(train + test <= 1.0)
+
+            return List(trainCount) { types.training } +
+                    List(validationCount) { types.validation } +
+                    List(testCount) { types.test }
+        }
+
+        fun type(index: Int) = seq[index]
+        fun print() {
+            println("Dataset $trainCount + $validationCount + $testCount = $count (train + validation + test = total)")
+        }
+    }
+
     class Main {
 
 
@@ -25,13 +49,24 @@ fun main() {
 
             workFolder.mkdirs()
             pers.setupDatabase()
-            foreachRow {
-                writeSource(it[DbSatds.old_clean], it, "satd")
-                writeSource(it[DbSatds.new_clean], it, "fixed")
+
+            val ds = Dataset(transaction { query().count() }, 0.7, 0.15)
+            ds.print()
+            transaction {
+                query().forEachIndexed() { idx, it ->
+                    val type = ds.type(idx).toString()
+                    writeSource(it[DbSatds.old_clean], it, "satd", type)
+                    writeSource(it[DbSatds.new_clean], it, "fixed", type)
+                }
             }
         }
 
-        private fun writeSource(methodSource: String, it: ResultRow, type: String) {
+        private fun query() =
+            DbSatds.select { DbSatds.accept.eq(1) and DbSatds.parent_count.eq(1) }.orderBy(DbSatds.id)
+
+        private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String) {
+            val folder = workFolder.resolve(subfolder)
+            folder.mkdirs()
             val filename = "${it[DbSatds.code_hash]}_${it[DbSatds.id]}_$type.java"
             val content = wrapMethod(methodSource)
             try {
@@ -44,10 +79,9 @@ fun main() {
                 val method = methods.first()
                 method.name.identifier = type
 
-                workFolder.resolve(filename).writeText(wrapMethod(method.toString()))
+                folder.resolve(filename).writeText(wrapMethod(method.toString()))
             } catch (ex: Exception) {
                 println("$filename\n$content")
-//                throw ex
             }
         }
 
@@ -59,19 +93,6 @@ ${methodSource.prependIndent()}
 }
 """.trimIndent()
             return content
-        }
-
-
-        private fun foreachRow(function: (ResultRow) -> Unit) {
-            transaction {
-                DbSatds
-                    .select {
-                        DbSatds.accept.eq(1) and DbSatds.parent_count.eq(1)
-                    }
-                    .forEach {
-                        function(it)
-                    }
-            }
         }
 
     }
