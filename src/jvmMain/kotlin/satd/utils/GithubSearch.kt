@@ -67,19 +67,19 @@ class DateRange(val s: DateTime, val e: DateTime) {
 
 private fun qryGithubFullscanDateRange(s: DateTime, e: DateTime) {
 
-    val dtr = DateRange(s, e)
-    val jsonFile = urls.folder.resolve("${dtr.fs}.json")
+    val dateRange = DateRange(s, e)
+    val jsonFile = urls.folder.resolve("${dateRange.fs}.json")
 
     var page = 1
-    qryGitbubDtr(dtr, jsonFile, page)
+    qryGitbubDateRange(dateRange, jsonFile, page)
 
     val jsonObject = toJsonObject(jsonFile)
     accumulateUrls(jsonObject)
     var totalCount = jsonObject.get("total_count").asInt - 100
     while (totalCount > 0) {
         page++
-        urls.folder.resolve("${dtr.fs}--p$page.json").also {
-            qryGitbubDtr(dtr, it, page)
+        urls.folder.resolve("${dateRange.fs}--p$page.json").also {
+            qryGitbubDateRange(dateRange, it, page)
             accumulateUrls(toJsonObject(it))
         }
         totalCount -= 100
@@ -101,9 +101,9 @@ private fun toJsonObject(jsonFile: File): JsonObject {
     return jsonObject
 }
 
-private fun qryGitbubDtr(dtr: DateRange, jsonFile: File, page: Int) {
+private fun qryGitbubDateRange(dateRange: DateRange, jsonFile: File, page: Int) {
     val url = "https://api.github.com/search/repositories?" +
-            "q=language:Java+topic:android+is:public+created:${dtr.qry}&page=$page&per_page=100"
+            "q=language:Java+topic:android+is:public+created:${dateRange.qry}&page=$page&per_page=100"
     println(url + (if (jsonFile.exists()) " skipping, file already exists" else ""))
     if (!jsonFile.exists()) {
         val content = URL(url).readText()
