@@ -27,4 +27,5 @@ class DateRangeTest {
         assertEquals(DateTime.parse("2020-01-03"), left.dtEnd)
         assertEquals(DateTime.parse("2020-01-04"), right.dtStart)
     }
+
 }
