@@ -3,9 +3,9 @@ package satd.github
 import com.google.gson.JsonParser
 import org.joda.time.DateTime
 import org.joda.time.Interval
-import org.joda.time.Period
 import java.io.File
 import java.net.URL
+import kotlin.math.ceil
 import kotlin.math.max
 
 fun main() {
@@ -37,11 +37,11 @@ class GithubQueryTool(val workingFolder: File, val dateRange: DateRange, val que
         while (L.isNotEmpty()) {
             val q = L.removeAt(0)
             val r = q.execute()
-            if (r.total_count > 0)
+            if (r.total_count > 1000)
                 L.addAll(0, q.split())
             else {
                 r.save()
-                q.followingPages()
+                q.followingPages(r)
                     .forEach { it.execute().save() }
             }
         }
@@ -49,6 +49,8 @@ class GithubQueryTool(val workingFolder: File, val dateRange: DateRange, val que
     }
 
     inner class ReposSearch(val dateRange: DateRange, val querySpecification: String, val page: Int = 1) {
+        override fun toString() = "${dateRange.qry} qs=$querySpecification page$page"
+
         private val jsonFile = jsonFolder.resolve("${dateRange.fs}-p$page.json")
 
         fun execute(): SearchResult {
@@ -58,43 +60,46 @@ class GithubQueryTool(val workingFolder: File, val dateRange: DateRange, val que
 
             println(url + (if (jsonFile.exists()) " skipping, file already exists" else ""))
 
-            if (!jsonFile.exists())
-                jsonFile.writeText("$url\n${queryGithub(url)}")
+            if (!jsonFile.exists()) {
+                val content = URL(url).readText()
+                jsonFile.writeText("$url\n$content")
+                //this could read the headers and wait the minimum amount of time
+                //see https://developer.github.com/v3/#rate-limiting
+                Thread.sleep(1000)
+//                Thread.sleep(20000)
+            }
 
             val content = jsonFile.readLines().drop(1).joinToString("\n")
-
-
 
             return SearchResult(content)
 
         }
 
-        private fun queryGithub(url: String): String {
-            val content = URL(url).readText()
-            //this could read the headers and wait the minimum amount of time
-            //see https://developer.github.com/v3/#rate-limiting
-            Thread.sleep(20000)
-            return content
-        }
-
         fun split(): List<ReposSearch> {
             val (left, right) = dateRange.split()
-            TODO()
+            return listOf(ReposSearch(left, querySpecification), ReposSearch(right, querySpecification))
         }
 
-        fun followingPages(): Sequence<ReposSearch> {
-            TODO("not implemented")
+        fun followingPages(r: SearchResult): Sequence<ReposSearch> {
+            val pageCount = ceil(r.total_count.toDouble() / 100).toInt()
+            if (pageCount <= 1) return emptySequence()
+            return (2..pageCount).map { ReposSearch(dateRange, querySpecification, it) }.asSequence()
         }
+
 
     }
 
-    class SearchResult(jsonContent: String) {
+    inner class SearchResult(jsonContent: String) {
 
         private val json by lazy { JsonParser.parseString(jsonContent).asJsonObject!! }
         val total_count: Int by lazy { json.get("total_count").asInt }
 
         fun save() {
-            TODO("not implemented")
+            json.getAsJsonArray("items")
+                .forEach {
+                    val html_url = it.asJsonObject.get("html_url").asString
+                    output.appendText("$html_url\n")
+                }
         }
     }
 
@@ -104,9 +109,9 @@ class GithubQueryTool(val workingFolder: File, val dateRange: DateRange, val que
 class DateRange(val dtStart: DateTime, val dtEnd: DateTime) {
     fun split(): Pair<DateRange, DateRange> {
         if (dtStart == dtEnd) throw Exception("Cannot split one day :(")
-        val p = Period(dtStart, dtEnd).plusDays(1)
-        val days1 = p.days / 2
-        val days2 = p.days - days1
+
+        val days1 = days / 2
+        val days2 = days - days1
         val days = max(days1, days2) - 1
 
         val left = DateRange(dtStart, dtStart.plusDays(days))
@@ -114,10 +119,14 @@ class DateRange(val dtStart: DateTime, val dtEnd: DateTime) {
         return Pair(left, right)
     }
 
+    val days: Int = Interval(dtStart, dtEnd.plusDays(1)).toDuration().toStandardDays().days
+
     val start = dtStart.yyyyMMdd()
     val end = dtEnd.yyyyMMdd()
     val qry = "$start..$end"
     val fs = "$start-$end"
+
+    override fun toString() = qry
 }
 
 private fun DateTime.yyyyMMdd() = toString("yyyy-MM-dd").orEmpty()
