@@ -18,7 +18,7 @@ fun main() {
         , DateRange(dtStart, dtEnd)
         , "language:Java topic:android is:public"
     )
-        .createTxt()
+        .createOutputTxt()
         .also {
             println("Generated: $it contains ${it.useLines { it.count() }}")
         }
@@ -32,7 +32,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
     private val queue = mutableListOf<ReposSearch>()
     private val output = File(workingFolder, "github-url-list.txt")
 
-    fun createTxt(): File {
+    fun createOutputTxt(): File {
         cacheFolder.mkdirs()
         jsonFolder.deleteRecursively()
         jsonFolder.mkdirs()
@@ -47,8 +47,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 queue.addAll(0, search.split())
             else {
                 result.save()
-                search.followingPages(result)
-                    .forEach { it.execute().save() }
+                search.followingPages(result).forEach { it.execute().save() }
             }
         }
         return output
