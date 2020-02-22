@@ -6,6 +6,8 @@ import org.joda.time.Interval
 import org.joda.time.Period
 import java.io.File
 import java.net.URL
+import java.net.URLConnection
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -29,6 +31,8 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 
     private val cacheFolder = workingFolder.resolve("cache")
     private val jsonFolder = workingFolder.resolve("json")
+    private val tokensFile = workingFolder.resolve("github-tokens.txt")
+    private var tokensIndex = 0
     private val queue = mutableListOf<ReposSearch>()
     private val output = File(workingFolder, "github-url-list.txt")
 
@@ -82,7 +86,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
         private fun invokeApi(url: String) {
             print("request...")
             val c = URL(url).openConnection()
-
+            manageAuthorization(c)
             //see https://developer.github.com/v3/#rate-limiting
             //e.g. {X-RateLimit-Reset=[1582281440], X-RateLimit-Remaining=[7], X-RateLimit-Limit=[10]}
 
@@ -104,6 +108,23 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 Thread.sleep(l)
             }
             println("done")
+        }
+
+        private fun manageAuthorization(c: URLConnection) {
+
+            if (!tokensFile.exists())
+                tokensFile.writeText("#expeected format is username:token\n#see https://developer.github.com/v3/auth/#basic-authentication")
+
+            val lines = tokensFile.readLines().filterNot { it.startsWith("#") or it.isBlank() }
+            if (lines.isEmpty())
+                return
+
+            tokensIndex %= lines.size
+
+            val userCredentials = lines[tokensIndex]
+            val basicAuth = "Basic " + String(Base64.getEncoder().encode(userCredentials.toByteArray()))
+            c.setRequestProperty("Authorization", basicAuth)
+            tokensIndex++
         }
 
         fun split(): List<ReposSearch> {
