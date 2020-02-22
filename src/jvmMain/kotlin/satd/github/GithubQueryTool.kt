@@ -2,12 +2,10 @@ package satd.github
 
 import com.google.gson.JsonParser
 import org.joda.time.DateTime
-import org.joda.time.Duration
 import org.joda.time.Interval
 import org.joda.time.Period
 import java.io.File
 import java.net.URL
-import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -79,24 +77,25 @@ class GithubQueryTool(val workingFolder: File, val dateRange: DateRange, val que
 
         private fun invokeApi(url: String) {
             print("request...")
-            //                val content = URL(url).readText()
             val c = URL(url).openConnection()
-            //{X-RateLimit-Reset=[1582281440], X-RateLimit-Remaining=[7], X-RateLimit-Limit=[10]}
-            val message = c.headerFields
+
+            //see https://developer.github.com/v3/#rate-limiting
+            //e.g. {X-RateLimit-Reset=[1582281440], X-RateLimit-Remaining=[7], X-RateLimit-Limit=[10]}
+
+            val headers = c.headerFields
                 .filter { it.key.orEmpty().contains("rate", ignoreCase = true) }
                 .mapValues { it.value.first().orEmpty() }
                 .mapKeys { it.key }
 
-            val d = DateTime((message["X-RateLimit-Reset"] ?: "").toLong() * 1000).toLocalDateTime()
-            val d1 = Period(DateTime(), d.toDateTime()).toStandardSeconds().seconds
-            println("reset on: $d in $d1 $message")
+            val resetDt = DateTime((headers["X-RateLimit-Reset"] ?: "").toLong() * 1000).toLocalDateTime()
+            val resetSecs = Period(DateTime(), resetDt.toDateTime()).toStandardSeconds().seconds
+            println("reset on: $resetDt in $resetSecs $headers")
             val content = c.getInputStream().use { it.readBytes() }.toString(Charsets.UTF_8)
 
             jsonFile.writeText("$url\n$content")
             //this could read the headers and wait the minimum amount of time
-            //see https://developer.github.com/v3/#rate-limiting
-            if ((message["X-RateLimit-Remaining"] ?: "").toInt() == 1) {
-                val l = d1.toLong() * 1000
+            if ((headers["X-RateLimit-Remaining"] ?: "").toInt() == 1) {
+                val l = resetSecs.toLong() * 1000
                 print(" sleeping for $l")
                 Thread.sleep(l)
             }
