@@ -54,11 +54,11 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 search.followingPages(result).forEach { it.execute().save() }
             }
         }
+        output.apply { writeText(readLines().toSet().sorted().joinToString("\n")) }
         return output
     }
 
     inner class ReposSearch(val dateRange: DateRange, val querySpec: String, val page: Int = 1) {
-
         override fun toString() = "${dateRange.qry} qs=$querySpec page$page"
         private val jsonFile = cacheFolder.resolve("${dateRange.fs}-p$page.json")
 
