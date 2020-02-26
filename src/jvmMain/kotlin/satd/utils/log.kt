@@ -1,6 +1,6 @@
 package satd.utils
 
-private var appname = ""
+private var appname = "default-log"
 fun loglnStart(name: String) {
     appname = name
 }
