@@ -2,6 +2,7 @@ package satd.github
 
 import org.joda.time.DateTime
 import org.joda.time.Period
+import satd.utils.Rate
 import java.io.File
 import java.net.URL
 import java.net.URLConnection
@@ -10,6 +11,7 @@ import java.util.*
 class GithubApi(val tokensFile: File) {
 
     private var tokensIndex = 0
+    private val rate = Rate(120)
 
     inner class Call(private val url: String, private val jsonFile: File) {
 
@@ -31,6 +33,7 @@ class GithubApi(val tokensFile: File) {
                 } catch (ex: Exception) {
                     println("$url exception:")
                     ex.printStackTrace()
+                    Thread.sleep(1000)
                 }
             }
         }
@@ -46,11 +49,13 @@ class GithubApi(val tokensFile: File) {
                 .mapValues { it.value.first().orEmpty() }
                 .mapKeys { it.key }
 
-            print("headers: $headers")
+            print("req/sec:$rate headers: $headers")
             val resetDt = DateTime((headers["X-RateLimit-Reset"] ?: "").toLong() * 1000).toLocalDateTime()
             val resetSecs = Period(DateTime(), resetDt.toDateTime()).toStandardSeconds().seconds
             println("reset on: $resetDt in $resetSecs secs")
             val content = c.getInputStream().use { it.readBytes() }.toString(Charsets.UTF_8)
+
+            rate.spin()
 
             jsonFile.writeText("$url\n$content")
             //this could read the headers and wait the minimum amount of time
