@@ -16,9 +16,9 @@ fun main() {
     val dtStart = DateTime(2000, 1, 1, 0, 0)
     val dtEnd = DateTime(2021, 1, 1, 0, 0)
     GithubQueryTool(
-        File("./data/github/query2")
+        File("./data/github/queryJavaPublic")
         , DateRange(dtStart, dtEnd)
-        , "language:Java topic:android is:public"
+        , "language:Java is:public"
     )
         .createOutputTxt()
         .also {
