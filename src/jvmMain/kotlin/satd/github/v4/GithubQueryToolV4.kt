@@ -30,6 +30,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
     private val apiCall = GithubApiV4(tokensFile)
     private val queue = mutableListOf<ReposSearch>()
     private val output = File(workingFolder, "github-url-list.txt")
+    private val outputTsv = File(workingFolder, "github-url-list.tsv")
 
     fun createOutputTxt(): File {
         cacheFolder.mkdirs()
@@ -37,6 +38,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
         jsonFolder.mkdirs()
 
         output.writeText("")
+        outputTsv.writeText("")
 
         queue.add(ReposSearch(Type.PROBE, dateRange))
         while (queue.isNotEmpty()) {
@@ -101,8 +103,12 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 jsonFile.copyTo(File(jsonFolder, jsonFile.name))
                 search.getAsJsonArray("edges")
                     .forEach {
-                        val html_url = it.asJsonObject.get("node").asJsonObject.get("nameWithOwner").asString
-                        output.appendText("https://github.com/$html_url\n")
+                        val obj = it.asJsonObject.get("node").asJsonObject
+                        val name = obj.get("nameWithOwner").asString
+                        val issueCount = obj.get("issues").asJsonObject.get("totalCount").asInt
+                        output.appendText("https://github.com/$name\n")
+                        if(issueCount>100)
+                            outputTsv.appendText("https://github.com/$name\t$issueCount\n")
                     }
             }
         }

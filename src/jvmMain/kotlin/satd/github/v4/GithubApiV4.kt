@@ -19,7 +19,7 @@ class GithubApiV4(val tokensFile: File) {
 
         fun invoke(): String {
             if (jsonFile.exists())
-                println("$queryDescription skipping, file already exists")
+                println("${jsonFile.name} skipping, file already exists")
             else
                 invokeRetry()
 
@@ -30,13 +30,13 @@ class GithubApiV4(val tokensFile: File) {
             repeat(10) {
                 try {
                     val retry = if (it == 0) "" else "retry $it"
-                    println("$queryDescription request... $retry")
+                    println("${jsonFile.name} request... $retry")
                     invokeUnsafe()
                     return
                 } catch (ex: Exception) {
                     if (ex.doNotCatch())
                         throw ex
-                    println("$queryDescription exception:")
+                    println("${jsonFile.name} exception:")
                     ex.printStackTrace()
                     Thread.sleep(1000)
                 }
