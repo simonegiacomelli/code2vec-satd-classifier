@@ -1,0 +1,809 @@
+{
+  "data": {
+    "search": {
+      "repositoryCount": 7579778,
+      "edges": [
+        {
+          "node": {
+            "nameWithOwner": "CyC2018/CS-Notes",
+            "issues": {
+              "totalCount": 375
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "iluwatar/java-design-patterns",
+            "issues": {
+              "totalCount": 524
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "MisterBooo/LeetCodeAnimation",
+            "issues": {
+              "totalCount": 27
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "elastic/elasticsearch",
+            "issues": {
+              "totalCount": 22781
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "kdn251/interviews",
+            "issues": {
+              "totalCount": 39
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "ReactiveX/RxJava",
+            "issues": {
+              "totalCount": 2874
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "doocs/advanced-java",
+            "issues": {
+              "totalCount": 85
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "square/okhttp",
+            "issues": {
+              "totalCount": 2975
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "google/guava",
+            "issues": {
+              "totalCount": 3085
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "spring-projects/spring-framework",
+            "issues": {
+              "totalCount": 19189
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "square/retrofit",
+            "issues": {
+              "totalCount": 2320
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/dubbo",
+            "issues": {
+              "totalCount": 3238
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "macrozheng/mall",
+            "issues": {
+              "totalCount": 234
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "PhilJay/MPAndroidChart",
+            "issues": {
+              "totalCount": 4374
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "bumptech/glide",
+            "issues": {
+              "totalCount": 3629
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "airbnb/lottie-android",
+            "issues": {
+              "totalCount": 1092
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Blankj/AndroidUtilCode",
+            "issues": {
+              "totalCount": 1014
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "proxyee-down-org/proxyee-down",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "JakeWharton/butterknife",
+            "issues": {
+              "totalCount": 1104
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "crossoverJie/JCSprout",
+            "issues": {
+              "totalCount": 84
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "netty/netty",
+            "issues": {
+              "totalCount": 4966
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "TheAlgorithms/Java",
+            "issues": {
+              "totalCount": 135
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "ityouknow/spring-boot-examples",
+            "issues": {
+              "totalCount": 93
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/fastjson",
+            "issues": {
+              "totalCount": 2528
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/druid",
+            "issues": {
+              "totalCount": 2680
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "NationalSecurityAgency/ghidra",
+            "issues": {
+              "totalCount": 1273
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "ctripcorp/apollo",
+            "issues": {
+              "totalCount": 1883
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/arthas",
+            "issues": {
+              "totalCount": 777
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "CymChad/BaseRecyclerViewAdapterHelper",
+            "issues": {
+              "totalCount": 2801
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Netflix/Hystrix",
+            "issues": {
+              "totalCount": 992
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "google/gson",
+            "issues": {
+              "totalCount": 1242
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "square/picasso",
+            "issues": {
+              "totalCount": 1492
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "SeleniumHQ/selenium",
+            "issues": {
+              "totalCount": 6277
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "nostra13/Android-Universal-Image-Loader",
+            "issues": {
+              "totalCount": 1203
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "libgdx/libgdx",
+            "issues": {
+              "totalCount": 3072
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "chrisbanes/PhotoView",
+            "issues": {
+              "totalCount": 604
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "facebook/fresco",
+            "issues": {
+              "totalCount": 2077
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "shuzheng/zheng",
+            "issues": {
+              "totalCount": 86
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "jenkinsci/jenkins",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/kafka",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "google/ExoPlayer",
+            "issues": {
+              "totalCount": 6163
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Tencent/tinker",
+            "issues": {
+              "totalCount": 1238
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "seata/seata",
+            "issues": {
+              "totalCount": 1196
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "bazelbuild/bazel",
+            "issues": {
+              "totalCount": 7350
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "lenve/vhr",
+            "issues": {
+              "totalCount": 172
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "android10/Android-CleanArchitecture",
+            "issues": {
+              "totalCount": 243
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "qiurunze123/miaosha",
+            "issues": {
+              "totalCount": 37
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "DrKLO/Telegram",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "CarGuo/GSYVideoPlayer",
+            "issues": {
+              "totalCount": 2471
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "halo-dev/halo",
+            "issues": {
+              "totalCount": 442
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "lgvalle/Material-Animations",
+            "issues": {
+              "totalCount": 40
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "didi/DoraemonKit",
+            "issues": {
+              "totalCount": 269
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "wuyouzhuguli/SpringAll",
+            "issues": {
+              "totalCount": 25
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "mybatis/mybatis-3",
+            "issues": {
+              "totalCount": 968
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/easyexcel",
+            "issues": {
+              "totalCount": 1021
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "hdodenhof/CircleImageView",
+            "issues": {
+              "totalCount": 314
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "dianping/cat",
+            "issues": {
+              "totalCount": 963
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "winterbe/java8-tutorial",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "xuxueli/xxl-job",
+            "issues": {
+              "totalCount": 1288
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "react-native-community/lottie-react-native",
+            "issues": {
+              "totalCount": 454
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/canal",
+            "issues": {
+              "totalCount": 2194
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "signalapp/Signal-Android",
+            "issues": {
+              "totalCount": 7262
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "openzipkin/zipkin",
+            "issues": {
+              "totalCount": 1118
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "EnterpriseQualityCoding/FizzBuzzEnterpriseEdition",
+            "issues": {
+              "totalCount": 351
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/skywalking",
+            "issues": {
+              "totalCount": 2101
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "brettwooldridge/HikariCP",
+            "issues": {
+              "totalCount": 1243
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "JeffLi1993/springboot-learning-example",
+            "issues": {
+              "totalCount": 70
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "dbeaver/dbeaver",
+            "issues": {
+              "totalCount": 7347
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/flink",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "forezp/SpringCloudLearning",
+            "issues": {
+              "totalCount": 41
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "orhanobut/logger",
+            "issues": {
+              "totalCount": 178
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "LMAX-Exchange/disruptor",
+            "issues": {
+              "totalCount": 215
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "greenrobot/greenDAO",
+            "issues": {
+              "totalCount": 893
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "daimajia/AndroidSwipeLayout",
+            "issues": {
+              "totalCount": 488
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/spring-cloud-alibaba",
+            "issues": {
+              "totalCount": 757
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "eclipse/deeplearning4j",
+            "issues": {
+              "totalCount": 5101
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/ARouter",
+            "issues": {
+              "totalCount": 677
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Curzibn/Luban",
+            "issues": {
+              "totalCount": 337
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Bigkoo/Android-PickerView",
+            "issues": {
+              "totalCount": 798
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "linlinjava/litemall",
+            "issues": {
+              "totalCount": 244
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "jfeinstein10/SlidingMenu",
+            "issues": {
+              "totalCount": 645
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "daimajia/AndroidViewAnimations",
+            "issues": {
+              "totalCount": 119
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "hollischuang/toBeTopJavaer",
+            "issues": {
+              "totalCount": 17
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Konloch/bytecode-viewer",
+            "issues": {
+              "totalCount": 209
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/Sentinel",
+            "issues": {
+              "totalCount": 894
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "realm/realm-java",
+            "issues": {
+              "totalCount": 3978
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "zhihu/Matisse",
+            "issues": {
+              "totalCount": 597
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "xkcoding/spring-boot-demo",
+            "issues": {
+              "totalCount": 72
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "android-async-http/android-async-http",
+            "issues": {
+              "totalCount": 1056
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Tamsiree/RxTool",
+            "issues": {
+              "totalCount": 227
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/rocketmq",
+            "issues": {
+              "totalCount": 757
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "prestodb/presto",
+            "issues": {
+              "totalCount": 4039
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "JakeWharton/ViewPagerIndicator",
+            "issues": {
+              "totalCount": 281
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "mockito/mockito",
+            "issues": {
+              "totalCount": 991
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/hadoop",
+            "issues": {
+              "totalCount": 0
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alibaba/vlayout",
+            "issues": {
+              "totalCount": 468
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "lipangit/JiaoZiVideoPlayer",
+            "issues": {
+              "totalCount": 2600
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "zhangdaiscott/jeecg-boot",
+            "issues": {
+              "totalCount": 789
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "looly/hutool",
+            "issues": {
+              "totalCount": 628
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "apache/incubator-shardingsphere",
+            "issues": {
+              "totalCount": 2558
+            }
+          }
+        }
+      ]
+    }
+  }
+}

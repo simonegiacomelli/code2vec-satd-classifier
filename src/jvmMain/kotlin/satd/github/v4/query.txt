@@ -1,0 +1,84 @@
+query q1 {
+  search(query: "language:Java is:public created:2014-01-21..2014-01-21", type: REPOSITORY, first: 100) {
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+          createdAt
+          diskUsage
+          issues {
+            totalCount
+          }
+          refs(first: 3, refPrefix: "refs/heads/") {
+            edges {
+              node {
+                name
+                target {
+                  ... on Commit {
+                    history(first: 0) {
+                      totalCount
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+     # cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+
+query rateReport {
+  viewer {
+    login
+  }
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+
+query issueCount {
+  repository(owner: "isaacs", name: "github") {
+    issues {
+      totalCount
+    }
+  }
+}
+
+query q51 {
+  viewer {
+    login
+    repositories(first: 100) {
+      edges {
+        node {
+          id
+          issues(first: 50) {
+            edges {
+              node {
+                id
+                labels(first: 60) {
+                  edges {
+                    node {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
