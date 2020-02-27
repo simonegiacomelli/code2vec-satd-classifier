@@ -57,11 +57,8 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
         override fun toString() = "${dateRange.qry} qs=$querySpec page$page"
         private val jsonFile = cacheFolder.resolve("${dateRange.fs}-p$page.json")
         fun execute(): SearchResult {
-            val url = "https://api.github.com/search/repositories?" +
-                    "q=$querySpec created:${dateRange.qry}&page=$page&per_page=100"
-                        .replace(" ", "+")
 
-            val content = apiCall.Call(url, jsonFile).invoke()
+            val content = apiCall.Call("$querySpec ${dateRange.qry}" , v4repoJsonQuery(), jsonFile).invoke()
 
             return SearchResult(content)
 
@@ -99,4 +96,41 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 }
 
 
-
+fun GithubQueryTool.ReposSearch.v4repoJsonQuery(): String {
+    return """query q1 {
+  search(query: "$querySpec created:${dateRange.qry}", type: REPOSITORY, first: 100) {
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+          createdAt
+          diskUsage
+          issues {
+            totalCount
+          }
+          refs(first: 3, refPrefix: "refs/heads/") {
+            edges {
+              node {
+                name
+                target {
+                  ... on Commit {
+                    history(first: 0) {
+                      totalCount
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+     # cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}"""
+}

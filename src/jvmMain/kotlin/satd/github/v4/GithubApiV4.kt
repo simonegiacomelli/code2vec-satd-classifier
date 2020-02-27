@@ -4,6 +4,7 @@ import org.joda.time.DateTime
 import org.joda.time.Period
 import satd.utils.Rate
 import java.io.File
+import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLConnection
 import java.util.*
@@ -13,13 +14,14 @@ class GithubApiV4(val tokensFile: File) {
     private var tokensIndex = 0
     private val rate = Rate(120)
 
-    inner class Call(private val url: String, private val jsonFile: File) {
+    inner class Call(private val queryDescription: String, private val queryJson: String, private val jsonFile: File) {
 
         fun invoke(): String {
             if (jsonFile.exists())
-                println("$url skipping, file already exists")
+                println("$queryDescription skipping, file already exists")
             else
                 invokeRetry()
+
             return jsonFile.readLines().drop(1).joinToString("\n")
         }
 
@@ -27,11 +29,11 @@ class GithubApiV4(val tokensFile: File) {
             repeat(10) {
                 try {
                     val retry = if (it == 0) "" else "retry $it"
-                    println("$url request... $retry")
+                    println("$queryDescription request... $retry")
                     invokeUnsafe()
                     return
                 } catch (ex: Exception) {
-                    println("$url exception:")
+                    println("$queryDescription exception:")
                     ex.printStackTrace()
                     Thread.sleep(1000)
                 }
@@ -39,31 +41,22 @@ class GithubApiV4(val tokensFile: File) {
         }
 
         private fun invokeUnsafe() {
-            val c = URL(url).openConnection()
+
+            //https://developer.github.com/v4/guides/forming-calls/#communicating-with-graphql
+            val c = URL("https://api.github.com/graphql").openConnection() as HttpURLConnection
+            c.requestMethod = "POST"
+            c.doOutput = true
+
+            //https://developer.github.com/v4/guides/resource-limitations/
             manageAuthorization(c)
-            //see https://developer.github.com/v3/#rate-limiting
-            //e.g. {X-RateLimit-Reset=[1582281440], X-RateLimit-Remaining=[7], X-RateLimit-Limit=[10]}
 
-            val headers = c.headerFields
-                .filter { it.key.orEmpty().contains("rate", ignoreCase = true) }
-                .mapValues { it.value.first().orEmpty() }
-                .mapKeys { it.key }
+            c.outputStream.bufferedWriter().use { it.write(queryJson) }
 
-            print("req/sec:$rate headers: $headers")
-            val resetDt = DateTime((headers["X-RateLimit-Reset"] ?: "").toLong() * 1000).toLocalDateTime()
-            val resetSecs = Period(DateTime(), resetDt.toDateTime()).toStandardSeconds().seconds
-            println("reset on: $resetDt in $resetSecs secs")
             val content = c.getInputStream().use { it.readBytes() }.toString(Charsets.UTF_8)
 
             rate.spin()
 
-            jsonFile.writeText("$url\n$content")
-            //this could read the headers and wait the minimum amount of time
-            if ((headers["X-RateLimit-Remaining"] ?: "").toInt() <= 1) {
-                val l = resetSecs.toLong() * 1000
-                print(" sleeping for $l")
-                Thread.sleep(l)
-            }
+            jsonFile.writeText("$queryJson\n$content")
         }
     }
 
