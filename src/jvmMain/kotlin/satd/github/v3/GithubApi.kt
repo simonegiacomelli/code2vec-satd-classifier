@@ -1,4 +1,4 @@
-package satd.github
+package satd.github.v3
 
 import org.joda.time.DateTime
 import org.joda.time.Period

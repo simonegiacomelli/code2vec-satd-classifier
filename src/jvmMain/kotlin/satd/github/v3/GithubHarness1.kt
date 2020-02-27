@@ -1,4 +1,4 @@
-package satd.github
+package satd.github.v3
 
 import java.net.URL
 
