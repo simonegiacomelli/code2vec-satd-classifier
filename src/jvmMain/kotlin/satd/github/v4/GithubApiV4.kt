@@ -1,6 +1,5 @@
 package satd.github.v4
 
-import com.google.gson.Gson
 import com.google.gson.JsonObject
 import satd.utils.Rate
 import java.io.File
@@ -15,7 +14,7 @@ class GithubApiV4(val tokensFile: File) {
     private var tokensIndex = 0
     private val rate = Rate(120)
 
-    inner class Call(private val queryDescription: String, private val queryJson: String, private val jsonFile: File) {
+    inner class Call(private val queryJson: String, private val jsonFile: File) {
 
         fun invoke(): String {
             if (jsonFile.exists())

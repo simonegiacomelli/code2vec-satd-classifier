@@ -75,7 +75,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 Type.PROBE -> qryRepoProbe(querySpec)
                 Type.QUERY -> qryRepoNames(querySpec, cursor)
             }
-            val content = apiCall.Call("$querySpec ${dateRange.qry}", queryJson, jsonFile).invoke()
+            val content = apiCall.Call(queryJson, jsonFile).invoke()
 
             return SearchResult(content, this)
 
