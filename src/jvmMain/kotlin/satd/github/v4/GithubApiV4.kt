@@ -27,7 +27,7 @@ class GithubApiV4(val tokensFile: File) {
         }
 
         private fun invokeRetry() {
-            repeat(10) {
+            repeat(50) {
                 try {
                     val retry = if (it == 0) "" else "retry $it"
                     println("${jsonFile.name} request... $retry")
@@ -38,7 +38,7 @@ class GithubApiV4(val tokensFile: File) {
                         throw ex
                     println("${jsonFile.name} exception:")
                     ex.printStackTrace()
-                    Thread.sleep(1000)
+                    Thread.sleep(if (it <= 10) 1000 else 10000)
                 }
             }
         }
