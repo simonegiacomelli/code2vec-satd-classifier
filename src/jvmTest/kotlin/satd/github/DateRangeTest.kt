@@ -47,4 +47,13 @@ class DateRangeTest {
         assertEquals(target.days,left.days+right.days)
     }
 
+    @Test
+    fun testDameDay() {
+        val dtStart = DateTime.parse("2000-01-01")
+        val dtEnd = DateTime.parse("2000-01-01")
+
+        val target = DateRange(dtStart, dtEnd)
+        assertTrue(target.sameDay())
+    }
+
 }

@@ -9,9 +9,9 @@ import kotlin.math.ceil
 fun main() {
 
     val dtStart = DateTime(2000, 1, 1, 0, 0)
-    val dtEnd = DateTime(2021, 1, 1, 0, 0)
+    val dtEnd = DateTime(2020, 1, 31, 0, 0)
     GithubQueryTool(
-        File("./data/github/queryJavaPublic")
+        File("./data/github/queryJavaPublic-v4")
         , DateRange(dtStart, dtEnd)
         , "language:Java is:public"
     )
@@ -22,7 +22,7 @@ fun main() {
 
 }
 
-class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySpecification: String) {
+class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySpec: String) {
 
     private val cacheFolder = workingFolder.resolve("cache")
     private val jsonFolder = workingFolder.resolve("json")
@@ -38,55 +38,71 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 
         output.writeText("")
 
-        queue.add(ReposSearch(dateRange, querySpecification))
+        queue.add(ReposSearch(Type.PROBE, dateRange))
         while (queue.isNotEmpty()) {
             val search = queue.removeAt(0)
-            val result = search.execute()
-            if (result.total_count > 1000)
-                queue.addAll(0, search.split())
-            else {
-                result.save()
-                search.followingPages(result).forEach { it.execute().save() }
-            }
+            val probe = search.execute()
+            if (probe.repositoryCount > 0)
+                if (probe.repositoryCount <= 1000 || search.dateRange.sameDay()) {
+                    val pageCount = ceil(probe.repositoryCount.toDouble() / 100).toInt()
+                    val result = search.toQuery().execute()
+                    result.save()
+                    var res = result
+                    var page = 1
+                    while (res.hasNextPage) {
+                        page++
+                        res = ReposSearch(Type.QUERY, search.dateRange, page, res.endCursor).execute()
+                        res.save()
+                    }
+                    if (pageCount != page) println("weird $pageCount != $page <-------------------------------")
+                } else
+                    queue.addAll(0, search.split())
+
         }
         output.apply { writeText(readLines().toSet().sorted().joinToString("\n")) }
         return output
     }
 
-    inner class ReposSearch(val dateRange: DateRange, val querySpec: String, val page: Int = 1) {
-        override fun toString() = "${dateRange.qry} qs=$querySpec page$page"
-        private val jsonFile = cacheFolder.resolve("${dateRange.fs}-p$page.json")
+    enum class Type { PROBE, QUERY }
+
+    inner class ReposSearch(val type: Type, val dateRange: DateRange, val page: Int = 1, val cursor: String = "") {
+        override fun toString() = "${dateRange.qry} qs=$querySpec cursor=$cursor"
+        private val jsonFile = cacheFolder.resolve("${type.name}-${dateRange.fs}-p$page.json")
         fun execute(): SearchResult {
+            val queryJson = when (type) {
+                Type.PROBE -> qryRepoProbe(querySpec)
+                Type.QUERY -> qryRepoNames(querySpec, cursor)
+            }
+            val content = apiCall.Call("$querySpec ${dateRange.qry}", queryJson, jsonFile).invoke()
 
-            val content = apiCall.Call("$querySpec ${dateRange.qry}" , v4repoJsonQuery(), jsonFile).invoke()
-
-            return SearchResult(content)
+            return SearchResult(content, this)
 
         }
 
 
         fun split(): List<ReposSearch> {
             val (left, right) = dateRange.split()
-            return listOf(ReposSearch(left, querySpec), ReposSearch(right, querySpec))
+            return listOf(ReposSearch(Type.PROBE, left), ReposSearch(Type.PROBE, right))
         }
 
-        fun followingPages(r: SearchResult): Sequence<ReposSearch> {
-            val pageCount = ceil(r.total_count.toDouble() / 100).toInt()
-            if (pageCount <= 1) return emptySequence()
-            return (2..pageCount).map { ReposSearch(dateRange, querySpec, it) }.asSequence()
-        }
+        fun toQuery(): ReposSearch = ReposSearch(Type.QUERY, dateRange)
 
-        inner class SearchResult(jsonContent: String) {
+        inner class SearchResult(jsonContent: String, repoSearch: ReposSearch) {
 
             private val json by lazy { JsonParser.parseString(jsonContent).asJsonObject!! }
-            val total_count: Int by lazy { json.get("total_count").asInt }
+            private val data by lazy { json.get("data").asJsonObject }
+            private val search by lazy { data.get("search").asJsonObject }
+            val repositoryCount: Int by lazy { search.get("repositoryCount").asInt }
+            private val pageInfo by lazy { search.get("pageInfo").asJsonObject }
+            val endCursor by lazy { pageInfo.get("endCursor").asString }
+            val hasNextPage by lazy { pageInfo.get("hasNextPage").asBoolean }
 
             fun save() {
                 jsonFile.copyTo(File(jsonFolder, jsonFile.name))
-                json.getAsJsonArray("items")
+                search.getAsJsonArray("edges")
                     .forEach {
-                        val html_url = it.asJsonObject.get("html_url").asString
-                        output.appendText("$html_url\n")
+                        val html_url = it.asJsonObject.get("node").asJsonObject.get("nameWithOwner").asString
+                        output.appendText("https://github.com/$html_url\n")
                     }
             }
         }
@@ -96,41 +112,57 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 }
 
 
-fun GithubQueryTool.ReposSearch.v4repoJsonQuery(): String {
+fun GithubQueryTool.ReposSearch.qryRepoNames(querySpec: String, cursor: String): String {
+    val cursorClause = if (cursor.isEmpty()) "" else "after:\"$cursor\""
     return """query q1 {
-  search(query: "$querySpec created:${dateRange.qry}", type: REPOSITORY, first: 100) {
-    repositoryCount
-    edges {
-      node {
-        ... on Repository {
-          nameWithOwner
-          createdAt
-          diskUsage
-          issues {
-            totalCount
-          }
-          refs(first: 3, refPrefix: "refs/heads/") {
-            edges {
-              node {
-                name
-                target {
-                  ... on Commit {
-                    history(first: 0) {
-                      totalCount
-                    }
-                  }
+search(query: "$querySpec created:${dateRange.qry}", type: REPOSITORY, first: 100 $cursorClause) {
+repositoryCount
+edges {
+  node {
+    ... on Repository {
+      nameWithOwner
+      createdAt
+      diskUsage
+      issues {
+        totalCount
+      }
+      refs(first: 3, refPrefix: "refs/heads/") {
+        edges {
+          node {
+            name
+            target {
+              ... on Commit {
+                history(first: 0) {
+                  totalCount
                 }
               }
             }
           }
         }
       }
-     # cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
     }
   }
-}"""
+ # cursor
 }
+pageInfo {
+  endCursor
+  hasNextPage
+}
+}
+}
+"""
+}
+
+
+fun GithubQueryTool.ReposSearch.qryRepoProbe(querySpec: String): String = """query q1 {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  search(query: "$querySpec created:${dateRange.qry}", type: REPOSITORY, first: 100) {
+    repositoryCount
+  }
+}
+"""

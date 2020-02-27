@@ -1,809 +1,2853 @@
 {
   "data": {
     "search": {
-      "repositoryCount": 7579778,
+      "repositoryCount": 1053,
       "edges": [
         {
           "node": {
-            "nameWithOwner": "CyC2018/CS-Notes",
+            "nameWithOwner": "Kickflip/kickflip-android-sdk",
+            "createdAt": "2014-01-21T21:58:27Z",
+            "diskUsage": 38981,
             "issues": {
-              "totalCount": 375
+              "totalCount": 61
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "1.3.1",
+                    "target": {
+                      "history": {
+                        "totalCount": 154
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "avsync",
+                    "target": {
+                      "history": {
+                        "totalCount": 112
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "ffmpeg287",
+                    "target": {
+                      "history": {
+                        "totalCount": 160
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "iluwatar/java-design-patterns",
+            "nameWithOwner": "SKCraft/Launcher",
+            "createdAt": "2014-01-21T18:03:36Z",
+            "diskUsage": 1131,
             "issues": {
-              "totalCount": 524
+              "totalCount": 276
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "feature/creator-tools",
+                    "target": {
+                      "history": {
+                        "totalCount": 121
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 194
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "MisterBooo/LeetCodeAnimation",
+            "nameWithOwner": "codingforinterviews/practice-problems",
+            "createdAt": "2014-01-21T19:27:22Z",
+            "diskUsage": 833,
             "issues": {
-              "totalCount": 27
+              "totalCount": 2
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 53
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "tree-zig-zag-cpp",
+                    "target": {
+                      "history": {
+                        "totalCount": 19
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "elastic/elasticsearch",
+            "nameWithOwner": "puniverse/comsat-examples",
+            "createdAt": "2014-01-21T20:07:45Z",
+            "diskUsage": 16272,
             "issues": {
-              "totalCount": 22781
+              "totalCount": 2
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 47
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "kdn251/interviews",
+            "nameWithOwner": "lucaspouzac/contiperf",
+            "createdAt": "2014-01-21T16:41:59Z",
+            "diskUsage": 400,
+            "issues": {
+              "totalCount": 9
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 305
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "version1",
+                    "target": {
+                      "history": {
+                        "totalCount": 137
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "TeamMetallurgy/Metallurgy4",
+            "createdAt": "2014-01-21T15:52:41Z",
+            "diskUsage": 2703,
             "issues": {
               "totalCount": 39
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 402
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "ReactiveX/RxJava",
+            "nameWithOwner": "SafeSlingerProject/SafeSlinger-Android",
+            "createdAt": "2014-01-21T19:30:06Z",
+            "diskUsage": 25888,
             "issues": {
-              "totalCount": 2874
+              "totalCount": 145
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "development",
+                    "target": {
+                      "history": {
+                        "totalCount": 94
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 179
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "tablet-UI",
+                    "target": {
+                      "history": {
+                        "totalCount": 89
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "doocs/advanced-java",
+            "nameWithOwner": "vbauer/avconv4java",
+            "createdAt": "2014-01-21T12:40:54Z",
+            "diskUsage": 892,
             "issues": {
-              "totalCount": 85
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "gh-pages",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 217
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "square/okhttp",
+            "nameWithOwner": "cmoulliard/droolsjbpm-osgi-examples",
+            "createdAt": "2014-01-21T14:10:53Z",
+            "diskUsage": 1790,
             "issues": {
-              "totalCount": 2975
+              "totalCount": 6
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "6.2.x",
+                    "target": {
+                      "history": {
+                        "totalCount": 103
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "brms-bpms",
+                    "target": {
+                      "history": {
+                        "totalCount": 95
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 105
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "google/guava",
-            "issues": {
-              "totalCount": 3085
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "spring-projects/spring-framework",
-            "issues": {
-              "totalCount": 19189
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "square/retrofit",
-            "issues": {
-              "totalCount": 2320
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "apache/dubbo",
-            "issues": {
-              "totalCount": 3238
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "macrozheng/mall",
-            "issues": {
-              "totalCount": 234
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "PhilJay/MPAndroidChart",
-            "issues": {
-              "totalCount": 4374
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "bumptech/glide",
-            "issues": {
-              "totalCount": 3629
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "airbnb/lottie-android",
-            "issues": {
-              "totalCount": 1092
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "Blankj/AndroidUtilCode",
-            "issues": {
-              "totalCount": 1014
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "proxyee-down-org/proxyee-down",
-            "issues": {
-              "totalCount": 0
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "JakeWharton/butterknife",
-            "issues": {
-              "totalCount": 1104
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "crossoverJie/JCSprout",
-            "issues": {
-              "totalCount": 84
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "netty/netty",
-            "issues": {
-              "totalCount": 4966
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "TheAlgorithms/Java",
-            "issues": {
-              "totalCount": 135
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "ityouknow/spring-boot-examples",
-            "issues": {
-              "totalCount": 93
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/fastjson",
-            "issues": {
-              "totalCount": 2528
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/druid",
-            "issues": {
-              "totalCount": 2680
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "NationalSecurityAgency/ghidra",
-            "issues": {
-              "totalCount": 1273
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "ctripcorp/apollo",
-            "issues": {
-              "totalCount": 1883
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/arthas",
-            "issues": {
-              "totalCount": 777
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "CymChad/BaseRecyclerViewAdapterHelper",
-            "issues": {
-              "totalCount": 2801
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "Netflix/Hystrix",
-            "issues": {
-              "totalCount": 992
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "google/gson",
-            "issues": {
-              "totalCount": 1242
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "square/picasso",
-            "issues": {
-              "totalCount": 1492
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "SeleniumHQ/selenium",
-            "issues": {
-              "totalCount": 6277
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "nostra13/Android-Universal-Image-Loader",
-            "issues": {
-              "totalCount": 1203
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "libgdx/libgdx",
-            "issues": {
-              "totalCount": 3072
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "chrisbanes/PhotoView",
-            "issues": {
-              "totalCount": 604
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "facebook/fresco",
-            "issues": {
-              "totalCount": 2077
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "shuzheng/zheng",
-            "issues": {
-              "totalCount": 86
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "jenkinsci/jenkins",
+            "nameWithOwner": "pavelbucek/tyrus-client-android-test",
+            "createdAt": "2014-01-21T16:59:29Z",
+            "diskUsage": 213,
             "issues": {
               "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "apache/kafka",
+            "nameWithOwner": "SauravGShephertz/libgdxMultiplayerSuperJumper",
+            "createdAt": "2014-01-21T09:06:12Z",
+            "diskUsage": 10552,
             "issues": {
               "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 5
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "google/ExoPlayer",
+            "nameWithOwner": "bizo/aws-java-sdk-stubs",
+            "createdAt": "2014-01-21T23:33:36Z",
+            "diskUsage": 141,
             "issues": {
-              "totalCount": 6163
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "bizo",
+                    "target": {
+                      "history": {
+                        "totalCount": 46
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 62
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "Tencent/tinker",
-            "issues": {
-              "totalCount": 1238
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "seata/seata",
-            "issues": {
-              "totalCount": 1196
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "bazelbuild/bazel",
-            "issues": {
-              "totalCount": 7350
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "lenve/vhr",
-            "issues": {
-              "totalCount": 172
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "android10/Android-CleanArchitecture",
-            "issues": {
-              "totalCount": 243
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "qiurunze123/miaosha",
+            "nameWithOwner": "mkyral/josm-tracer",
+            "createdAt": "2014-01-21T22:33:24Z",
+            "diskUsage": 1051,
             "issues": {
               "totalCount": 37
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "development",
+                    "target": {
+                      "history": {
+                        "totalCount": 427
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "experimental",
+                    "target": {
+                      "history": {
+                        "totalCount": 89
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 27
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "DrKLO/Telegram",
+            "nameWithOwner": "asiermarques/xamarin-demos",
+            "createdAt": "2014-01-21T18:47:03Z",
+            "diskUsage": 13988,
             "issues": {
               "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "CarGuo/GSYVideoPlayer",
+            "nameWithOwner": "thekingofkings/gowalla-exp",
+            "createdAt": "2014-01-21T01:27:21Z",
+            "diskUsage": 326384,
             "issues": {
-              "totalCount": 2471
+              "totalCount": 6
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 92
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "halo-dev/halo",
+            "nameWithOwner": "thescouser89/ovirt-slaves-plugin",
+            "createdAt": "2014-01-21T19:23:44Z",
+            "diskUsage": 141,
             "issues": {
-              "totalCount": 442
+              "totalCount": 3
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 31
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "ovirt-3",
+                    "target": {
+                      "history": {
+                        "totalCount": 31
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "ovirt-4",
+                    "target": {
+                      "history": {
+                        "totalCount": 31
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "lgvalle/Material-Animations",
+            "nameWithOwner": "wso2/carbon-registry",
+            "createdAt": "2014-01-21T11:42:25Z",
+            "diskUsage": 40629,
             "issues": {
-              "totalCount": 40
+              "totalCount": 14
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "4.4.x",
+                    "target": {
+                      "history": {
+                        "totalCount": 662
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "4.5.x",
+                    "target": {
+                      "history": {
+                        "totalCount": 943
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "carbon-metadata",
+                    "target": {
+                      "history": {
+                        "totalCount": 32
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "didi/DoraemonKit",
+            "nameWithOwner": "zkoss/zkckeditor",
+            "createdAt": "2014-01-21T02:57:23Z",
+            "diskUsage": 68396,
             "issues": {
-              "totalCount": 269
+              "totalCount": 9
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "3.6.0.0",
+                    "target": {
+                      "history": {
+                        "totalCount": 17
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "4.0.0.0",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 190
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "wuyouzhuguli/SpringAll",
-            "issues": {
-              "totalCount": 25
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "mybatis/mybatis-3",
-            "issues": {
-              "totalCount": 968
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/easyexcel",
-            "issues": {
-              "totalCount": 1021
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "hdodenhof/CircleImageView",
-            "issues": {
-              "totalCount": 314
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "dianping/cat",
-            "issues": {
-              "totalCount": 963
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "winterbe/java8-tutorial",
-            "issues": {
-              "totalCount": 0
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "xuxueli/xxl-job",
-            "issues": {
-              "totalCount": 1288
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "react-native-community/lottie-react-native",
-            "issues": {
-              "totalCount": 454
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/canal",
-            "issues": {
-              "totalCount": 2194
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "signalapp/Signal-Android",
-            "issues": {
-              "totalCount": 7262
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "openzipkin/zipkin",
-            "issues": {
-              "totalCount": 1118
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "EnterpriseQualityCoding/FizzBuzzEnterpriseEdition",
-            "issues": {
-              "totalCount": 351
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "apache/skywalking",
-            "issues": {
-              "totalCount": 2101
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "brettwooldridge/HikariCP",
-            "issues": {
-              "totalCount": 1243
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "JeffLi1993/springboot-learning-example",
-            "issues": {
-              "totalCount": 70
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "dbeaver/dbeaver",
-            "issues": {
-              "totalCount": 7347
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "apache/flink",
-            "issues": {
-              "totalCount": 0
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "forezp/SpringCloudLearning",
-            "issues": {
-              "totalCount": 41
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "orhanobut/logger",
-            "issues": {
-              "totalCount": 178
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "LMAX-Exchange/disruptor",
-            "issues": {
-              "totalCount": 215
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "greenrobot/greenDAO",
-            "issues": {
-              "totalCount": 893
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "daimajia/AndroidSwipeLayout",
-            "issues": {
-              "totalCount": 488
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/spring-cloud-alibaba",
-            "issues": {
-              "totalCount": 757
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "eclipse/deeplearning4j",
-            "issues": {
-              "totalCount": 5101
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/ARouter",
-            "issues": {
-              "totalCount": 677
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "Curzibn/Luban",
-            "issues": {
-              "totalCount": 337
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "Bigkoo/Android-PickerView",
-            "issues": {
-              "totalCount": 798
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "linlinjava/litemall",
-            "issues": {
-              "totalCount": 244
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "jfeinstein10/SlidingMenu",
-            "issues": {
-              "totalCount": 645
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "daimajia/AndroidViewAnimations",
-            "issues": {
-              "totalCount": 119
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "hollischuang/toBeTopJavaer",
-            "issues": {
-              "totalCount": 17
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "Konloch/bytecode-viewer",
-            "issues": {
-              "totalCount": 209
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "alibaba/Sentinel",
-            "issues": {
-              "totalCount": 894
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "realm/realm-java",
-            "issues": {
-              "totalCount": 3978
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "zhihu/Matisse",
-            "issues": {
-              "totalCount": 597
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "xkcoding/spring-boot-demo",
-            "issues": {
-              "totalCount": 72
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "android-async-http/android-async-http",
-            "issues": {
-              "totalCount": 1056
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "Tamsiree/RxTool",
-            "issues": {
-              "totalCount": 227
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "apache/rocketmq",
-            "issues": {
-              "totalCount": 757
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "prestodb/presto",
-            "issues": {
-              "totalCount": 4039
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "JakeWharton/ViewPagerIndicator",
-            "issues": {
-              "totalCount": 281
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "mockito/mockito",
-            "issues": {
-              "totalCount": 991
-            }
-          }
-        },
-        {
-          "node": {
-            "nameWithOwner": "apache/hadoop",
+            "nameWithOwner": "williamzzl/Stock",
+            "createdAt": "2014-01-21T13:34:00Z",
+            "diskUsage": 1956,
             "issues": {
               "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "alibaba/vlayout",
+            "nameWithOwner": "learnNcode/ListWithDiffRowViewType",
+            "createdAt": "2014-01-21T07:02:50Z",
+            "diskUsage": 832,
             "issues": {
-              "totalCount": 468
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 6
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "lipangit/JiaoZiVideoPlayer",
+            "nameWithOwner": "wso2/carbon-governance",
+            "createdAt": "2014-01-21T09:06:44Z",
+            "diskUsage": 7653,
             "issues": {
-              "totalCount": 2600
+              "totalCount": 10
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "4.4.4-upgrade",
+                    "target": {
+                      "history": {
+                        "totalCount": 687
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "4.6.x",
+                    "target": {
+                      "history": {
+                        "totalCount": 649
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "config-hackathon",
+                    "target": {
+                      "history": {
+                        "totalCount": 1175
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "zhangdaiscott/jeecg-boot",
+            "nameWithOwner": "chriskearney/stickypunch",
+            "createdAt": "2014-01-21T05:57:12Z",
+            "diskUsage": 296,
             "issues": {
-              "totalCount": 789
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 11
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "looly/hutool",
+            "nameWithOwner": "shaunmahony/multigps-archive",
+            "createdAt": "2014-01-21T03:06:26Z",
+            "diskUsage": 32874,
             "issues": {
-              "totalCount": 628
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 7
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         },
         {
           "node": {
-            "nameWithOwner": "apache/incubator-shardingsphere",
+            "nameWithOwner": "djangofan/selenium-framework-concept2",
+            "createdAt": "2014-01-21T05:31:15Z",
+            "diskUsage": 3473,
             "issues": {
-              "totalCount": 2558
+              "totalCount": 2
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 55
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "jfinkels/analyticalengine",
+            "createdAt": "2014-01-21T17:05:32Z",
+            "diskUsage": 533,
+            "issues": {
+              "totalCount": 7
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "antlr",
+                    "target": {
+                      "history": {
+                        "totalCount": 148
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "array-store",
+                    "target": {
+                      "history": {
+                        "totalCount": 198
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "gh-pages",
+                    "target": {
+                      "history": {
+                        "totalCount": 51
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "joaoosorio/pt-sepa-iso20022",
+            "createdAt": "2014-01-21T16:29:02Z",
+            "diskUsage": 212,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 2
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "arnobroekhof/openid-server",
+            "createdAt": "2014-01-21T22:28:43Z",
+            "diskUsage": 2188,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 498
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "alexliubj/takemynotes",
+            "createdAt": "2014-01-21T23:09:55Z",
+            "diskUsage": 106780,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 105
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "php/pftt2",
+            "createdAt": "2014-01-21T23:55:06Z",
+            "diskUsage": 209925,
+            "issues": {
+              "totalCount": 51
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 204
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "felixr/swing-explorer-idea",
+            "createdAt": "2014-01-21T09:22:01Z",
+            "diskUsage": 140,
+            "issues": {
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 5
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "pescCDS/cdsWebserver",
+            "createdAt": "2014-01-21T00:54:22Z",
+            "diskUsage": 11611,
+            "issues": {
+              "totalCount": 27
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "develop",
+                    "target": {
+                      "history": {
+                        "totalCount": 152
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 18
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "eiichiro/gig",
+            "createdAt": "2014-01-21T02:56:52Z",
+            "diskUsage": 25719,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 35
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "vluoto/deveo-android",
+            "createdAt": "2014-01-21T08:50:03Z",
+            "diskUsage": 552,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 27
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Vovics/RealChop",
+            "createdAt": "2014-01-21T09:20:19Z",
+            "diskUsage": 392,
+            "issues": {
+              "totalCount": 11
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 37
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "maven",
+                    "target": {
+                      "history": {
+                        "totalCount": 4
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "newTrees",
+                    "target": {
+                      "history": {
+                        "totalCount": 24
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Internet2/Shibboleth-Multi-Context-Broker",
+            "createdAt": "2014-01-21T14:09:31Z",
+            "diskUsage": 1584,
+            "issues": {
+              "totalCount": 21
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 66
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "hxnx-sam/DiscreteSpatialPhyloSimulator",
+            "createdAt": "2014-01-21T08:00:47Z",
+            "diskUsage": 7194,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 28
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "warrengm/Solitaire",
+            "createdAt": "2014-01-21T12:54:55Z",
+            "diskUsage": 136,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "swimmadude66/piBar",
+            "createdAt": "2014-01-21T16:32:35Z",
+            "diskUsage": 10664,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 6
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "lkrnac/blog-2014-01-21-mock-autowired-fields",
+            "createdAt": "2014-01-21T06:47:11Z",
+            "diskUsage": 144,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "championswimmer/Xperia_FOTAKernel_Manager_Android_App",
+            "createdAt": "2014-01-21T19:03:54Z",
+            "diskUsage": 582,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "v2",
+                    "target": {
+                      "history": {
+                        "totalCount": 35
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "v3",
+                    "target": {
+                      "history": {
+                        "totalCount": 49
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "tcamara/Judged",
+            "createdAt": "2014-01-21T05:28:28Z",
+            "diskUsage": 30668,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 16
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "LegacyXperia/android_packages_apps_Settings",
+            "createdAt": "2014-01-21T02:39:54Z",
+            "diskUsage": 277101,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "cm-10.1",
+                    "target": {
+                      "history": {
+                        "totalCount": 9432
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "cm-10.2",
+                    "target": {
+                      "history": {
+                        "totalCount": 11606
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "cm-11.0",
+                    "target": {
+                      "history": {
+                        "totalCount": 12663
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "egingell/UnToasted",
+            "createdAt": "2014-01-21T01:59:14Z",
+            "diskUsage": 3064,
+            "issues": {
+              "totalCount": 6
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 26
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "RajivKurian/Java-NIO-example",
+            "createdAt": "2014-01-21T00:22:52Z",
+            "diskUsage": 3632,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 18
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "oxus20/Java-BankAccountSimulation",
+            "createdAt": "2014-01-21T13:46:22Z",
+            "diskUsage": 136,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 6
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "hikari-boulders/ZHAW",
+            "createdAt": "2014-01-21T20:58:44Z",
+            "diskUsage": 25969,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 26
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "kaosf/android-app-tabs-webviews-gcm",
+            "createdAt": "2014-01-21T08:34:25Z",
+            "diskUsage": 936,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 17
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "IMAGINARY/FormulaMorph",
+            "createdAt": "2014-01-21T14:35:06Z",
+            "diskUsage": 2960,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "gh-pages",
+                    "target": {
+                      "history": {
+                        "totalCount": 6
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 171
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "OlegNyr/GisGMP",
+            "createdAt": "2014-01-21T13:14:20Z",
+            "diskUsage": 9613,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 8
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "elfprince13/GLSL-Shader-Editor",
+            "createdAt": "2014-01-21T08:42:05Z",
+            "diskUsage": 252,
+            "issues": {
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 17
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "jwalant/JavaWsPubSub",
+            "createdAt": "2014-01-21T20:32:06Z",
+            "diskUsage": 152,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "dump247/jenkins-docker-build-plugin",
+            "createdAt": "2014-01-21T20:14:36Z",
+            "diskUsage": 279,
+            "issues": {
+              "totalCount": 8
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 136
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "wujessica/MedCabinet",
+            "createdAt": "2014-01-21T18:13:36Z",
+            "diskUsage": 752,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "emij/Jarvis",
+            "createdAt": "2014-01-21T15:44:07Z",
+            "diskUsage": 14072,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "audioRecordV0.1",
+                    "target": {
+                      "history": {
+                        "totalCount": 120
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "deviceV0.1",
+                    "target": {
+                      "history": {
+                        "totalCount": 192
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "guiV0.2",
+                    "target": {
+                      "history": {
+                        "totalCount": 44
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "saidaltintop/java",
+            "createdAt": "2014-01-21T17:05:04Z",
+            "diskUsage": 244,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 31
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Apokrif/morse",
+            "createdAt": "2014-01-21T14:00:47Z",
+            "diskUsage": 356,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "surrender70/franca2ea",
+            "createdAt": "2014-01-21T15:34:37Z",
+            "diskUsage": 1988,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 11
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "optimusmoose/JAMSS",
+            "createdAt": "2014-01-21T17:32:00Z",
+            "diskUsage": 8949,
+            "issues": {
+              "totalCount": 2
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 50
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "sethhope/rpextensions",
+            "createdAt": "2014-01-21T23:33:23Z",
+            "diskUsage": 224,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 13
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "wuxudong/async-demo",
+            "createdAt": "2014-01-21T10:19:28Z",
+            "diskUsage": 4879,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 6
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "gap-ufrj/infoprovas",
+            "createdAt": "2014-01-21T01:45:29Z",
+            "diskUsage": 776,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "rajan-goswami/getback",
+            "createdAt": "2014-01-21T18:13:07Z",
+            "diskUsage": 2116,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 11
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "js1972/ZPIMON",
+            "createdAt": "2014-01-21T02:20:38Z",
+            "diskUsage": 6110,
+            "issues": {
+              "totalCount": 13
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 15
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Quentigus/24hDuCode2014",
+            "createdAt": "2014-01-21T18:24:56Z",
+            "diskUsage": 5456,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 193
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "guptanishi/OnlineCMS",
+            "createdAt": "2014-01-21T10:08:53Z",
+            "diskUsage": 5786,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "maandree/algorithms-and-data-structures",
+            "createdAt": "2014-01-21T11:56:40Z",
+            "diskUsage": 412,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 101
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "amaleki/SpringExample",
+            "createdAt": "2014-01-21T23:04:18Z",
+            "diskUsage": 140,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "danhaywood/isis-jrebel-plugin",
+            "createdAt": "2014-01-21T23:21:22Z",
+            "diskUsage": 600,
+            "issues": {
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 26
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Camirwin/WeatherDrive",
+            "createdAt": "2014-01-21T19:26:31Z",
+            "diskUsage": 864,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "tomcurran/controlpad",
+            "createdAt": "2014-01-21T15:58:17Z",
+            "diskUsage": 2064,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "web-education/mod-neo4j-persistor",
+            "createdAt": "2014-01-21T11:31:10Z",
+            "diskUsage": 66,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 57
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "marianj/Hi-World",
+            "createdAt": "2014-01-21T07:26:13Z",
+            "diskUsage": 140,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 4
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "chrlns/worldmap-classic",
+            "createdAt": "2014-01-21T12:17:56Z",
+            "diskUsage": 1912,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 11
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Lightstreamer/BananaDarts-adapter-java",
+            "createdAt": "2014-01-21T16:17:36Z",
+            "diskUsage": 113,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 86
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "anars/InfoServlet",
+            "createdAt": "2014-01-21T13:26:56Z",
+            "diskUsage": 152,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "ArchmageInc/RandomEncounters",
+            "createdAt": "2014-01-21T17:16:00Z",
+            "diskUsage": 3320,
+            "issues": {
+              "totalCount": 15
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 120
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "CS2340/M2",
+            "createdAt": "2014-01-21T19:13:38Z",
+            "diskUsage": 312,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 52
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "original",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Camirwin/ConvertIt",
+            "createdAt": "2014-01-21T23:57:04Z",
+            "diskUsage": 628,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "tonipenya/jchainme",
+            "createdAt": "2014-01-21T10:51:34Z",
+            "diskUsage": 1719,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 26
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "rossrowe/sauce-health-check",
+            "createdAt": "2014-01-21T11:08:27Z",
+            "diskUsage": 188,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 7
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "chrlns/dropdabomb-j2me",
+            "createdAt": "2014-01-21T12:06:28Z",
+            "diskUsage": 740,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "camcory/platform_packages_apps_dialer",
+            "createdAt": "2014-01-21T18:30:17Z",
+            "diskUsage": 61231,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "LX-5.1.1",
+                    "target": {
+                      "history": {
+                        "totalCount": 3868
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "MX",
+                    "target": {
+                      "history": {
+                        "totalCount": 5461
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "N",
+                    "target": {
+                      "history": {
+                        "totalCount": 11851
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "abdlquadri/ConferenceAppVirtualKeyboard",
+            "createdAt": "2014-01-21T12:31:44Z",
+            "diskUsage": 236,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "javafx7",
+                    "target": {
+                      "history": {
+                        "totalCount": 12
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "javafx8",
+                    "target": {
+                      "history": {
+                        "totalCount": 15
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 19
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Tomdroidd/tomdroid",
+            "createdAt": "2014-01-21T19:28:57Z",
+            "diskUsage": 2684,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "windworst/AndroidRemoteCamera",
+            "createdAt": "2014-01-21T19:21:06Z",
+            "diskUsage": 6032,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 14
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "callistaenterprise/activemq-labs",
+            "createdAt": "2014-01-21T05:18:10Z",
+            "diskUsage": 160,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 4
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "gregory-chapman/nPuzzle",
+            "createdAt": "2014-01-21T02:58:26Z",
+            "diskUsage": 6384,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 8
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Hyperion3360/HyperionRobot2014",
+            "createdAt": "2014-01-21T03:01:39Z",
+            "diskUsage": 776,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "Canon_Dev_NewJoystick",
+                    "target": {
+                      "history": {
+                        "totalCount": 24
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "Cleanout-OfficialToBe",
+                    "target": {
+                      "history": {
+                        "totalCount": 86
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "ballPressure",
+                    "target": {
+                      "history": {
+                        "totalCount": 95
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "a5anka/CCNx-Mall",
+            "createdAt": "2014-01-21T07:04:52Z",
+            "diskUsage": 148,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 7
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "jansolo/mod-handlebars",
+            "createdAt": "2014-01-21T13:04:49Z",
+            "diskUsage": 528,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 141
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "TimBao/Android_Othello",
+            "createdAt": "2014-01-21T09:58:53Z",
+            "diskUsage": 3400,
+            "issues": {
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 41
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "Intelliware/travelagency-heroku",
+            "createdAt": "2014-01-21T16:07:49Z",
+            "diskUsage": 2456,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 15
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "LegacyXperia/android_frameworks_base",
+            "createdAt": "2014-01-21T02:14:55Z",
+            "diskUsage": 1373822,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "cm-10.1",
+                    "target": {
+                      "history": {
+                        "totalCount": 90126
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "cm-10.2",
+                    "target": {
+                      "history": {
+                        "totalCount": 106421
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "cm-11.0",
+                    "target": {
+                      "history": {
+                        "totalCount": 117149
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "robertquitt/APCS",
+            "createdAt": "2014-01-21T17:56:02Z",
+            "diskUsage": 107,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "Final-Project",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 102
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "mohannad-abwah/AndroidLecture1",
+            "createdAt": "2014-01-21T04:44:12Z",
+            "diskUsage": 687,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 9
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "m-marini/jfract3d",
+            "createdAt": "2014-01-21T18:51:48Z",
+            "diskUsage": 22136,
+            "issues": {
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "develope",
+                    "target": {
+                      "history": {
+                        "totalCount": 39
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "gh-pages",
+                    "target": {
+                      "history": {
+                        "totalCount": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 39
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "dustin-graham/MorseWithPals",
+            "createdAt": "2014-01-21T23:53:49Z",
+            "diskUsage": 1908,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "guming/zkutil",
+            "createdAt": "2014-01-21T10:03:45Z",
+            "diskUsage": 172,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 3
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "pannous/blueprints-netbase",
+            "createdAt": "2014-01-21T23:08:09Z",
+            "diskUsage": 85272,
+            "issues": {
+              "totalCount": 1
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 164
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "node": {
+            "nameWithOwner": "acamoes/NXT-Control",
+            "createdAt": "2014-01-21T23:59:52Z",
+            "diskUsage": 184,
+            "issues": {
+              "totalCount": 0
+            },
+            "refs": {
+              "edges": [
+                {
+                  "node": {
+                    "name": "master",
+                    "target": {
+                      "history": {
+                        "totalCount": 14
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         }
-      ]
+      ],
+      "pageInfo": {
+        "endCursor": "Y3Vyc29yOjEwMA==",
+        "hasNextPage": true
+      }
     }
   }
 }

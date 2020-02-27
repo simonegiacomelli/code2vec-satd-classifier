@@ -1,13 +1,14 @@
 package satd.github.v4
 
-import org.joda.time.DateTime
-import org.joda.time.Period
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import satd.utils.Rate
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLConnection
 import java.util.*
+
 
 class GithubApiV4(val tokensFile: File) {
 
@@ -22,7 +23,7 @@ class GithubApiV4(val tokensFile: File) {
             else
                 invokeRetry()
 
-            return jsonFile.readLines().drop(1).joinToString("\n")
+            return jsonFile.readText()
         }
 
         private fun invokeRetry() {
@@ -33,6 +34,8 @@ class GithubApiV4(val tokensFile: File) {
                     invokeUnsafe()
                     return
                 } catch (ex: Exception) {
+                    if (ex.doNotCatch())
+                        throw ex
                     println("$queryDescription exception:")
                     ex.printStackTrace()
                     Thread.sleep(1000)
@@ -46,17 +49,29 @@ class GithubApiV4(val tokensFile: File) {
             val c = URL("https://api.github.com/graphql").openConnection() as HttpURLConnection
             c.requestMethod = "POST"
             c.doOutput = true
+            c.doInput = true
+
+            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            c.setRequestProperty("charset", "utf-8");
 
             //https://developer.github.com/v4/guides/resource-limitations/
             manageAuthorization(c)
+            val requestFile = File(jsonFile.path + ".request.txt")
+            requestFile.writeText(queryJson)
 
-            c.outputStream.bufferedWriter().use { it.write(queryJson) }
+            val jostr = JsonObject().apply { addProperty("query", queryJson) }.toString()
+            requestFile.appendText("\n\n$jostr")
+            c.outputStream.bufferedWriter().use { it.write(jostr); it.flush() }
 
-            val content = c.getInputStream().use { it.readBytes() }.toString(Charsets.UTF_8)
-
-            rate.spin()
-
-            jsonFile.writeText("$queryJson\n$content")
+            if (c.responseCode == HttpURLConnection.HTTP_OK) {
+                val content = c.inputStream.use { it.readBytes() }.toString(Charsets.UTF_8)
+                rate.spin()
+                jsonFile.writeText(content)
+            } else {
+                val err = c.errorStream.use { it.bufferedReader().readText() }
+                requestFile.appendText("\n\n$err")
+                throw Exception("code: ${c.responseCode} errorStream=$err")
+            }
         }
     }
 
@@ -77,4 +92,9 @@ class GithubApiV4(val tokensFile: File) {
         tokensIndex++
     }
 
+}
+
+private fun java.lang.Exception.doNotCatch(): Boolean {
+    val msg = message.orEmpty().toLowerCase()
+    return msg.contains("code: 401") || msg.contains("code: 400")
 }

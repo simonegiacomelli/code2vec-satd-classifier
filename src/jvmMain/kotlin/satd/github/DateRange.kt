@@ -6,7 +6,7 @@ import kotlin.math.max
 
 class DateRange(val dtStart: DateTime, val dtEnd: DateTime) {
     fun split(): Pair<DateRange, DateRange> {
-        if (dtStart == dtEnd) throw Exception("Cannot split one day :(")
+        if (sameDay()) throw Exception("Cannot split one day :(")
 
         val days1 = days / 2
         val days2 = days - days1
@@ -27,4 +27,5 @@ class DateRange(val dtStart: DateTime, val dtEnd: DateTime) {
     val fs = "$start--$end"
 
     override fun toString() = qry
+    fun sameDay() = dtStart == dtEnd
 }
