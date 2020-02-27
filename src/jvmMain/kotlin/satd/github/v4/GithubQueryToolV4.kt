@@ -1,4 +1,4 @@
-package satd.github.v3
+package satd.github.v4
 
 import com.google.gson.JsonParser
 import org.joda.time.DateTime
@@ -27,7 +27,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
     private val cacheFolder = workingFolder.resolve("cache")
     private val jsonFolder = workingFolder.resolve("json")
     private val tokensFile = workingFolder.resolve("github-tokens.txt")
-    private val apiCall = GithubApi(tokensFile)
+    private val apiCall = GithubApiV4(tokensFile)
     private val queue = mutableListOf<ReposSearch>()
     private val output = File(workingFolder, "github-url-list.txt")
 

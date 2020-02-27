@@ -1,4 +1,4 @@
-package satd.github.v3
+package satd.github.v4
 
 import org.joda.time.DateTime
 import org.joda.time.Period
@@ -8,7 +8,7 @@ import java.net.URL
 import java.net.URLConnection
 import java.util.*
 
-class GithubApi(val tokensFile: File) {
+class GithubApiV4(val tokensFile: File) {
 
     private var tokensIndex = 0
     private val rate = Rate(120)
