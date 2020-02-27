@@ -132,20 +132,20 @@ edges {
       issues {
         totalCount
       }
-      refs(first: 3, refPrefix: "refs/heads/") {
-        edges {
-          node {
-            name
-            target {
-              ... on Commit {
-                history(first: 0) {
-                  totalCount
-                }
-              }
-            }
-          }
-        }
-      }
+#      refs(first: 3, refPrefix: "refs/heads/") {
+#        edges {
+#          node {
+#            name
+#            target {
+#              ... on Commit {
+#                history(first: 0) {
+#                  totalCount
+#                }
+#              }
+#            }
+#          }
+#        }
+#      }
     }
   }
  # cursor
