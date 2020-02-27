@@ -29,7 +29,7 @@ class GithubApiV4(val tokensFile: File) {
             repeat(50) {
                 try {
                     val retry = if (it == 0) "" else "retry $it"
-                    println("${jsonFile.name} request... $retry")
+                    print("req/sec:$rate  ${jsonFile.name} request... $retry")
                     invokeUnsafe()
                     return
                 } catch (ex: Exception) {
@@ -66,6 +66,7 @@ class GithubApiV4(val tokensFile: File) {
                 val content = c.inputStream.use { it.readBytes() }.toString(Charsets.UTF_8)
                 rate.spin()
                 jsonFile.writeText(content)
+                println("done")
             } else {
                 val err = c.errorStream.use { it.bufferedReader().readText() }
                 requestFile.appendText("\n\n$err")
