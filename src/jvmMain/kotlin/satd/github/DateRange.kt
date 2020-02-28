@@ -32,8 +32,12 @@ class DateRange(val dtStart: DateTime, val dtEnd: DateTime) {
 
     private fun DateTime.yyyyMMdd() = toString("yyyy-MM-dd").orEmpty()
 
-    private fun DateTime.format() = if (!sameDay()) yyyyMMdd() else
-        toString("yyyy-MM-dd'T'HH:mm:ss'Z'").orEmpty()
+    private fun DateTime.format() = if (sameDay() && timeSpecified())
+        toString("yyyy-MM-dd'T'HH:mm:ss'Z'").orEmpty() else yyyyMMdd()
+
+
+    private fun timeSpecified() =
+        dtStart.toLocalTime() != LocalTime.MIDNIGHT || dtEnd.toLocalTime() != LocalTime.MIDNIGHT
 
 
     val start = dtStart.format()

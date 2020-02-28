@@ -8,10 +8,10 @@ import kotlin.math.ceil
 
 fun main() {
 
-    val dtStart = DateTime(2000, 1, 1, 0, 0)
-    val dtEnd = DateTime(2020, 1, 31, 0, 0)
+    val dtStart = DateTime.parse("2000-01-01")
+    val dtEnd = DateTime.parse("2020-01-31")
     GithubQueryTool(
-        File("./data/github/queryJavaPublic-v4")
+        File("./data/github-url-mining/queryJavaPublic-v4")
         , DateRange(dtStart, dtEnd)
         , "language:Java is:public"
     )

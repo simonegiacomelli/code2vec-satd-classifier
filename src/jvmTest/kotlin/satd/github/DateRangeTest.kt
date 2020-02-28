@@ -129,4 +129,14 @@ class DateRangeTest {
         assertTrue(target.sameDay())
     }
 
+
+    @Test
+    fun testBug1() {
+        val dtStart = DateTime.parse("2012-11-12")
+        val dtEnd = DateTime.parse("2012-11-12")
+
+        val target = DateRange(dtStart, dtEnd)
+        assertEquals("2012-11-12..2012-11-12", target.qry)
+    }
+
 }
