@@ -9,7 +9,7 @@ import kotlin.math.ceil
 fun main() {
 
     val dtStart = DateTime.parse("2000-01-01")
-    val dtEnd = DateTime.parse("2020-01-31")
+    val dtEnd = DateTime.parse("2019-12-31")
     GithubQueryTool(
         File("./data/github-url-mining/queryJavaPublic-v4")
         , DateRange(dtStart, dtEnd)
