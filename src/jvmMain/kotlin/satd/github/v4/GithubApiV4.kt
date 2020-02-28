@@ -12,7 +12,7 @@ import java.util.*
 class GithubApiV4(val tokensFile: File) {
 
     private var tokensIndex = 0
-    private val rate = Rate(120)
+    val rate = Rate(60)
 
     inner class Call(private val queryJson: String, private val jsonFile: File) {
 
@@ -29,7 +29,7 @@ class GithubApiV4(val tokensFile: File) {
             repeat(50) {
                 try {
                     val retry = if (it == 0) "" else "retry $it"
-                    print("req/sec:$rate  ${jsonFile.name} request... $retry")
+                    print("url-repo/sec:$rate  ${jsonFile.name} request... $retry")
                     invokeUnsafe()
                     return
                 } catch (ex: Exception) {
@@ -64,7 +64,6 @@ class GithubApiV4(val tokensFile: File) {
 
             if (c.responseCode == HttpURLConnection.HTTP_OK) {
                 val content = c.inputStream.use { it.readBytes() }.toString(Charsets.UTF_8)
-                rate.spin()
                 jsonFile.writeText(content)
                 println("done")
             } else {

@@ -107,6 +107,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                         val name = obj.get("nameWithOwner").asString
                         val issueCount = obj.get("issues").asJsonObject.get("totalCount").asInt
                         outputTsv.appendText("https://github.com/$name\t$issueCount\n")
+                        apiCall.rate.spin()
                         if (issueCount > 100)
                             output.appendText("https://github.com/$name\n")
 
