@@ -1,0 +1,43 @@
+query q1 {
+  search(query: "language:Java is:public created:2015-01-07T00:00:00Z..2015-01-07T23:59:59Z", type: REPOSITORY, first: 100, after: "Y3Vyc29yOjkwMA==") {
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+          createdAt
+          diskUsage
+          issues {
+            totalCount
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
+
+query q1 {
+  search(query: "language:Java is:public created:2015-01-07T00:00:00Z..2015-01-08T00:00:00Z", type: REPOSITORY, first: 100, after: "Y3Vyc29yOjkwMA==") {
+    repositoryCount
+    edges {
+      node {
+        ... on Repository {
+          nameWithOwner
+          createdAt
+          diskUsage
+          issues {
+            totalCount
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}
