@@ -45,7 +45,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
             val search = queue.removeAt(0)
             val probe = search.execute()
             if (probe.repositoryCount > 0)
-                if (probe.repositoryCount <= 1000 || search.dateRange.sameDay()) {
+                if (probe.repositoryCount <= 1000) {
                     val pageCount = ceil(probe.repositoryCount.toDouble() / 100).toInt()
                     val result = search.toQuery().execute()
                     result.save()
