@@ -3,7 +3,7 @@ package satd.step2
 import satd.utils.*
 import kotlin.streams.toList
 
-fun main(args: Array<String>) {
+fun main() {
     loglnStart("clone")
     config.load()
     HeapDumper.enable()
@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     logln("Using pool: $pool")
     pool.submit {
         RepoList
-            .getUrls()
+            .getGithubUrlsPartial()
             .also { repoRate.totRepo = it.size }
             .stream()
             .parallel()

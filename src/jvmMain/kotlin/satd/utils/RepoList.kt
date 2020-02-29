@@ -36,6 +36,13 @@ class RepoList {
             }
         }
 
+        fun getGithubUrlsPartial(): List<String> =
+            repoTxtResource("satd/urls/github-url-list-partial.txt")
+                .readText()
+                .split("\n")
+                .filter { !it.startsWith("#") }
+                .filter { it.isNotEmpty() }
+
         fun get() = csv("satd/urls/android-50-thousand.csv")
         fun getUrls() = get().sortedBy { it.commits }.map { it.url }
 
