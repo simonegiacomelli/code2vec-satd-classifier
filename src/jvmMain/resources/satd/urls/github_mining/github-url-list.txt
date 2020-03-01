@@ -1,3 +1,8 @@
+#github mining:
+# "2000-01-01"-"2019-12-31" "language:Java is:public"
+#
+# total hit 7265342
+# but with  issue count>100, total hit 13876
 https://github.com/00-Evan/shattered-pixel-dungeon
 https://github.com/040632/imsdroid
 https://github.com/07101994/andors-trail

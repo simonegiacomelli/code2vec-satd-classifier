@@ -37,7 +37,7 @@ class RepoList {
         }
 
         fun getGithubUrlsPartial(): List<String> =
-            repoTxtResource("satd/urls/github-url-list-partial.txt")
+            repoTxtResource("satd/urls/github_mining/github-url-list.txt")
                 .readText()
                 .split("\n")
                 .filter { !it.startsWith("#") }
