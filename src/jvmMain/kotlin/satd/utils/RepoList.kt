@@ -36,7 +36,7 @@ class RepoList {
             }
         }
 
-        fun getGithubUrlsPartial(): List<String> =
+        fun getGithubUrls(): List<String> =
             repoTxtResource("satd/urls/github_mining/github-url-list.txt")
                 .readText()
                 .split("\n")

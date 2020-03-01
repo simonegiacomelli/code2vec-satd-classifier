@@ -15,7 +15,7 @@ fun main() {
     logln("Using pool: $pool")
     pool.submit {
         RepoList
-            .getGithubUrlsPartial()
+            .getGithubUrls()
             .also { repoRate.totRepo = it.size }
             .stream()
             .parallel()
