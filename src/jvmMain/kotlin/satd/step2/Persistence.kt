@@ -105,7 +105,7 @@ object DbRepos : LongIdTable() {
         logln("$urlstr SUCCESS")
         repoRate.spin()
         transaction {
-            if (select { (done eq 1) }.count() == 0)
+            if (select { (url eq urlstr) }.count() == 0)
                 insert {
                     it[url] = urlstr
                     it[done] = 1
@@ -122,8 +122,11 @@ object DbRepos : LongIdTable() {
         logln("$urlstr FAILED $modules [${exstr.substringBefore('\n')}]")
         repoRate.spin()
         transaction(4, 0) {
-            insert {
-                it[url] = urlstr
+            if (select { (url eq urlstr) }.count() == 0)
+                insert {
+                    it[url] = urlstr
+                }
+            update({ url eq urlstr }) {
                 it[done] = 1
                 it[success] = 0
                 it[module] = modules
