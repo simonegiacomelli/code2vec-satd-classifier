@@ -40,7 +40,6 @@ fun main() {
     class Main {
 
 
-        val pers = persistence
         val workFolder = Folders.doc2vec.resolve("dataset").toFile()
 
         fun go() {
@@ -48,7 +47,7 @@ fun main() {
             assert(!workFolder.exists())
 
             workFolder.mkdirs()
-            pers.setupDatabase()
+            persistence.setupDatabase()
 
             val ds = Dataset(transaction { query().count() }, 0.7, 0.15)
             ds.print()
