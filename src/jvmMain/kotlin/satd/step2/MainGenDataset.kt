@@ -40,7 +40,7 @@ fun main() {
     class Main {
 
 
-        val workFolder = Folders.doc2vec.resolve("dataset").toFile()
+        val workFolder = Folders.dataset.resolve("doc2vec").toFile()
 
         fun go() {
             workFolder.deleteRecursively()
@@ -61,7 +61,13 @@ fun main() {
         }
 
         private fun query() =
-            DbSatds.select { DbSatds.accept.eq(1) and DbSatds.parent_count.eq(1) }.orderBy(DbSatds.id)
+            DbSatds.select {
+                (DbSatds.accept.eq(1)
+                        and DbSatds.parent_count.eq(1)
+                        and DbSatds.new_clean_len.less(15)
+                        and DbSatds.old_clean_len.less(15)
+                        )
+            }.orderBy(DbSatds.id)
 
         private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String) {
             val folder = workFolder.resolve(subfolder)
