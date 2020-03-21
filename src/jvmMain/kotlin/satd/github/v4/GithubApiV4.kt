@@ -49,6 +49,8 @@ class GithubApiV4(val tokensFile: File) {
             c.requestMethod = "POST"
             c.doOutput = true
             c.doInput = true
+            c.setConnectTimeout(60000);
+            c.setReadTimeout(60000);
 
             c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             c.setRequestProperty("charset", "utf-8");

@@ -11,6 +11,9 @@ repositories {
     jcenter()
     maven { url "https://dl.bintray.com/kotlin/ktor" }
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 def ktor_version = '1.1.3'
 def logback_version = '1.2.3'
@@ -36,6 +39,8 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
+                implementation files('libs/src2abs-0.1-jar-with-dependencies.jar')
+
                 implementation "io.ktor:ktor-server-netty:$ktor_version"
                 implementation "io.ktor:ktor-html-builder:$ktor_version"
                 implementation "ch.qos.logback:logback-classic:$logback_version"
@@ -46,7 +51,6 @@ kotlin {
                 implementation 'org.jetbrains.exposed:exposed:0.17.6'
                 implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.3.60"
                 implementation 'com.google.code.gson:gson:2.8.6'
-
 //                implementation 'org.webjars.bower:diff2html:2.11.2'
             }
         }
