@@ -15,24 +15,24 @@ enum class types {
 object MainGenDataset1 {
     @JvmStatic
     fun main(args: Array<String>) {
-        val where: Op<Boolean> = (DbSatds.accept.eq(1)
-                and DbSatds.parent_count.eq(1)
-                and DbSatds.new_clean_len.less(15)
-                and DbSatds.old_clean_len.less(15))
-
-        generate(where)
+        generate(
+            (DbSatds.accept.eq(1)
+                    and DbSatds.parent_count.eq(1)
+                    and DbSatds.new_clean_len.less(50)
+                    and DbSatds.old_clean_len.less(50))
+        )
     }
 }
 
-object MainGenDataset2{
+object MainGenDataset2 {
     @JvmStatic
     fun main(args: Array<String>) {
-        val where: Op<Boolean> = DbSatds.run {
-            (parent_count.eq(1)
-                    and old_clean_token_count.less(100)
-                    and new_clean_token_count.less(100))
-        }
-        generate(where)
+        generate(
+            DbSatds.run {
+                (parent_count.eq(1)
+                        and old_clean_token_count.less(100)
+                        and new_clean_token_count.less(100))
+            })
     }
 }
 
