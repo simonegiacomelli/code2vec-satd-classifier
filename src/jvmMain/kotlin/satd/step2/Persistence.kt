@@ -86,6 +86,8 @@ object DbSatds : LongIdTable() {
     val accept = integer("accept")
     val parent_count = integer("parent_count")
     val url = varchar("url", 400).default("")
+    val old_clean_token_count = integer("old_clean_token_count").nullable()
+    val new_clean_token_count = integer("new_clean_token_count").nullable()
 
     fun existsCodeHash(code_hash_str: String) = DbSatds.select { code_hash eq code_hash_str }.count() > 0
 }

@@ -1,9 +1,9 @@
 package satd.step2
 
 import com.github.javaparser.JavaParser
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import satd.utils.loglnStart
@@ -12,7 +12,31 @@ enum class types {
     training, validation, test
 }
 
-fun main() {
+object MainGenDataset1 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val where: Op<Boolean> = (DbSatds.accept.eq(1)
+                and DbSatds.parent_count.eq(1)
+                and DbSatds.new_clean_len.less(15)
+                and DbSatds.old_clean_len.less(15))
+
+        generate(where)
+    }
+}
+
+object MainGenDataset2{
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val where: Op<Boolean> = DbSatds.run {
+            (parent_count.eq(1)
+                    and old_clean_token_count.less(100)
+                    and new_clean_token_count.less(100))
+        }
+        generate(where)
+    }
+}
+
+private fun generate(where: Op<Boolean>) {
     loglnStart("gen-dataset")
     class Dataset(val count: Int, val train: Double, val test: Double) {
 
@@ -60,13 +84,9 @@ fun main() {
             }
         }
 
-        private fun query() =
+        private fun query(): Query =
             DbSatds.select {
-                (DbSatds.accept.eq(1)
-                        and DbSatds.parent_count.eq(1)
-                        and DbSatds.new_clean_len.less(15)
-                        and DbSatds.old_clean_len.less(15)
-                        )
+                where
             }.orderBy(DbSatds.id)
 
         private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String) {
@@ -89,17 +109,6 @@ fun main() {
                 println("$filename\n$content")
             }
         }
-
-        private fun wrapMethod(methodSource: String): String {
-            val content =
-                """
-public class Wrapper{
-${methodSource.prependIndent()}
-}
-""".trimIndent()
-            return content
-        }
-
     }
 
     Main().go()

@@ -131,3 +131,14 @@ task updateDbStats(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.MainUpdateDbStatsKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+
+task MainGenDataset1(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainGenDataset1"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
+task MainGenDataset2(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainGenDataset2"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
