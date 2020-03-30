@@ -1,16 +1,30 @@
 package satd.step2
 
 import org.eclipse.jgit.api.Git
+import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import satd.utils.dateTimeToStr
+import satd.utils.logln
 import satd.utils.loglnStart
-import java.nio.file.Paths
 
-fun main() {
+object MainDiff1 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        diff(where1)
+    }
+}
+
+object MainDiff2 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        diff(where2)
+    }
+}
+
+private fun diff(where: Op<Boolean>) {
     loglnStart("diff")
     class Main {
         fun ResultRow.filename(): String {
@@ -27,7 +41,7 @@ fun main() {
                         "\n"
             }
 
-//        val pers = Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd"))
+        //        val pers = Persistence(Paths.get("./data_saved/database/foo-03-december/h2satd"))
         val pers = persistence
         val workFolder = Folders.diff.resolve(dateTimeToStr()).toFile()
         val repoFolder = workFolder.resolve("repo")
@@ -60,6 +74,7 @@ fun main() {
         }
 
         private fun diff2html() {
+            logln("workFolder: $workFolder")
             foreachRow {
                 val content =
                     "${it.header}${it[DbSatds.old]}"
@@ -77,18 +92,22 @@ fun main() {
             git.commit().setMessage("files with satd").call()
             git.add().addFilepattern(".").call()
 
-            Runtime.getRuntime().exec(
-                "diff2html --file ../diff.html  -s side -- -U1000000 -M HEAD~1"
+            val cmd = "diff2html --file ../diff.html  -s side -- -U1000000 -M HEAD~1"
+            logln("Executing [$cmd]")
+            val res = Runtime.getRuntime().exec(
+                cmd
                 , null
                 , repoFolder
-            )
+            ).waitFor()
+            logln("Exit status: $res")
         }
 
         private fun foreachRow(function: (ResultRow) -> Unit) {
             transaction {
                 DbSatds
                     .select {
-                        DbSatds.accept.eq(1) and DbSatds.parent_count.eq(1)
+
+                        where
                     }
                     .forEach {
 

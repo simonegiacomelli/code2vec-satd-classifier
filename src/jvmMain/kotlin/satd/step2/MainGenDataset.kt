@@ -12,27 +12,34 @@ enum class types {
     training, validation, test
 }
 
+val where1 by lazy {
+    DbSatds.run {
+        (accept.eq(1)
+                and parent_count.eq(1)
+                and new_clean_len.less(50)
+                and old_clean_len.less(50))
+    }
+}
+
+val where2 by lazy {
+    DbSatds.run {
+        (parent_count.eq(1)
+                and old_clean_token_count.less(100)
+                and new_clean_token_count.less(100))
+    }
+}
+
 object MainGenDataset1 {
     @JvmStatic
     fun main(args: Array<String>) {
-        generate(
-            (DbSatds.accept.eq(1)
-                    and DbSatds.parent_count.eq(1)
-                    and DbSatds.new_clean_len.less(50)
-                    and DbSatds.old_clean_len.less(50))
-        )
+        generate(where1)
     }
 }
 
 object MainGenDataset2 {
     @JvmStatic
     fun main(args: Array<String>) {
-        generate(
-            DbSatds.run {
-                (parent_count.eq(1)
-                        and old_clean_token_count.less(100)
-                        and new_clean_token_count.less(100))
-            })
+        generate(where2)
     }
 }
 
