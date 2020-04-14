@@ -1,0 +1,25 @@
+
+
+{
+  google__gson: repository(owner: "google", name: "gson") {
+    ...RepoFragment
+  }
+  martian: repository(owner: "google", name: "martian") {
+    ...RepoFragment
+  }
+  keyboard: repository(owner: "jasonrudolph", name: "keyboard") {
+    ...RepoFragment
+  }
+}
+
+fragment RepoFragment on Repository {
+
+      object(expression:"master") {
+      ... on Commit {
+        history {
+          totalCount
+        }
+      }
+    }
+
+}
