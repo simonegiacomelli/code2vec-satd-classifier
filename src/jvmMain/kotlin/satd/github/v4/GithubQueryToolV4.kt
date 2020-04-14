@@ -1,5 +1,6 @@
 package satd.github.v4
 
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.joda.time.DateTime
 import satd.github.DateRange
@@ -89,7 +90,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 
         fun toQuery(): ReposSearch = ReposSearch(Type.QUERY, dateRange)
 
-        inner class SearchResult(jsonContent: String, repoSearch: ReposSearch) {
+        inner class SearchResult(val jsonContent: String, repoSearch: ReposSearch) {
 
             private val json by lazy { JsonParser.parseString(jsonContent).asJsonObject!! }
             private val data by lazy { json.get("data").asJsonObject }
@@ -103,15 +104,22 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 jsonFile.copyTo(File(jsonFolder, jsonFile.name))
                 search.getAsJsonArray("edges")
                     .forEach {
-                        val obj = it.asJsonObject.get("node").asJsonObject
-                        val name = obj.get("nameWithOwner").asString
-                        val issueCount = obj.get("issues").asJsonObject.get("totalCount").asInt
-                        outputTsv.appendText("https://github.com/$name\t$issueCount\n")
+                        val node = it.asJsonObject.get("node").asJsonObject
+                        val name = node.get("nameWithOwner").asString
+                        val issueCount = node.get("issues").asJsonObject.get("totalCount").asInt
+                        val commitCount = getCommitCount(node)
+                        outputTsv.appendText("https://github.com/$name\t$issueCount\t${commitCount ?: "null"}\n")
                         apiCall.rate.spin()
-                        if (issueCount > 100)
+                        if (commitCount ?: 0 > 100 || issueCount > 100)
                             output.appendText("https://github.com/$name\n")
 
                     }
+            }
+
+            private fun getCommitCount(node: JsonObject): Int? {
+                val obj = node.get("object")
+                if (obj.isJsonNull) return null
+                return obj.asJsonObject.get("history").asJsonObject.get("totalCount").asInt
             }
         }
     }
@@ -133,6 +141,14 @@ edges {
       diskUsage
       issues {
         totalCount
+      }
+      
+      object(expression:"master") {
+        ... on Commit {
+          history {
+            totalCount
+          }
+        }
       }
 #      refs(first: 3, refPrefix: "refs/heads/") {
 #        edges {
