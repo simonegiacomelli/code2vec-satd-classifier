@@ -26,7 +26,6 @@ fun main() {
 class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySpec: String) {
 
     private val cacheFolder = workingFolder.resolve("cache")
-    private val jsonFolder = workingFolder.resolve("json")
     private val tokensFile = workingFolder.resolve("github-tokens.txt")
     private val apiCall = GithubApiV4(tokensFile)
     private val queue = mutableListOf<ReposSearch>()
@@ -35,8 +34,6 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 
     fun createOutputTxt(): File {
         cacheFolder.mkdirs()
-        jsonFolder.deleteRecursively()
-        jsonFolder.mkdirs()
 
         output.writeText("")
         outputTsv.writeText("")
@@ -70,13 +67,13 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 
     inner class ReposSearch(val type: Type, val dateRange: DateRange, val page: Int = 1, val cursor: String = "") {
         override fun toString() = "${dateRange.qry} qs=$querySpec cursor=$cursor"
-        private val jsonFile = cacheFolder.resolve("${type.name}-${dateRange.fs}-p$page.json")
+        private val cacheFile = cacheFolder.resolve("${type.name}-${dateRange.fs}-p$page.json")
         fun execute(): SearchResult {
             val queryJson = when (type) {
                 Type.PROBE -> qryRepoProbe(querySpec)
                 Type.QUERY -> qryRepoNames(querySpec, cursor)
             }
-            val content = apiCall.Call(queryJson, jsonFile).invoke()
+            val content = apiCall.Call(queryJson, cacheFile).invoke()
 
             return SearchResult(content, this)
 
@@ -101,7 +98,6 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
             val hasNextPage by lazy { pageInfo.get("hasNextPage").asBoolean }
 
             fun save() {
-                jsonFile.copyTo(File(jsonFolder, jsonFile.name))
                 search.getAsJsonArray("edges")
                     .forEach {
                         val node = it.asJsonObject.get("node").asJsonObject
