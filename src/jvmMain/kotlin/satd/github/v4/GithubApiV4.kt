@@ -14,24 +14,32 @@ class GithubApiV4(val tokensFile: File) {
     private var tokensIndex = 0
     val rate = Rate(60)
 
-    inner class Call(private val queryJson: String, private val jsonFile: File) {
+    interface Verifier {
+        fun acceptable(): Boolean
+    }
 
-        fun invoke(): String {
+
+    inner class Call<T : Verifier>(private val queryJson: String, private val jsonFile: File, val verifier: (String) -> T) {
+
+        fun invoke(): T {
             if (jsonFile.exists())
-                println("${jsonFile.name} skipping, file already exists")
-            else
-                invokeRetry()
+                verifier(jsonFile.readText()).also {
+                    if (it.acceptable()) {
+                        println("${jsonFile.name} skipping, file already exists")
+                        return it
+                    } else
+                        println("${jsonFile.name} Content was not acceptable")
+                }
 
-            return jsonFile.readText()
+            return invokeRetry()
         }
 
-        private fun invokeRetry() {
+        private fun invokeRetry(): T {
             repeat(50) {
                 try {
                     val retry = if (it == 0) "" else "retry $it"
                     print("url-repo/sec:$rate  ${jsonFile.name} request... $retry")
-                    invokeUnsafe()
-                    return
+                    return invokeUnsafe()
                 } catch (ex: Exception) {
                     if (ex.doNotCatch())
                         throw ex
@@ -40,9 +48,10 @@ class GithubApiV4(val tokensFile: File) {
                     Thread.sleep(if (it <= 10) 1000 else 10000)
                 }
             }
+            throw Exception("Retry exhausted")
         }
 
-        private fun invokeUnsafe() {
+        private fun invokeUnsafe(): T {
 
             //https://developer.github.com/v4/guides/forming-calls/#communicating-with-graphql
             val c = URL("https://api.github.com/graphql").openConnection() as HttpURLConnection
@@ -66,8 +75,13 @@ class GithubApiV4(val tokensFile: File) {
 
             if (c.responseCode == HttpURLConnection.HTTP_OK) {
                 val content = c.inputStream.use { it.readBytes() }.toString(Charsets.UTF_8)
-                jsonFile.writeText(content)
-                println("done")
+                verifier(content).also {
+                    if (!it.acceptable())
+                        throw Exception("Content was not acceptable")
+                    jsonFile.writeText(content)
+                    println("done")
+                    return it
+                }
             } else {
                 val err = c.errorStream.use { it.bufferedReader().readText() }
                 requestFile.appendText("\n\n$err")

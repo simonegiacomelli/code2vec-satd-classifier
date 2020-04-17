@@ -73,9 +73,10 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 Type.PROBE -> qryRepoProbe(querySpec)
                 Type.QUERY -> qryRepoNames(querySpec, cursor)
             }
-            val content = apiCall.Call(queryJson, cacheFile).invoke()
+            val searchResult = apiCall.Call(queryJson, cacheFile
+                , { SearchResult(it, this) }).invoke()
 
-            return SearchResult(content, this)
+            return searchResult
 
         }
 
@@ -87,7 +88,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
 
         fun toQuery(): ReposSearch = ReposSearch(Type.QUERY, dateRange)
 
-        inner class SearchResult(val jsonContent: String, repoSearch: ReposSearch) {
+        inner class SearchResult(val jsonContent: String, repoSearch: ReposSearch) : GithubApiV4.Verifier {
 
             private val json by lazy { JsonParser.parseString(jsonContent).asJsonObject!! }
             private val data by lazy { json.get("data").asJsonObject }
@@ -116,6 +117,12 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 val obj = node.get("object")
                 if (obj.isJsonNull) return null
                 return obj.asJsonObject.get("history").asJsonObject.get("totalCount").asInt
+            }
+
+            override fun acceptable(): Boolean {
+                //just hit the parsing
+                repositoryCount
+                return true
             }
         }
     }
