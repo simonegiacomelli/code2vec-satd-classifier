@@ -12,7 +12,7 @@ fun main() {
     val dtStart = DateTime.parse("2000-01-01")
     val dtEnd = DateTime.parse("2019-12-31")
     GithubQueryTool(
-        File("./data/github-url-mining/queryJavaPublic-v4")
+        File("./data/github-url-mining/queryJavaPublic-v4-commit")
         , DateRange(dtStart, dtEnd)
         , "language:Java is:public"
     )
@@ -119,11 +119,20 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 return obj.asJsonObject.get("history").asJsonObject.get("totalCount").asInt
             }
 
+            override var exception: Exception? = null
+
             override fun acceptable(): Boolean {
-                //just hit the parsing
-                repositoryCount
-                return true
+                exception = null
+                return try {
+                    //just hit the parsing
+                    repositoryCount
+                    true
+                } catch (ex: Exception) {
+                    exception = ex
+                    false
+                }
             }
+
         }
     }
 

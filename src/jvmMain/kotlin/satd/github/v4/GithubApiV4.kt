@@ -16,10 +16,15 @@ class GithubApiV4(val tokensFile: File) {
 
     interface Verifier {
         fun acceptable(): Boolean
+        val exception: Exception?
     }
 
 
-    inner class Call<T : Verifier>(private val queryJson: String, private val jsonFile: File, val verifier: (String) -> T) {
+    inner class Call<T : Verifier>(
+        private val queryJson: String,
+        private val jsonFile: File,
+        val verifier: (String) -> T
+    ) {
 
         fun invoke(): T {
             if (jsonFile.exists())
@@ -28,7 +33,7 @@ class GithubApiV4(val tokensFile: File) {
                         println("${jsonFile.name} skipping, file already exists")
                         return it
                     } else
-                        println("${jsonFile.name} Content was not acceptable")
+                        println("${jsonFile.name} Content was not acceptable error: ${it.exception}")
                 }
 
             return invokeRetry()
