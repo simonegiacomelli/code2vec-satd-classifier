@@ -3,6 +3,8 @@ package satd.utils
 private var appname = "default-log"
 fun loglnStart(name: String) {
     appname = name
+    logln("Starting $name")
+    logln("pid: $pid")
 }
 
 private val logfile by lazy {

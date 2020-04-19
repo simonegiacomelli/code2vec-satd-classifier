@@ -7,7 +7,7 @@ import satd.utils.*
 
 fun main() {
     loglnStart("MainDbPostProcessing")
-    logln("Starting pid: $pid")
+
     config.load()
 
     persistence.setupDatabase()
