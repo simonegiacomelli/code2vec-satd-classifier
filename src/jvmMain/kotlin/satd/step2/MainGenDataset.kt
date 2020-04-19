@@ -28,6 +28,14 @@ val where2 by lazy {
                 and new_clean_token_count.less(100))
     }
 }
+val where3 by lazy {
+    DbSatds.run {
+        (parent_count.eq(1)
+                and old_clean_token_count.less(100)
+                and new_clean_token_count.less(100)
+                and inner_methods.eq(0))
+    }
+}
 
 object MainGenDataset1 {
     @JvmStatic
@@ -40,6 +48,13 @@ object MainGenDataset2 {
     @JvmStatic
     fun main(args: Array<String>) {
         generate(where2)
+    }
+}
+
+object MainGenDataset3 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        generate(where3)
     }
 }
 
