@@ -24,11 +24,10 @@ fun main() {
                             val new = JavaMethod(row[new_clean])
                             it[old_clean_token_count] = old.tokenCount
                             it[new_clean_token_count] = new.tokenCount
-                            it[inner_methods] = if (
-                                old.hasInnerMethods
-                                || new.hasInnerMethods) 1 else 0
+                            it[valid] = if (old.valid && new.valid) 1 else 0
+
                         }
-                    }catch (ex:Exception){
+                    } catch (ex: Exception) {
                         println("fault id ${row[id]}")
                         throw ex
                     }

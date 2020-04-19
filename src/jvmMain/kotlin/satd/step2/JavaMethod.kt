@@ -14,20 +14,23 @@ class JavaMethod(val content: String) {
     }
 
     val tokenCount by lazy { res.stream().count().toInt() }
+    private val methods by lazy {
+        res.types
+            .filterNotNull()
+            .flatMap { type ->
+                type.methods
+                    .filter { it.body.isPresent }
+            }
+    }
+    val valid: Boolean by lazy { methods.count() == 1 && !hasInnerMethods }
 
-    val hasInnerMethods: Boolean by lazy {
+    private val hasInnerMethods: Boolean by lazy {
         try {
-
-
-            res.types
-                .filterNotNull()
-                .any { type ->
-                    type.methods
-                        .filter { it.body.isPresent }
-                        .any {
-                        it.body.get().findFirst(MethodDeclaration::class.java).isPresent
-                    }
+            methods
+                .any {
+                    it.body.get().findFirst(MethodDeclaration::class.java).isPresent
                 }
+
         } catch (ex: Exception) {
             println("error in [[$content]]")
             throw ex
