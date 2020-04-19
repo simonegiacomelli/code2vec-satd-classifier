@@ -39,8 +39,8 @@ val where2 by lazy {
 val where3 by lazy {
     DbSatds.run {
         (parent_count.eq(1)
-                and old_clean_token_count.less(15)
-                and new_clean_token_count.less(15)
+                and old_clean_token_count.less(100)
+                and new_clean_token_count.less(100)
                 and valid.eq(1))
     }
 }

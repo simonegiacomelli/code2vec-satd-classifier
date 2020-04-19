@@ -9,23 +9,33 @@ class JavaMethodTest {
 
     @Test
     fun `has inner methods`() {
-        assertTrue {  JavaMethod(src1).hasInnerMethods }
+        assertFalse {  JavaMethod(src1).valid }
     }
 
 
     @Test
     fun `no inner methods`() {
-        assertFalse {  JavaMethod(src2).hasInnerMethods }
+        assertTrue {  JavaMethod(src2).valid }
     }
 
     @Test
     fun `no inner methods but anonymous object`() {
-        assertFalse {  JavaMethod(src3).hasInnerMethods }
+        assertTrue {  JavaMethod(src3).valid }
     }
 
     @Test
     fun `no inner methods because abstract method`() {
-        assertFalse {  JavaMethod(src4).hasInnerMethods }
+        assertFalse {  JavaMethod(src4).valid }
+    }
+
+    @Test
+    fun `body method with only throw exception should be invalid`() {
+        assertFalse {  JavaMethod(src5).valid }
+    }
+
+    @Test
+    fun `empty method`() {
+        assertFalse {  JavaMethod(src6).valid }
     }
 
 
@@ -95,3 +105,15 @@ public IElementSemantics getSemantics(ISemanticContext br) {
 
 const val src4 = """@Override
 public abstract INamedElementSemantics getSemantics();"""
+
+const val src5 = """
+    @Override
+public void modifyAVUMetadata(final String userName, final AvuData avuData) throws DataNotFoundException, JargonException {
+    throw new UnsupportedOperationException("--##string##--");
+}
+"""
+const val src6 = """
+    @FXML
+    void satd() {
+    }
+"""
