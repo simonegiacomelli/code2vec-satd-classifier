@@ -1,9 +1,9 @@
 package satd.step2
 
 import com.github.javaparser.JavaParser
-import com.github.javaparser.ast.Node
 import com.github.javaparser.ast.body.MethodDeclaration
-import com.github.javaparser.ast.stmt.BlockStmt
+import com.github.javaparser.ast.body.VariableDeclarator
+import com.github.javaparser.ast.expr.VariableDeclarationExpr
 
 class JavaMethod(val content: String) {
     private val res by lazy {
@@ -27,16 +27,23 @@ class JavaMethod(val content: String) {
         methods.count() == 1
                 && !hasInnerMethods
                 && !methods.first().body.isEmpty
-                && accept(methods.first().body.get())
+                && accept(methods.first())
 
 
     }
 
-    private fun accept(get: BlockStmt): Boolean {
-        if(get.statements.isEmpty())
+    private fun accept(m: MethodDeclaration): Boolean {
+        if (m.isDefault) return false
+        val body = m.body.get()
+        if (body.statements.isEmpty())
             return false
-        if(get.statements.size == 1 && get.statements[0].isThrowStmt)
+        if (body.statements.size == 1 && body.statements[0].isThrowStmt)
             return false
+        //enum
+        if (body.findAll(VariableDeclarator::class.java).any {
+                it.name.asString() == "enum"
+            }) return false
+
         return true
     }
 

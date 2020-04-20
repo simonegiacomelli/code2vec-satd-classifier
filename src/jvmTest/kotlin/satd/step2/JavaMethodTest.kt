@@ -38,6 +38,17 @@ class JavaMethodTest {
         assertFalse {  JavaMethod(src6).valid }
     }
 
+    @Test
+    fun `default method`() {
+        assertFalse {  JavaMethod(src7).valid }
+    }
+
+
+    @Test
+    fun `enum keyword used as variable name`() {
+        assertFalse {  JavaMethod(src8).valid }
+    }
+
 
 }
 
@@ -116,4 +127,31 @@ const val src6 = """
     @FXML
     void satd() {
     }
+"""
+
+const val src7 = """
+   default void fixed(Select.Selection selection, String alias) {
+        final List<Object> parameters = parameters();
+        if (functionName().equals("--##string##--") && parameters.size() == 1) {
+            selection.cast(QueryBuilder.raw(parameters.get(0).toString()), targetCQLTypeName()).as(alias);
+        } else {
+            selection.fcall(functionName(), parameters.toArray()).as(alias);
+        }
+    }"""
+
+const val src8 = """
+    protected synchronized void satd() {
+        super._decreaseActiveCount();
+        if (!_processlisteners.isEmpty()) {
+            ProcessThread pro = (ProcessThread) Thread.currentThread();
+            Actor actor = pro.getActor();
+            PNProcessEvent event = new PNProcessEvent(actor, PNProcessEvent.PROCESS_FINISHED, PNProcessEvent.FINISHED_PROPERLY);
+            Enumeration enum = _processlisteners.elements();
+            while (enum.hasMoreElements()) {
+                PNProcessListener lis = (PNProcessListener) enum.nextElement();
+                lis.processStateChanged(event);
+            }
+        }
+    }
+
 """
