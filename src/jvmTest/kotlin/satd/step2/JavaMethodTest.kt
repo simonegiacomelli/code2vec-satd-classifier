@@ -43,10 +43,14 @@ class JavaMethodTest {
         assertFalse {  JavaMethod(src7).valid }
     }
 
-
     @Test
     fun `enum keyword used as variable name`() {
         assertFalse {  JavaMethod(src8).valid }
+    }
+
+    @Test
+    fun `unexpected ???`() {
+        assertFalse {  JavaMethod(src9).valid }
     }
 
 
@@ -154,4 +158,19 @@ const val src8 = """
         }
     }
 
+"""
+
+const val src9 = """
+     public void fixed(Record record) {
+        long id = store.makeNewRecordId();
+        store.registerRecord(id, record);
+        for (Property p : config.getIdentityProperties()) ???;
+        for (Property p : config.getLookupProperties()) {
+            String propname = p.getName();
+            for (String value : record.getValues(propname)) {
+                String[] tokens = StringUtils.split(value);
+                for (int ix = 0; ix < tokens.length; ix++) store.registerToken(id, propname, tokens[ix]);
+            }
+        }
+    }
 """

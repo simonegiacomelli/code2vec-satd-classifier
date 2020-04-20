@@ -4,6 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.body.VariableDeclarator
 import com.github.javaparser.ast.expr.VariableDeclarationExpr
+import com.github.javaparser.ast.stmt.UnparsableStmt
 
 class JavaMethod(val content: String) {
     private val res by lazy {
@@ -39,6 +40,10 @@ class JavaMethod(val content: String) {
             return false
         if (body.statements.size == 1 && body.statements[0].isThrowStmt)
             return false
+
+        if(body.findFirst(UnparsableStmt::class.java).isPresent)
+            return false
+
         //enum
         if (body.findAll(VariableDeclarator::class.java).any {
                 it.name.asString() == "enum"
