@@ -24,16 +24,15 @@ import java.io.InputStreamReader
         this.name = name
     }
 
-    internal inner class StreamGobbler(var `is`: InputStream, var type: String) :
+    internal inner class StreamGobbler(val input: InputStream, val type: String) :
         Thread() {
         override fun run() {
             try {
-                val isr = InputStreamReader(`is`)
-                val br = BufferedReader(isr)
-                var line: String
-                while (br.readLine()
-                        .also { line = it } != null
-                ) log.info("$type> $line")
+                input
+                    .bufferedReader()
+                    .lines()
+                    .filter { it != null }
+                    .forEach { log.info("$type> $it") }
             } catch (ioe: IOException) {
                 ioe.printStackTrace()
             }
