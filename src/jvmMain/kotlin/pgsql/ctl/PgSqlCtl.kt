@@ -79,12 +79,12 @@ class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appPrope
     }
 
     private fun exec(vararg commandTokens: String): Int {
-        val tokens= listOf(*commandTokens)
+        val tokens = listOf(*commandTokens)
         val command = ProcessBuilder().command(tokens)
         command.environment()["LANGUAGE"] = "EN"
         log.info("Running command: {}", java.lang.String.join(" ", command.command()))
         log.info("in {}", command.directory())
-        //log.info("with environment [{}]", Joiner.on(", ").withKeyValueSeparator("=").join(command.environment()));
+        log.info("with environment [{}]", command.environment().map { "${it.key}=${it.value}" }.joinToString(", "))
         val process = command.start()
         val globber = ProcessStreamGlobber(process)
         globber.setName(File(tokens[0]).name)
