@@ -14,12 +14,12 @@ class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val appProp = File("file.conf")
             val pgsqlctl = PgSqlCtl(PgSqlConfigFix(), Properties())
             val pgSqlStarter = PgSqlStarter(pgsqlctl)
             //pgsqlctl.stop();
             pgSqlStarter.start()
             pgSqlStarter.hookShutdown()
+            println("DONE")
         }
     }
 
@@ -36,7 +36,7 @@ class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
     }
 
     fun hookShutdown() {
-        Shutdown.def().addApplicationShutdownHook {
+        Shutdown.addApplicationShutdownHook {
             log.info("Stopping PgSql")
             if (smartShutdownFailed()) {
                 if (pgSqlCtl.stopFast() == StopStatus.STOP_FAILED) log.error("Unable to stop PgSql")

@@ -3,12 +3,25 @@ package core
 import core.Ignore.exception
 import org.slf4j.LoggerFactory
 import java.lang.Runnable
-import java.util.*
+import kotlin.system.exitProcess
 
-/* Simone 11/10/13 12.32 */   class Shutdown protected constructor() {
+/* Simone 11/10/13 12.32 */
+
+object Shutdown  {
+    val log = LoggerFactory.getLogger(Shutdown::class.java)
+
     @Volatile
     var isShuttingDown = false
-    var listeners = ArrayList<()->Unit>()
+    val listeners = mutableListOf<()->Unit>()
+
+    init {
+        Runtime.getRuntime().addShutdownHook(object : Thread() {
+            override fun run() {
+                notifyAllRemaining()
+            }
+        })
+    }
+
     fun stopping(): Boolean {
         return isShuttingDown
     }
@@ -26,14 +39,14 @@ import java.util.*
     }
 
     @Synchronized
-    private fun exitInternal(exitCode: Int) {
+    private fun exit(exitCode: Int) {
         if (isShuttingDown) {
             log.info("Stop already issued; exit code [{}] swallowed", exitCode)
             return
         }
         log.info("Shutdown.exit({})", exitCode)
-        def()!!.notifyAllRemaining()
-        System.exit(exitCode)
+        notifyAllRemaining()
+        exitProcess(exitCode)
     }
 
     fun hook() {
@@ -44,7 +57,7 @@ import java.util.*
         })
         Daemon().start("Shutdown safeguard watch", Runnable {
             while (true) {
-                if (def()!!.stopping()) {
+                if (stopping()) {
                     Sleep.sleepStatic(30000)
                     log.warn("Still alive. Halting")
                     Runtime.getRuntime().halt(4)
@@ -55,26 +68,5 @@ import java.util.*
         })
     }
 
-    companion object {
-        val log = LoggerFactory.getLogger(Shutdown::class.java)
-        var def: Shutdown? = null
 
-        @Synchronized
-        fun def(): Shutdown {
-            if (def == null) def = Shutdown()
-            return def!!
-        }
-
-        fun exit(exitCode: Int) {
-            def()!!.exitInternal(exitCode)
-        }
-    }
-
-    init {
-        Runtime.getRuntime().addShutdownHook(object : Thread() {
-            override fun run() {
-                notifyAllRemaining()
-            }
-        })
-    }
 }
