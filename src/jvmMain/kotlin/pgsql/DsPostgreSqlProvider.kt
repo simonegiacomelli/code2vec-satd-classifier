@@ -11,13 +11,13 @@ class DsPostgreSqlProvider {
     companion object {
         const val HOST = "localhost"
         const val NAME = "db"
+        const val PORT = 1603
         val USERNAME: String by lazy { System.getenv("USER") }
         const val PASSWORD = "usi"
     }
 
     fun init(pgConn: Connection) {
-        try {
-            val statement = pgConn.createStatement()
+        pgConn.createStatement().use { statement ->
             if (dbNotExist(statement)) statement.execute(
                 String.format(
                     "CREATE DATABASE %s WITH OWNER = %s ENCODING = 'UTF8' " +
@@ -25,9 +25,6 @@ class DsPostgreSqlProvider {
                     , NAME, USERNAME
                 )
             )
-            statement.close()
-        } catch (e: SQLException) {
-            throw RuntimeException(e)
         }
     }
 

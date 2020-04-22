@@ -1,47 +1,88 @@
 package satd.step2
 
+import org.h2.jdbcx.JdbcDataSource
 import org.h2.tools.Server
 import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.postgresql.ds.PGSimpleDataSource
+import pgsql.DsPostgreSqlProvider
+import pgsql.PgSqlStarter
 import satd.utils.Folders
 import satd.utils.RepoCsvRow
+import satd.utils.hostname
 import satd.utils.logln
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.lang.IllegalArgumentException
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
-import org.h2.jdbcx.JdbcDataSource;
 import javax.sql.DataSource
 
-class Persistence(val databasePath: Path, h2_options: String = "AUTO_SERVER_PORT=19091") {
-    val url = "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;$h2_options"
+interface IDb {
+    fun connection(): Connection
+    fun dataSource(): DataSource
+    fun startDatabase()
+}
 
-    init {
-        println("Url $url")
-    }
+class DbH2(databasePath: Path, h2_options: String = "AUTO_SERVER_PORT=19091") : IDb {
+    val url = "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;$h2_options"
 
     private val user = "sa"
     private val pass = ""
 
-    fun connection(): Connection {
+
+    override fun connection(): Connection {
         Class.forName("org.h2.Driver")
         return DriverManager.getConnection(url, user, pass)
     }
 
-    fun dataSource(): DataSource {
-        val ds = JdbcDataSource()
-        ds.setURL(url)
-        ds.user = user
-        ds.password = pass
-
-        return ds
+    override fun dataSource(): DataSource = JdbcDataSource().also {
+        it.setURL(url)
+        it.user = user
+        it.password = pass
     }
 
+    override fun startDatabase() {}
+}
+
+class DbPgsql(
+    val port: Int = DsPostgreSqlProvider.PORT
+    , val databaseName: String = DsPostgreSqlProvider.NAME
+    , val hostname: String = DsPostgreSqlProvider.HOST
+    , val user: String = DsPostgreSqlProvider.USERNAME
+    , val pass: String = DsPostgreSqlProvider.PASSWORD
+) : IDb {
+
+    val url = "jdbc:postgresql://$hostname:$port/$databaseName"
+    val urlMaster = "jdbc:postgresql://$hostname:$port/postgres"
+
+    override fun connection(): Connection = connection(url)
+    private fun connection(urlstr: String): Connection {
+        return DriverManager.getConnection(urlstr, user, pass)
+    }
+
+    override fun dataSource(): DataSource = PGSimpleDataSource().also {
+        it.portNumber = port
+        it.serverName = hostname
+        it.databaseName = databaseName
+        it.user = user
+        it.password = pass
+    }
+
+    override fun startDatabase() {
+        Class.forName("org.postgresql.Driver")
+        PgSqlStarter.def.start()
+        DsPostgreSqlProvider().init(connection(urlMaster))
+    }
+}
+
+
+class Persistence(db: IDb) : IDb by db {
+
     fun setupDatabase() {
+        startDatabase()
         Database.connect(dataSource())
         transaction {
             addLogger(StdOutSqlLogger)
@@ -55,19 +96,12 @@ class Persistence(val databasePath: Path, h2_options: String = "AUTO_SERVER_PORT
 
 }
 
-val persistence = Persistence(Folders.database_db1.resolve("h2satd"))
+val persistence = Persistence(DbH2(Folders.database_db1.resolve("h2satd")))
+//val persistence = Persistence(DbPgsql())
 
 fun main(args: Array<String>) {
-    val p = if (args.isEmpty())
-        persistence
-    else {
-        val databasePath = Paths.get(args.first())
-        val fullPath = Paths.get(args.first() + ".mv.db")
-        if (!fullPath.toFile().exists())
-            throw IllegalArgumentException("Path [$fullPath] not found!")
-        Persistence(databasePath)
-    }
-    p.startWebServer()
+    persistence.setupDatabase()
+    persistence.startWebServer()
 }
 
 
