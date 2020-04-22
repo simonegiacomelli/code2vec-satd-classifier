@@ -33,3 +33,18 @@ fun main(args: Array<String>) {
     logln("Done")
 
 }
+
+
+object Verify1 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        persistence.setupDatabase()
+        val list = DbRepos.allDone().subtract(RepoList.getGithubUrls())
+        println("Repositories that were done previously but that are not in the todo list")
+        println("Count ${list.count()}")
+        list.sorted().forEach {
+            println(it)
+        }
+
+    }
+}

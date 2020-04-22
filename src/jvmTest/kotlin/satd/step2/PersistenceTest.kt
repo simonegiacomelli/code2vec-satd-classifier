@@ -16,20 +16,26 @@ class PersistenceTest {
 
     @BeforeTest
     fun setUp() {
+        setupTestDb()
+    }
+
+    @AfterTest
+    fun afterTest(){
+
+    }
+
+    private fun setupTestDb() {
+        val p = Persistence(newTempFolder(), h2_options = ";DB_CLOSE_DELAY=-1;")
+        p.setupDatabase()
     }
 
     @Test
-
-    fun `failed should be successfull`() {
-        val p = Persistence(newTempFolder())
-        p.setupDatabase()
+    fun `failed should not throw exceptions`() {
         DbRepos.failed("https://example.com", Exception("just a test"), "PersistenceTest....")
     }
 
     @Test
     fun `duplicate hash_code should be silently ignored (unique index violation)`() {
-        val p = Persistence(newTempFolder())
-        p.setupDatabase()
         ignoreDuplcatesInvoke("hash1")
         ignoreDuplcatesInvoke("hash2")
         ignoreDuplcatesInvoke("hash1")
@@ -38,8 +44,6 @@ class PersistenceTest {
 
     @Test
     fun `reasonable error should NOT be ignored`() {
-        val p = Persistence(newTempFolder())
-        p.setupDatabase()
         ignoreDuplcatesInvoke("hash1", "commit1")
         assertFails("the value should be too big to be accepted") {
             ignoreDuplcatesInvoke("hash2", "x".repeat(20000))

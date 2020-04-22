@@ -17,8 +17,12 @@ import java.sql.DriverManager
 import org.h2.jdbcx.JdbcDataSource;
 import javax.sql.DataSource
 
-class Persistence(val databasePath: Path) {
-    val url = "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=19091"
+class Persistence(val databasePath: Path, h2_options: String = "AUTO_SERVER_PORT=19091") {
+    val url = "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;$h2_options"
+
+    init {
+        println("Url $url")
+    }
 
     private val user = "sa"
     private val pass = ""
@@ -76,6 +80,7 @@ object DbSatds : LongIdTable() {
     val repo = varchar("repo", 200)
     val old_len = integer("old_len")
     val new_len = integer("new_len")
+
     //clean means: without comments
     val old_clean = text("old_clean")
     val new_clean = text("new_clean")
