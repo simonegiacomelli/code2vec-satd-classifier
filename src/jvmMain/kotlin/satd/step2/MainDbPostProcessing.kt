@@ -7,7 +7,7 @@ import satd.utils.*
 
 fun main() {
     loglnStart("MainDbPostProcessing")
-    logln("Starting pid: $pid")
+
     config.load()
 
     persistence.setupDatabase()
@@ -16,9 +16,20 @@ fun main() {
         DbSatds.apply {
             selectAll().orderBy(id)
                 .forEach { row ->
-                    update({ id eq row[id] }) {
-                        it[old_clean_token_count] = JavaMethod(row[old_clean]).tokenCount
-                        it[new_clean_token_count] = JavaMethod(row[new_clean]).tokenCount
+                    try {
+
+
+                        update({ id eq row[id] }) {
+                            val old = JavaMethod(row[old_clean])
+                            val new = JavaMethod(row[new_clean])
+                            it[old_clean_token_count] = old.tokenCount
+                            it[new_clean_token_count] = new.tokenCount
+                            it[valid] = if (old.valid && new.valid) 1 else 0
+
+                        }
+                    } catch (ex: Exception) {
+                        println("fault id ${row[id]}")
+                        throw ex
                     }
                 }
         }

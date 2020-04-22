@@ -4,12 +4,21 @@ import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
+import satd.utils.logln
 import satd.utils.loglnStart
 
 enum class types {
     training, validation, test
+}
+
+inline fun assert2(value: Boolean, lazyMessage: () -> Any = {}) {
+    if (!value) {
+        val message = lazyMessage()
+        throw AssertionError(message)
+    }
 }
 
 val where1 by lazy {
@@ -28,6 +37,14 @@ val where2 by lazy {
                 and new_clean_token_count.less(100))
     }
 }
+val where3 by lazy {
+    DbSatds.run {
+        (parent_count.eq(1)
+                and old_clean_token_count.less(100)
+                and new_clean_token_count.less(100)
+                and valid.eq(1))
+    }
+}
 
 object MainGenDataset1 {
     @JvmStatic
@@ -43,8 +60,14 @@ object MainGenDataset2 {
     }
 }
 
+object MainGenDataset3 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        generate(where3)
+    }
+}
+
 private fun generate(where: Op<Boolean>) {
-    loglnStart("gen-dataset")
     class Dataset(val count: Int, val train: Double, val test: Double) {
 
         val trainCount = (count * train).toInt()
@@ -55,7 +78,7 @@ private fun generate(where: Op<Boolean>) {
 
         private fun genSeq(): List<types> {
 
-            assert(train + test <= 1.0)
+            assert2(train + test <= 1.0)
 
             return List(trainCount) { types.training } +
                     List(validationCount) { types.validation } +
@@ -64,42 +87,53 @@ private fun generate(where: Op<Boolean>) {
 
         fun type(index: Int) = seq[index]
         fun print() {
-            println("Dataset $trainCount + $validationCount + $testCount = $count (train + validation + test = total)")
+            println("Dataset $validationCount + $testCount + $trainCount  = $count (validation + test + train = total)")
+        }
+
+        fun print2() {
+            println("Files ${validationCount * 2} + ${testCount * 2} + ${trainCount * 2} = ${count * 2} (validation + test + train = total)")
         }
     }
 
     class Main {
 
 
-        val workFolder = Folders.dataset.resolve("doc2vec").toFile()
+        val workFolder = Folders.dataset.resolve("java-small").toFile()
 
         fun go() {
+            loglnStart("GenDataset")
+            logln("Using workFolder: $workFolder")
             workFolder.deleteRecursively()
-            assert(!workFolder.exists())
+            assert2(!workFolder.exists())
 
             workFolder.mkdirs()
             persistence.setupDatabase()
 
-            val ds = Dataset(transaction { query().count() }, 0.7, 0.15)
+            val typeIndexes = mutableMapOf<String, Int>()
+            val ds = Dataset(transaction { queryOrdered().count() }, 0.7, 0.15)
             ds.print()
+            ds.print2()
             transaction {
-                query().forEachIndexed() { idx, it ->
+                queryOrdered().forEachIndexed() { idx, it ->
                     val type = ds.type(idx).toString()
-                    writeSource(it[DbSatds.old_clean], it, "satd", type)
-                    writeSource(it[DbSatds.new_clean], it, "fixed", type)
+                    val index = typeIndexes.getOrDefault(type, 0) + 2
+                    typeIndexes[type] = index
+                    writeSource(it[DbSatds.old_clean], it, "satd", type, index - 1)
+                    writeSource(it[DbSatds.new_clean], it, "fixed", type, index)
                 }
             }
         }
 
-        private fun query(): Query =
+        private fun queryOrdered(): Query =
             DbSatds.select {
                 where
             }.orderBy(DbSatds.id)
 
-        private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String) {
+        private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
             val folder = workFolder.resolve(subfolder)
             folder.mkdirs()
-            val filename = "${it[DbSatds.code_hash]}_${it[DbSatds.id]}_$type.java"
+            val filename = "${index.toString().padStart(6, '0')}_${it[DbSatds.id].toString()
+                .padStart(6, '0')}_${it[DbSatds.code_hash]}_$type.java"
             val content = wrapMethod(methodSource)
             try {
                 val cu = JavaParser().parse(content)!!
@@ -107,13 +141,14 @@ private fun generate(where: Op<Boolean>) {
                     throw Exception("parse did not yield expected result")
 
                 val methods = cu.result.get().types.filterNotNull().flatMap { it.methods }.filterNotNull()
-                assert(methods.size == 1)
+                assert2(methods.size == 1)
                 val method = methods.first()
                 method.name.identifier = type
 
                 folder.resolve(filename).writeText(wrapMethod(method.toString()))
             } catch (ex: Exception) {
                 println("$filename\n$content")
+                throw ex
             }
         }
     }
