@@ -13,10 +13,13 @@ import java.util.*
 
 /* Simone 08/07/2014 09:49 */
 
-class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appProperties: Properties) : IPgSqlCtl {
+class PgSqlCtl(
+    private val pgsqlBinFolder: String = "data/pgsql",
+    private val pgsqlDataFolder: String = "data/db/pg",
+    private val pgsqlTcpPort: Int = 1603,
+    private val pgSqlConfigFix: IPgSqlConfigFix = PgSqlConfigFix()
+) : IPgSqlCtl {
     companion object {
-        const val DATABASE_SUBFOLDER = "pg"
-        const val DEFAULT_TCP_PORT = 1603
         private val log = LoggerFactory.getLogger(PgSqlCtl::class.java)
     }
 
@@ -35,16 +38,12 @@ class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appPrope
     private val db: String get() = dbPath.toString()
 
     private val dbPath: Path
-        get() = Paths.get(appProperties.getProperty("pgsql.data.folder", "data/db/"))
-            .resolve(DATABASE_SUBFOLDER).normalize()
+        get() = Paths.get(pgsqlDataFolder).normalize()
 
     private fun getPgBin(exe: String): String {
-        val home: Path = Paths.get(appProperties.getProperty("pgsql.bin.folder", "data/pgsql"))
-            .toAbsolutePath().normalize()
+        val home: Path = Paths.get(pgsqlBinFolder).toAbsolutePath().normalize()
         assert2(Files.exists(home), "Postgres home directory not found: $home")
-        val bin = home.resolve("bin")
-            .resolve(exe)
-            .normalize()
+        val bin = home.resolve("bin").resolve(exe).normalize()
         assert2(Files.exists(bin), "Not found $bin")
         return bin.toString()
     }
@@ -95,7 +94,7 @@ class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appPrope
     }
 
     override fun initDb() {
-        initDb(DEFAULT_TCP_PORT)
+        initDb(pgsqlTcpPort)
     }
 
     override fun dbExist(): Boolean {

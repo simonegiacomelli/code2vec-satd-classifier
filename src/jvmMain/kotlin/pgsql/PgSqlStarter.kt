@@ -8,22 +8,20 @@ import java.io.File
 import java.util.*
 
 /* Simone 08/07/2014 17:49 */
-class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
+class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl = PgSqlCtl()) {
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val pgsqlctl = PgSqlCtl(PgSqlConfigFix(), Properties())
-            val pgSqlStarter = PgSqlStarter(pgsqlctl)
+            val pgSqlStarter = PgSqlStarter()
             //pgsqlctl.stop();
             pgSqlStarter.start()
-            pgSqlStarter.hookShutdown()
             println("DONE")
         }
     }
 
     val log = LoggerFactory.getLogger(javaClass)
-    fun start() {
+    fun start(hookShutdown: Boolean = true) {
         if (!pgSqlCtl.dbExist()) {
             pgSqlCtl.initDb()
             pgSqlCtl.start()
@@ -31,9 +29,11 @@ class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
             val status = pgSqlCtl.status()
             if (status == CtlStatus.NO_SERVER_RUNNING) pgSqlCtl.start() else if (status == CtlStatus.RUNNING) log.warn("PgSql already running")
         }
+        if (hookShutdown)
+            hookShutdown()
     }
 
-    fun hookShutdown() {
+    private fun hookShutdown() {
         Shutdown.addApplicationShutdownHook {
             log.info("Stopping PgSql")
             if (smartShutdownFailed()) {
