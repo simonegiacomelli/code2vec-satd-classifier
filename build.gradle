@@ -19,7 +19,9 @@ def ktor_version = '1.1.3'
 def logback_version = '1.2.3'
 
 kotlin {
-    jvm()
+    jvm(){
+        withJava()
+    }
     js {
         browser {
         }
@@ -150,5 +152,10 @@ task MainDiff1(type: JavaExec, dependsOn: [jvmJar]) {
 task MainDiff2(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step2.MainDiff2"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
+task MainTest1(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "sample.Test1"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }

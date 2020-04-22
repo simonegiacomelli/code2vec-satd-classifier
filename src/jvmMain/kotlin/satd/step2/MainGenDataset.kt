@@ -14,7 +14,11 @@ enum class types {
     training, validation, test
 }
 
-inline fun assert2(value: Boolean, lazyMessage: () -> Any = {}) {
+fun assert2(value: Boolean, msg: String) {
+    assert2(value) { msg }
+}
+
+fun assert2(value: Boolean, lazyMessage: () -> Any = {}) {
     if (!value) {
         val message = lazyMessage()
         throw AssertionError(message)
