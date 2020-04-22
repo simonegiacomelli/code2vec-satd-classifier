@@ -1,13 +1,28 @@
 package pgsql
 
-import core.AppProperties
 import core.Shutdown
 import org.slf4j.LoggerFactory
 import pgsql.ctl.*
+import satd.utils.Config
 import java.io.File
+import java.util.*
 
 /* Simone 08/07/2014 17:49 */
 class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
+
+
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val appProp = File("file.conf")
+            val pgsqlctl = PgSqlCtl(PgSqlConfigFix(), Properties())
+            val pgSqlStarter = PgSqlStarter(pgsqlctl)
+            //pgsqlctl.stop();
+            pgSqlStarter.start()
+            pgSqlStarter.hookShutdown()
+        }
+    }
+
     @JvmField
     val log = LoggerFactory.getLogger(javaClass)
     fun start() {
@@ -33,18 +48,6 @@ class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
         val result = pgSqlCtl.stop() == StopStatus.STOP_FAILED
         if (result) log.warn("Smart shutdown failed. Issuing fast shutdown")
         return result
-    }
-
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val appProp = File("file.conf")
-            val pgsqlctl = PgSqlCtl(PgSqlConfigFix(), AppProperties(appProp))
-            val pgSqlStarter = PgSqlStarter(pgsqlctl)
-            //pgsqlctl.stop();
-            pgSqlStarter.start()
-            pgSqlStarter.hookShutdown()
-        }
     }
 
 }

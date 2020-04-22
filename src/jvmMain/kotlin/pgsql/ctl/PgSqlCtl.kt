@@ -1,6 +1,5 @@
 package pgsql.ctl
 
-import core.IAppProperties
 import core.ProcessStreamGlobber
 import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
@@ -15,7 +14,7 @@ import java.util.*
 
 /* Simone 08/07/2014 09:49 */   class PgSqlCtl(
     private val pgSqlConfigFix: IPgSqlConfigFix,
-    private val appProperties: IAppProperties
+    private val appProperties: Properties
 ) : IPgSqlCtl {
     override fun status(): CtlStatus {
         val returnCode = exec(getPgBin("pg_ctl"), "status", "-D", db)

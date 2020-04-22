@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.reflect.KProperty
 
 class Config {
-    private val prop = Properties()
+    val prop = Properties()
     private val initialized = lazy { true }
     fun load() {
         loadConfFile("config.properties")
