@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import pgsql.DsPostgreSqlProvider
 import satd.step2.assert2
 import java.io.File
-import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -15,6 +14,12 @@ import java.util.*
 /* Simone 08/07/2014 09:49 */
 
 class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appProperties: Properties) : IPgSqlCtl {
+    companion object {
+        const val DATABASE_SUBFOLDER = "pg"
+        const val DEFAULT_TCP_PORT = 1603
+        private val log = LoggerFactory.getLogger(PgSqlCtl::class.java)
+    }
+
     override fun status(): CtlStatus {
         val returnCode = exec(getPgBin("pg_ctl"), "status", "-D", db)
         val status: CtlStatus
@@ -58,7 +63,7 @@ class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appPrope
             cmds.add("-m")
             cmds.add("fast")
         }
-        val returnCode = exec(cmds)
+        val returnCode = exec(*cmds.toTypedArray())
         val stopStatus = if (returnCode == 0) StopStatus.STOP_OK else StopStatus.STOP_FAILED
         log.info("Stop result: {}({})", stopStatus.toString(), returnCode)
         return stopStatus
@@ -68,24 +73,21 @@ class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appPrope
         val exitCode = exec(getPgBin("pg_ctl"), "start", "-w", "-t", "300", "-D", db)
         log.info(
             "Start: {}",
-            if (exitCode == 0) "SUCCESSFUL" else String.format("FAILED(exitCode:%d)", exitCode)
+            if (exitCode == 0) "SUCCESSFUL" else "FAILED(exitCode:$exitCode)"
         )
         if (exitCode != 0) throw PgCtlStartFailed(exitCode)
     }
 
-    private fun exec(vararg tokens: String): Int {
-        return exec(Arrays.asList(*tokens))
-    }
-
-    private fun exec(commandTokens: List<String>): Int {
-        val command = ProcessBuilder().command(commandTokens)
+    private fun exec(vararg commandTokens: String): Int {
+        val tokens= listOf(*commandTokens)
+        val command = ProcessBuilder().command(tokens)
         command.environment()["LANGUAGE"] = "EN"
         log.info("Running command: {}", java.lang.String.join(" ", command.command()))
         log.info("in {}", command.directory())
         //log.info("with environment [{}]", Joiner.on(", ").withKeyValueSeparator("=").join(command.environment()));
         val process = command.start()
         val globber = ProcessStreamGlobber(process)
-        globber.setName(File(commandTokens[0]).name)
+        globber.setName(File(tokens[0]).name)
         globber.startGlobber()
         val returnVal = process.waitFor()
         log.info("returned {}", returnVal)
@@ -127,10 +129,5 @@ class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appPrope
     private inner class PgCtlStartFailed(returnCode: Int) :
         RuntimeException("return code: $returnCode")
 
-    companion object {
-        const val DATABASE_SUBFOLDER = "pg"
-        const val DEFAULT_TCP_PORT = 1603
-        private val log = LoggerFactory.getLogger(PgSqlCtl::class.java)
-    }
 
 }

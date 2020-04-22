@@ -10,7 +10,6 @@ import java.util.*
 /* Simone 08/07/2014 17:49 */
 class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
 
-
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -23,7 +22,6 @@ class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl) {
         }
     }
 
-    @JvmField
     val log = LoggerFactory.getLogger(javaClass)
     fun start() {
         if (!pgSqlCtl.dbExist()) {
