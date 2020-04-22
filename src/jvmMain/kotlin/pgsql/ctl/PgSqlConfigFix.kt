@@ -18,7 +18,7 @@ import java.util.regex.Pattern
         log.info("Configuring [{}]", hbaFile)
         //String hbaContent = StringUtils.replace(FileUtils.read(hbaFile), DsPostgreSqlProvider.USERNAME, "postgres") + "";
 
-        var hbaContent = hbaFile.readText().replace( "postgres", DsPostgreSqlProvider.USERNAME);
+        var hbaContent = hbaFile.readText().replace("postgres", DsPostgreSqlProvider.USERNAME);
         hbaContent = Pattern.compile(
             "(^host\\s+\\w+\\s+\\w+\\s+::1/128\\s+\\w+)",
             Pattern.MULTILINE
