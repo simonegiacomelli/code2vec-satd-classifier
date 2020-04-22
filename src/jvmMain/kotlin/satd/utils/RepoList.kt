@@ -37,7 +37,7 @@ class RepoList {
         }
 
         fun getGithubUrls(): List<String> =
-            repoTxtResource("satd/urls/github_mining/github-url-list.txt")
+            repoTxtResource("satd/urls/github_mining/commit100_or_issue100/github-url-list.txt")
                 .readText()
                 .split("\n")
                 .filter { !it.startsWith("#") }

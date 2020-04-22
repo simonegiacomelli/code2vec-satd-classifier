@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
             .take(config.batch_size.toIntOrNull() ?: 1000)
             .stream()
             .parallel()
-            .map { Repo(it).clone().reportFailed() }
+            .map { Repo(it).clone().reportFailed().also { repoRate.spin() } }
             .filter { !it.failed }
             .map { Find(it).trackSatd() }
             .toList()
