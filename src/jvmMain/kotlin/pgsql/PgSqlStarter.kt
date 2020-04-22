@@ -11,11 +11,11 @@ import java.util.*
 class PgSqlStarter(private val pgSqlCtl: IPgSqlCtl = PgSqlCtl()) {
 
     companion object {
+        val def by lazy { PgSqlStarter() }
         @JvmStatic
         fun main(args: Array<String>) {
-            val pgSqlStarter = PgSqlStarter()
             //pgsqlctl.stop();
-            pgSqlStarter.start()
+            def.start()
             println("DONE")
         }
     }

@@ -10,13 +10,11 @@ class DsPostgreSqlProvider {
 
     companion object {
         const val HOST = "localhost"
-        const val PORT = "1603"
         const val NAME = "db"
-        const val USERNAME = "simonegiacomelli"
+        val USERNAME: String by lazy { System.getenv("USER") }
         const val PASSWORD = "usi"
     }
 
-    private val hostname: String? = null
     fun init(pgConn: Connection) {
         try {
             val statement = pgConn.createStatement()

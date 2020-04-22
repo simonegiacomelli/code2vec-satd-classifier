@@ -27,21 +27,16 @@ import java.io.InputStreamReader
     internal inner class StreamGobbler(val input: InputStream, val type: String) :
         Thread() {
         override fun run() {
-            try {
-                input
-                    .bufferedReader()
-                    .lines()
-                    .filter { it != null }
-                    .forEach { log.info("$type> $it") }
-            } catch (ioe: IOException) {
-                ioe.printStackTrace()
-            }
+            input
+                .bufferedReader()
+                .lines()
+                .filter { it != null }
+                .forEach { log.info("$type> $it") }
         }
-
     }
 
     companion object {
-        val log = LoggerFactory.getLogger(ProcessStreamGlobber::class.java)
+        private val log = LoggerFactory.getLogger(ProcessStreamGlobber::class.java)
     }
 
 }
