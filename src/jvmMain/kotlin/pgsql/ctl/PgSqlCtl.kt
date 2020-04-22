@@ -12,10 +12,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 
-/* Simone 08/07/2014 09:49 */   class PgSqlCtl(
-    private val pgSqlConfigFix: IPgSqlConfigFix,
-    private val appProperties: Properties
-) : IPgSqlCtl {
+/* Simone 08/07/2014 09:49 */
+
+class PgSqlCtl(private val pgSqlConfigFix: IPgSqlConfigFix, private val appProperties: Properties) : IPgSqlCtl {
     override fun status(): CtlStatus {
         val returnCode = exec(getPgBin("pg_ctl"), "status", "-D", db)
         val status: CtlStatus
@@ -28,16 +27,14 @@ import java.util.*
         return status
     }
 
-    private val db: String
-        private get() = dbPath.toString()
+    private val db: String get() = dbPath.toString()
 
     private val dbPath: Path
-        private get() = Paths.get(appProperties.getProperty("pgsql.data.folder", "data/db/"))
+        get() = Paths.get(appProperties.getProperty("pgsql.data.folder", "data/db/"))
             .resolve(DATABASE_SUBFOLDER).normalize()
 
     private fun getPgBin(exe: String): String {
-        val home: Path
-        home = Paths.get(appProperties.getProperty("pgsql.bin.folder", "data/pgsql"))
+        val home: Path = Paths.get(appProperties.getProperty("pgsql.bin.folder", "data/pgsql"))
             .toAbsolutePath().normalize()
         assert2(Files.exists(home), "Postgres home directory not found: $home")
         val bin = home.resolve("bin")
@@ -56,9 +53,7 @@ import java.util.*
     }
 
     fun stopInternal(fast: Boolean): StopStatus {
-        val cmds = ArrayList(
-            Arrays.asList(getPgBin("pg_ctl"), "stop", "-t", "20", "-D", db)
-        )
+        val cmds = mutableListOf(getPgBin("pg_ctl"), "stop", "-t", "20", "-D", db)
         if (fast) {
             cmds.add("-m")
             cmds.add("fast")
@@ -83,22 +78,18 @@ import java.util.*
     }
 
     private fun exec(commandTokens: List<String>): Int {
-        return try {
-            val command = ProcessBuilder().command(commandTokens)
-            command.environment()["LANGUAGE"] = "EN"
-            log.info("Running command: {}", java.lang.String.join(" ", command.command()))
-            log.info("in {}", command.directory())
-            //log.info("with environment [{}]", Joiner.on(", ").withKeyValueSeparator("=").join(command.environment()));
-            val process = command.start()
-            val globber = ProcessStreamGlobber(process)
-            globber.setName(File(commandTokens[0]).name)
-            globber.startGlobber()
-            val returnVal = process.waitFor()
-            log.info("returned {}", returnVal)
-            returnVal
-        } catch (ex: Exception) {
-            throw RuntimeException(ex)
-        }
+        val command = ProcessBuilder().command(commandTokens)
+        command.environment()["LANGUAGE"] = "EN"
+        log.info("Running command: {}", java.lang.String.join(" ", command.command()))
+        log.info("in {}", command.directory())
+        //log.info("with environment [{}]", Joiner.on(", ").withKeyValueSeparator("=").join(command.environment()));
+        val process = command.start()
+        val globber = ProcessStreamGlobber(process)
+        globber.setName(File(commandTokens[0]).name)
+        globber.startGlobber()
+        val returnVal = process.waitFor()
+        log.info("returned {}", returnVal)
+        return returnVal
     }
 
     override fun initDb() {
@@ -126,12 +117,10 @@ import java.util.*
     }
 
     private val pwFile: File
-        private get() = try {
+        get() {
             val pwFile = File.createTempFile("tmp", "tmp")
             core.FileUtils.write(pwFile, DsPostgreSqlProvider.PASSWORD)
-            pwFile
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+            return pwFile
         }
 
     private inner class PgdataAlreadyExists(message: String?) : RuntimeException(message)

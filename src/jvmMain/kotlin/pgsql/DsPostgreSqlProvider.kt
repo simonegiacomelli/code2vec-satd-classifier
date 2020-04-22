@@ -1,56 +1,54 @@
-package pgsql;
+package pgsql
+
+import java.sql.Connection
+import java.sql.SQLException
+import java.sql.Statement
 
 /* User: Simone 30/03/13 9.32 */
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+class DsPostgreSqlProvider {
 
-public class DsPostgreSqlProvider {
+    companion object {
+        const val HOST = "localhost"
+        const val PORT = "1603"
+        const val NAME = "db"
+        const val USERNAME = "simonegiacomelli"
+        const val PASSWORD = "usi"
+    }
 
-    public static final String HOST = "localhost";
-    public static final String PORT = "1603";
-    public static final String NAME = "db";
-    public static final String USERNAME = "simonegiacomelli";
-    public static final String PASSWORD = "usi";
-
-
-    private String hostname;
-
-
-    public void init(Connection pgConn) {
+    private val hostname: String? = null
+    fun init(pgConn: Connection) {
         try {
-
-            Statement statement = pgConn.createStatement();
-            if (dbNotExist(statement))
-                statement.execute(String.format("CREATE DATABASE %s WITH OWNER = %s ENCODING = 'UTF8' " +
-                                "TABLESPACE = pg_default LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;"
-                        , NAME, USERNAME));
-            statement.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            val statement = pgConn.createStatement()
+            if (dbNotExist(statement)) statement.execute(
+                String.format(
+                    "CREATE DATABASE %s WITH OWNER = %s ENCODING = 'UTF8' " +
+                            "TABLESPACE = pg_default LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;"
+                    , NAME, USERNAME
+                )
+            )
+            statement.close()
+        } catch (e: SQLException) {
+            throw RuntimeException(e)
         }
-
     }
 
-    private boolean dbNotExist(Statement statement) throws SQLException {
-        ResultSet dbCountRs = statement.executeQuery(String.format("select count(*) from pg_database where datname='%s'", NAME));
-        dbCountRs.next();
-        int dbCount = dbCountRs.getInt(1);
-        dbCountRs.close();
-        return dbCount == 0;
-    }
+    private fun dbNotExist(statement: Statement): Boolean {
+        val dbCountRs = statement.executeQuery("select count(*) from pg_database where datname='$NAME'")
+        dbCountRs.next()
+        val dbCount = dbCountRs.getInt(1)
+        dbCountRs.close()
+        return dbCount == 0
+    } //
 
-//
-//    private BasicDataSource getDataSource(String url, BasicDataSource ds) {
-//        ds.setUrl(url);
-//        ds.setDriverClassName("org.postgresql.Driver");
-//        ds.setUsername(getUser());
-//        ds.setPassword(getPassword());
-//        ds.setMaxWait(1000);
-//        ds.setMaxActive(16);
-//        return ds;
-//    }
+    //    private BasicDataSource getDataSource(String url, BasicDataSource ds) {
+    //        ds.setUrl(url);
+    //        ds.setDriverClassName("org.postgresql.Driver");
+    //        ds.setUsername(getUser());
+    //        ds.setPassword(getPassword());
+    //        ds.setMaxWait(1000);
+    //        ds.setMaxActive(16);
+    //        return ds;
+    //    }
 
 }
