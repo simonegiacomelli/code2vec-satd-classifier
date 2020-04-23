@@ -24,10 +24,11 @@ interface IDb {
     fun connection(): Connection
     fun dataSource(): DataSource
     fun startDatabase()
+    val url: String
 }
 
 class DbH2(databasePath: Path, h2_options: String = "AUTO_SERVER_PORT=19091") : IDb {
-    val url = "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;$h2_options"
+    override val url = "jdbc:h2:$databasePath;AUTO_SERVER=TRUE;$h2_options"
 
     private val user = "sa"
     private val pass = ""
@@ -55,7 +56,7 @@ class DbPgsql(
     , val pass: String = DsPostgreSqlProvider.PASSWORD
 ) : IDb {
 
-    val url = "jdbc:postgresql://$hostname:$port/$databaseName"
+    override val url = "jdbc:postgresql://$hostname:$port/$databaseName"
     val urlMaster = "jdbc:postgresql://$hostname:$port/postgres"
 
     override fun connection(): Connection = connection(url)
@@ -82,6 +83,7 @@ class DbPgsql(
 class Persistence(db: IDb) : IDb by db {
 
     fun setupDatabase() {
+        logln("Jdbc url: [$url]")
         startDatabase()
         Database.connect(dataSource())
         transaction {
@@ -96,8 +98,8 @@ class Persistence(db: IDb) : IDb by db {
 
 }
 
-val persistence = Persistence(DbH2(Folders.database_db1.resolve("h2satd")))
-//val persistence = Persistence(DbPgsql())
+//val persistence = Persistence(DbH2(Folders.database_db1.resolve("h2satd")))
+val persistence = Persistence(DbPgsql())
 
 fun main(args: Array<String>) {
     persistence.setupDatabase()
