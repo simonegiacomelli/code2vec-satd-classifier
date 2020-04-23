@@ -6,8 +6,8 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
-/* Simone 08/07/2014 12:47 */   class ProcessStreamGlobber(private val process: Process) {
-    private var name: String? = null
+/* Simone 08/07/2014 12:47 */   class ProcessStreamGlobber(private val process: Process, val processName: String = "") {
+
     fun startGlobber() {
         startStreamGobbler(process.errorStream, "ERR")
         startStreamGobbler(process.inputStream, "OUT")
@@ -16,12 +16,8 @@ import java.io.InputStreamReader
     private fun startStreamGobbler(errorStream: InputStream, streamName: String) {
         val sg =
             StreamGobbler(errorStream, streamName)
-        if (name != null) sg.name = "$name-$streamName"
+        if (processName.isNotEmpty()) sg.name = "$processName-$streamName"
         sg.start()
-    }
-
-    fun setName(name: String?) {
-        this.name = name
     }
 
     internal inner class StreamGobbler(val input: InputStream, val type: String) :

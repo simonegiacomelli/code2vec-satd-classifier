@@ -6,10 +6,10 @@ import org.slf4j.LoggerFactory
 import pgsql.DsPostgreSqlProvider
 import satd.step2.assert2
 import java.io.File
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
 
 /* Simone 08/07/2014 09:49 */
 
@@ -85,8 +85,7 @@ class PgSqlCtl(
         log.info("in {}", command.directory())
         log.info("with environment [{}]", command.environment().map { "${it.key}=${it.value}" }.joinToString(", "))
         val process = command.start()
-        val globber = ProcessStreamGlobber(process)
-        globber.setName(File(tokens[0]).name)
+        val globber = ProcessStreamGlobber(process, processName = File(tokens[0]).name)
         globber.startGlobber()
         val returnVal = process.waitFor()
         log.info("returned {}", returnVal)
@@ -128,5 +127,54 @@ class PgSqlCtl(
     private inner class PgCtlStartFailed(returnCode: Int) :
         RuntimeException("return code: $returnCode")
 
+    fun pg_dump(databaseName: String, path: String) {
+        val exitValue = try {
+            val tokens = listOf(
+                getPgBin("pg_dump"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", DsPostgreSqlProvider.USERNAME
+                , "-F", "d", "-b", "-c", "-W", "-f", path, databaseName
+            )
 
+            val command = ProcessBuilder().command(tokens)
+            command.environment()["LANGUAGE"] = "EN"
+            log.info("Running command: {}", java.lang.String.join(" ", command.command()))
+            val process = command.start()
+
+            fun st(os: InputStream, descr: String) {
+                Thread {
+                    val buf = StringBuilder()
+                    while (true) {
+                        val ch = os.read()
+                        if (ch == -1)
+                            return@Thread
+                        val toChar = ch.toChar()
+
+                        buf.append(toChar)
+                        if (buf.toString() == "Password: ")
+                            process.outputStream
+                                .bufferedWriter()
+                                .also {
+                                    it.write(DsPostgreSqlProvider.PASSWORD + "\n")
+                                }.flush()
+
+
+                    }
+                }.apply {
+                    isDaemon = true
+                    name = "pg_dump-$descr"
+                }.start()
+            }
+
+            st(process.inputStream, "OUT")
+            st(process.errorStream, "ERR")
+
+            val returnVal = process.waitFor()
+            log.info("returned {}", returnVal)
+            returnVal
+        } finally {
+
+        }
+        if (exitValue != 0) throw RuntimeException("Operation failed, pg_dump returned $exitValue")
+        else log.info("Backup successful")
+
+    }
 }

@@ -7,7 +7,7 @@ import pgsql.ctl.IPgSqlConfigFix
 import java.nio.file.Path
 import java.util.regex.Pattern
 
-/* Simone 31/03/2015 17:00 */   class PgSqlConfigFix : IPgSqlConfigFix {
+/* Simone 31/03/2015 17:00 */   class PgSqlConfigFix(val enableLocalTrust: Boolean = false) : IPgSqlConfigFix {
     val log = LoggerFactory.getLogger(javaClass)
     override fun fixConfig(dbPath: Path, tcpPort: Int) {
         val confFile = dbPath.resolve("postgresql.conf").toFile()
@@ -25,7 +25,8 @@ import java.util.regex.Pattern
         ).matcher(hbaContent).replaceAll("#$1")
         FileUtils.write(
             hbaFile,
-            "$hbaContent\nhost    all             all             samenet                 md5"
+            "$hbaContent\nhost    all             all             samenet                 md5\n" +
+                    "local    all             all                              trust"
         )
     }
 }
