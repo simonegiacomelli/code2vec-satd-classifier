@@ -160,3 +160,14 @@ task MainTest1(type: JavaExec, dependsOn: [jvmJar]) {
     main = "sample.Test1"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+task pgsqlBackup(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "database"
+    main = "pgsql.PgBackup"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
+task pgsqlRestore(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "database"
+    main = "pgsql.PgRestore"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
+

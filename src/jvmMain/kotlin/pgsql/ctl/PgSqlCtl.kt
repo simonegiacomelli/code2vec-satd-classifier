@@ -177,4 +177,55 @@ class PgSqlCtl(
         else log.info("Backup successful")
 
     }
+
+    fun pg_restore(databaseName: String, path: String) {
+        val exitValue = try {
+            val tokens = listOf(
+                getPgBin("pg_restore"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", DsPostgreSqlProvider.USERNAME
+                , "-W", "-c", "-d", databaseName, path
+            )
+
+            val command = ProcessBuilder().command(tokens)
+            command.environment()["LANGUAGE"] = "EN"
+            log.info("Running command: {}", java.lang.String.join(" ", command.command()))
+            val process = command.start()
+
+            fun st(os: InputStream, descr: String) {
+                Thread {
+                    val buf = StringBuilder()
+                    while (true) {
+                        val ch = os.read()
+                        if (ch == -1)
+                            return@Thread
+                        val toChar = ch.toChar()
+
+                        buf.append(toChar)
+                        if (buf.toString() == "Password: ")
+                            process.outputStream
+                                .bufferedWriter()
+                                .also {
+                                    it.write(DsPostgreSqlProvider.PASSWORD + "\n")
+                                }.flush()
+
+
+                    }
+                }.apply {
+                    isDaemon = true
+                    name = "pg_restore-$descr"
+                }.start()
+            }
+
+            st(process.inputStream, "OUT")
+            st(process.errorStream, "ERR")
+
+            val returnVal = process.waitFor()
+            log.info("returned {}", returnVal)
+            returnVal
+        } finally {
+
+        }
+        if (exitValue != 0) throw RuntimeException("Operation failed, pg_restore returned $exitValue")
+        else log.info("Restore successful")
+
+    }
 }
