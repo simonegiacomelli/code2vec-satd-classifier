@@ -7,18 +7,20 @@ import kotlin.system.exitProcess
 
 /* Simone 11/10/13 12.32 */
 
-object Shutdown  {
+object Shutdown {
     val log = LoggerFactory.getLogger(Shutdown::class.java)
 
     @Volatile
     var isShuttingDown = false
-    val listeners = mutableListOf<()->Unit>()
+    val listeners = mutableListOf<() -> Unit>()
 
     init {
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
                 notifyAllRemaining()
             }
+        }.also {
+            it.isDaemon = true
         })
     }
 
@@ -26,7 +28,7 @@ object Shutdown  {
         return isShuttingDown
     }
 
-    fun addApplicationShutdownHook(runnable: ()->Unit) {
+    fun addApplicationShutdownHook(runnable: () -> Unit) {
         listeners.add(runnable)
     }
 

@@ -33,6 +33,10 @@ import java.io.InputStreamReader
                 .filter { it != null }
                 .forEach { log.info("$type> $it") }
         }
+
+        init {
+            isDaemon = true
+        }
     }
 
     companion object {
