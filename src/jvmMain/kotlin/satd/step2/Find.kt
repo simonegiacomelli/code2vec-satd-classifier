@@ -27,7 +27,7 @@ class Find(val repo: Repo) {
     private fun RevCommit.newTreeIterator() =
         CanonicalTreeParser().apply { reset(/*reader*/git.repository.newObjectReader(), tree) }
 
-    private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") || this.oldPath.endsWith(".java")
+    private fun DiffEntry.isJavaSource() = this.newPath.endsWith(".java") && this.oldPath.endsWith(".java")
 
     private val AnyObjectId.esc get() = "\"$this\""
     private val AnyObjectId.abb get() = "${this.abbreviate(7).name()}"
