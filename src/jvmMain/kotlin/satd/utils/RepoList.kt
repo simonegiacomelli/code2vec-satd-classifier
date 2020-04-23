@@ -2,6 +2,7 @@ package satd.utils
 
 import java.net.MalformedURLException
 import java.net.URL
+import kotlin.streams.toList
 
 class RepoList {
 
@@ -36,12 +37,20 @@ class RepoList {
             }
         }
 
-        fun getGithubUrls(): List<String> =
-            repoTxtResource("satd/urls/github_mining/commit100_or_issue100/github-url-list.txt")
-                .readText()
-                .split("\n")
-                .filter { !it.startsWith("#") }
-                .filter { it.isNotEmpty() }
+        fun getGithubUrls(): List<String> {
+            return repoTxtResource("satd/urls/github_mining/commit100_or_issue100/github-url-list.txt")
+                .openStream().use { inStream ->
+                    inStream.bufferedReader()
+                        .lines()
+                        .filter { !it.startsWith("#") }
+                        .filter { it.isNotEmpty() }
+                        .map { it.split("\t") }
+                        .sorted { t, t2 -> t[0].compareTo(t2[0]) }
+                        .map { "https://github.com/${it[1]}" }
+                        .toList()
+                }
+        }
+
 
         fun get() = csv("satd/urls/android-50-thousand.csv")
         fun getUrls() = get().sortedBy { it.commits }.map { it.url }
