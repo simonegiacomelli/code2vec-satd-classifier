@@ -106,10 +106,11 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                         val issueCount = node.get("issues").asJsonObject.get("totalCount").asInt
                         val createdAt = node.get("createdAt").asString
                         val commitCount = getCommitCount(node)
-                        outputTsv.appendText("https://github.com/$name\t$issueCount\t${commitCount ?: "null"}\t$createdAt\n")
+                        val line = "$createdAt\t$name\t$issueCount\t${commitCount ?: "null"}\n"
+                        outputTsv.appendText(line)
                         apiCall.rate.spin()
                         if (commitCount ?: 0 > 100 || issueCount > 100)
-                            output.appendText("https://github.com/$name\n")
+                            output.appendText(line)
 
                     }
             }
