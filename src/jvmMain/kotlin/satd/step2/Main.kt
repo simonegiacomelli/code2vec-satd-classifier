@@ -18,7 +18,6 @@ fun main(args: Array<String>) {
     pool.submit {
         RepoList
             .getGithubUrls()
-            .sortedDescending()
             .also { repoRate.totRepo = it.size }
             .subtract(DbRepos.allDone().also { repoRate.alreadyDone(it.size) })
             .take(config.batch_size.toIntOrNull() ?: 1000)
