@@ -15,7 +15,7 @@ import java.util.*
 
 class PgSqlCtl(
     private val pgsqlBinFolder: String = "data/pgsql",
-    private val pgsqlDataFolder: String = "data/db/pg",
+    private val pgsqlDataFolder: String = "data/database/pg",
     private val pgsqlTcpPort: Int = 1603,
     private val pgSqlConfigFix: IPgSqlConfigFix = PgSqlConfigFix()
 ) : IPgSqlCtl {
