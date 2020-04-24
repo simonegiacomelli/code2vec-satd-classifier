@@ -18,13 +18,14 @@ class DsPostgreSqlProvider {
 
     fun init(pgConn: Connection) {
         pgConn.createStatement().use { statement ->
-            if (dbNotExist(statement)) statement.execute(
-                String.format(
-                    "CREATE DATABASE %s WITH OWNER = %s ENCODING = 'UTF8' " +
+            if (dbNotExist(statement)) {
+                println("Going to create database $NAME owner $USERNAME")
+                statement.execute(
+                    "CREATE DATABASE $NAME WITH OWNER = $USERNAME ENCODING = 'UTF8' " +
                             "TABLESPACE = pg_default LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;"
-                    , NAME, USERNAME
+
                 )
-            )
+            }
         }
     }
 

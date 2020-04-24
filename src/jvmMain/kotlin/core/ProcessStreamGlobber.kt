@@ -1,12 +1,21 @@
 package core
 
 import org.slf4j.LoggerFactory
-import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 
-/* Simone 08/07/2014 12:47 */   class ProcessStreamGlobber(private val process: Process, val processName: String = "") {
+/* Simone 08/07/2014 12:47 */
+
+class ProcessStreamGlobber(private val process: Process, val processName: String = "") {
+    companion object {
+        private val log = LoggerFactory.getLogger(ProcessStreamGlobber::class.java)
+        fun handleIS(inputStream: InputStream, type: String) {
+            inputStream
+                .bufferedReader()
+                .lines()
+                .filter { it != null }
+                .forEach { log.info("$type> $it") }
+        }
+    }
 
     fun startGlobber() {
         startStreamGobbler(process.errorStream, "ERR")
@@ -14,8 +23,7 @@ import java.io.InputStreamReader
     }
 
     private fun startStreamGobbler(errorStream: InputStream, streamName: String) {
-        val sg =
-            StreamGobbler(errorStream, streamName)
+        val sg = StreamGobbler(errorStream, streamName)
         if (processName.isNotEmpty()) sg.name = "$processName-$streamName"
         sg.start()
     }
@@ -23,11 +31,7 @@ import java.io.InputStreamReader
     internal inner class StreamGobbler(val input: InputStream, val type: String) :
         Thread() {
         override fun run() {
-            input
-                .bufferedReader()
-                .lines()
-                .filter { it != null }
-                .forEach { log.info("$type> $it") }
+            handleIS(input, type)
         }
 
         init {
@@ -35,8 +39,5 @@ import java.io.InputStreamReader
         }
     }
 
-    companion object {
-        private val log = LoggerFactory.getLogger(ProcessStreamGlobber::class.java)
-    }
 
 }

@@ -173,6 +173,7 @@ task pgsqlRestore(type: JavaExec, dependsOn: [jvmJar]) {
 task pgsqlRemoveDataFolder(type: JavaExec, dependsOn: [jvmJar]) {
     group = "database"
     main = "pgsql.PgRemoveDataFolder"
+    standardInput = System.in
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
 

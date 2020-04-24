@@ -192,33 +192,37 @@ class PgSqlCtl(
             log.info("Running command: {}", java.lang.String.join(" ", command.command()))
             val process = command.start()
 
-            fun st(os: InputStream, descr: String) {
+            fun st(os: InputStream, descr: String, interceptPw: Boolean) {
                 Thread {
                     val buf = StringBuilder()
-                    while (true) {
-                        val ch = os.read()
-                        if (ch == -1)
-                            return@Thread
-                        val toChar = ch.toChar()
+                    if (interceptPw)
+                        while (true) {
+                            val ch = os.read()
+                            if (ch == -1)
+                                return@Thread
+                            val toChar = ch.toChar()
 
-                        buf.append(toChar)
-                        if (buf.toString() == "Password: ")
-                            process.outputStream
-                                .bufferedWriter()
-                                .also {
-                                    it.write(DsPostgreSqlProvider.PASSWORD + "\n")
-                                }.flush()
+                            buf.append(toChar)
 
+                            if (buf.toString() == "Password: ") {
+                                process.outputStream
+                                    .bufferedWriter()
+                                    .also {
+                                        it.write(DsPostgreSqlProvider.PASSWORD + "\n")
+                                    }.flush()
+                                break
+                            }
 
-                    }
+                        }
+                    ProcessStreamGlobber.handleIS(os, descr)
                 }.apply {
                     isDaemon = true
                     name = "pg_restore-$descr"
                 }.start()
             }
 
-            st(process.inputStream, "OUT")
-            st(process.errorStream, "ERR")
+            st(process.errorStream, "ERR", interceptPw = true)
+            st(process.inputStream, "OUT", interceptPw = false)
 
             val returnVal = process.waitFor()
             log.info("returned {}", returnVal)

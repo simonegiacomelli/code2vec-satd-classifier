@@ -1,5 +1,6 @@
 package pgsql
 
+import satd.step2.DbPgsql
 import java.io.File
 
 val file by lazy { File("./data/backup/bk1") }
@@ -17,15 +18,22 @@ object PgBackup {
 object PgRestore {
     @JvmStatic
     fun main(args: Array<String>) {
-        PgSqlStarter.def.start()
+        DbPgsql(databaseName = DsPostgreSqlProvider.NAME).startDatabase()
         PgSqlStarter.def.pgSqlCtl.pg_restore(DsPostgreSqlProvider.NAME, file.absolutePath)
+        println("PgRestore end")
     }
 }
 
 object PgRemoveDataFolder {
     @JvmStatic
     fun main(args: Array<String>) {
-        PgSqlStarter.def.pgSqlCtl.stopFast()
-        File(PgDefaults.dataFolder).deleteRecursively()
+        val folder = File(PgDefaults.dataFolder).absoluteFile
+        println("This will delete the data folder of postgres $folder")
+        println("Do you want to continue? Type y and enter to continue. Anything else and enter to exit")
+        if (readLine() == "y") {
+            PgSqlStarter.def.pgSqlCtl.stopFast()
+            folder.deleteRecursively()
+        }
+        println("PgRemoveDataFolder end")
     }
 }
