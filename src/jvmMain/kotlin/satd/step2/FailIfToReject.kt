@@ -1,16 +1,19 @@
 package satd.step2
 
-import kotlinx.coroutines.yield
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.lib.ObjectChecker.tree
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.treewalk.TreeWalk
 
 
 fun failIfToReject(git: Git) {
-//    git.addFile("Android.mk", "x")
-//    git.addFile("CleanSpec.mk", "x")
-    val bad = setOf("Android.mk","CleanSpec.mk")
+
+    val bad = setOf("Android.mk", "CleanSpec.mk")
+    if (containsAll(git, bad))
+        throw RejectedRepositoryException("Android OS repository is not accepted")
+
+}
+
+private fun containsAll(git: Git, bad: Set<String>): Boolean {
     val repository = git.repository
     val head = repository.findRef("HEAD")
 
@@ -26,13 +29,13 @@ fun failIfToReject(git: Git) {
             treeWalk.isRecursive = false
             val actual = sequence {
                 while (treeWalk.next())
-                    yield( treeWalk.pathString)
+                    yield(treeWalk.pathString)
             }.asIterable()
 
-            if(bad.subtract(actual).isEmpty())
-                throw RejectedRepositoryException("Android OS repository is not accepted")
+            return bad.subtract(actual).isEmpty()
+
         }
     }
-
 }
+
 class RejectedRepositoryException(message: String?) : Exception(message)
