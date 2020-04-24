@@ -16,7 +16,7 @@ class JavaMethod(val content: String) {
     }
 
     val tokenCount by lazy { res.stream().count().toInt() }
-    private val methods by lazy {
+    private val methods: List<MethodDeclaration> by lazy {
         res.types
             .filterNotNull()
             .flatMap { type ->
@@ -27,7 +27,7 @@ class JavaMethod(val content: String) {
     val valid: Boolean by lazy {
         methods.count() == 1
                 && !hasInnerMethods
-                && !methods.first().body.isEmpty
+                && !methods.first().body.get().isEmpty
                 && accept(methods.first())
 
 
@@ -41,7 +41,7 @@ class JavaMethod(val content: String) {
         if (body.statements.size == 1 && body.statements[0].isThrowStmt)
             return false
 
-        if(body.findFirst(UnparsableStmt::class.java).isPresent)
+        if (body.findFirst(UnparsableStmt::class.java).isPresent)
             return false
 
         //enum
