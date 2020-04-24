@@ -13,7 +13,7 @@ fun main() {
 
     val take = RepoList.getGithubUrls().take(30)
 
-    println("going to clone the following repos")
+    logln("going to clone the following repos")
     val osCommand = take.map {
         "git clone --no-checkout $it"
     }.map {
