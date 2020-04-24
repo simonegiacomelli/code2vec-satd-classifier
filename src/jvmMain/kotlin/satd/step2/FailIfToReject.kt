@@ -1,9 +1,16 @@
 package satd.step2
 
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.lib.ObjectId
+import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.treewalk.TreeWalk
+import java.io.File
 
+fun main() {
+    val git = Git.init().setDirectory(File("data/repos/ckisgen/RoyalGinger-frameworks-base")).call()!!
+    failIfToReject(git)
+}
 
 fun failIfToReject(git: Git) {
 
@@ -14,12 +21,23 @@ fun failIfToReject(git: Git) {
 }
 
 private fun containsAll(git: Git, bad: Set<String>): Boolean {
-    val repository = git.repository
-    val head = repository.findRef("HEAD")
+    git.log().all().call().toList().take(10).forEach { child ->
+        child!!.apply {
+            if (containsAllCommit(git.repository, this, setOf("Android.mk", "CleanSpec.mk")))
+                return true
+        }
 
-    // a RevWalk allows to walk over commits based on some filtering that is defined
+    }
+    return false
+}
+
+private fun containsAllCommit(
+    repository: Repository?,
+    objectId: ObjectId?,
+    bad: Set<String>
+): Boolean {
     RevWalk(repository).use { walk ->
-        val commit = walk.parseCommit(head.objectId)
+        val commit = walk.parseCommit(objectId)
         val tree = commit.tree
 
 
