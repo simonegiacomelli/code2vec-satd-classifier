@@ -6,15 +6,16 @@ import satd.step2.Exceptions
 import satd.step2.repoRate
 import java.io.File
 import java.net.URL
+import java.nio.file.Path
 
 
-class Repo(val urlstr: String) {
+class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
     val url = URL(urlstr)
     private val parts = url.path.drop(1).split('/')
     val userName = parts[0]
     val repoName = parts[1]
     val friendlyName = "${userName}_$repoName"
-    private val reposPath get() = Folders.repos
+
 
     val textProgressMonitor = TextProgressMonitor(url.toString())
     val folder = File("$reposPath/$userName/$repoName")
