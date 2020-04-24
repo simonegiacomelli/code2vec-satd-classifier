@@ -16,7 +16,7 @@ fun main() {
         .take(20)
     println("going to clone the following repos")
     take.forEach {
-        println("git clone --no-checkout $it")
+        logln("git clone --no-checkout $it")
         Repo(it).apply {
             folder.deleteRecursively()
             integrityMarker.delete()
@@ -24,8 +24,8 @@ fun main() {
 
 
     }
-    println("removed previous folders")
-    println("starting clone")
+    logln("removed previous folders")
+    logln("starting clone")
 
     measureTimeMillis {
 
@@ -35,7 +35,7 @@ fun main() {
             .toList()
 
     }.also {
-        println("took ${it / 1000} seconds")
+        logln("took ${it / 1000} seconds")
     }
     logln("Done cloning")
 
