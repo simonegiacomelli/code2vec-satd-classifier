@@ -5,7 +5,7 @@ import java.util.*
 /**
  * Keep track of spin per second in a time window
  */
-class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis) {
+class Rate(val windowSecs: Int, val decimals: Int = 1, val time: () -> Long = System::currentTimeMillis) {
     val counter = LinkedList<Int>()
     var spinCount = 0
     var trackedSecond: Int = -1
@@ -53,6 +53,6 @@ class Rate(val windowSecs: Int, val time: () -> Long = System::currentTimeMillis
     }
 
     override fun toString(): String {
-        return "%.3f".format(rate())
+        return "%.${decimals}f".format(rate())
     }
 }

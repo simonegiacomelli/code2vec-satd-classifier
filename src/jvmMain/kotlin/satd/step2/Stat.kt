@@ -1,13 +1,11 @@
 package satd.step2
 
-import kotlinx.atomicfu.AtomicInt
 import satd.utils.AntiSpin
 import satd.utils.Rate
 import satd.utils.Repo
 import satd.utils.logln
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+
 
 class Stat(val repo: Repo, commitCount: Int) {
     val start = System.currentTimeMillis()
@@ -32,15 +30,21 @@ class Stat(val repo: Repo, commitCount: Int) {
 
     val ratePrinter =
         AntiSpin(10000) {
+            val commitn = p("${commitRate.spinCount}/$commitCount", 13)
             logln(
-                "${repo.urlstr} commit#:${commitRate.spinCount}/$commitCount commit/sec:$commitRate source#:${sourceRate.spinCount}  satd#:${satdRate.spinCount} " +
-                        "satd/sec: $satdRate source/sec:$sourceRate ${age()}"
+                "${p(age(), 8)} commit#:$commitn " +
+                        "c/sec:${p(commitRate, 5)} src-done#:${p(sourceRate.spinCount, 6)} " +
+                        "satd#:${p(satdRate.spinCount, 2)} " +
+                        //"satd/sec:$satdRate " +
+                        "src/sec:${p(sourceRate, 5)} ${repo.urlstr} "
             )
         }
 
+    private fun p(inp: Any, l: Int): String = "$inp".padEnd(l)
     private fun age(): String {
         val delta = System.currentTimeMillis() - start
+
         val mins = (delta.toDouble() / 100 / 60).roundToLong().toDouble() / 10
-        return "age mins:$mins"
+        return "age:${mins}m"
     }
 }
