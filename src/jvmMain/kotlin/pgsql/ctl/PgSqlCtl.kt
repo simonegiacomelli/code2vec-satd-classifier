@@ -4,6 +4,7 @@ import core.ProcessStreamGlobber
 import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
 import pgsql.DsPostgreSqlProvider
+import pgsql.PgDefaults
 import satd.step2.assert2
 import java.io.File
 import java.io.InputStream
@@ -13,10 +14,11 @@ import java.nio.file.Paths
 
 /* Simone 08/07/2014 09:49 */
 
+
 class PgSqlCtl(
-    private val pgsqlBinFolder: String = "data/pgsql",
-    private val pgsqlDataFolder: String = "data/database/pg",
-    private val pgsqlTcpPort: Int = 1603,
+    private val pgsqlBinFolder: String = PgDefaults.binFolder,
+    private val pgsqlDataFolder: String = PgDefaults.dataFolder,
+    private val pgsqlTcpPort: Int = PgDefaults.tcpPort,
     private val pgSqlConfigFix: IPgSqlConfigFix = PgSqlConfigFix()
 ) : IPgSqlCtl {
     companion object {
@@ -24,7 +26,7 @@ class PgSqlCtl(
     }
 
     override fun status(): CtlStatus {
-        val returnCode = exec(getPgBin("pg_ctl"), "status", "-D", db)
+        val returnCode = exec(getPgBin("pg_ctl"), "status", "-D", dataPathStr)
         val status: CtlStatus
         status = when (returnCode) {
             0 -> CtlStatus.RUNNING
@@ -35,9 +37,9 @@ class PgSqlCtl(
         return status
     }
 
-    private val db: String get() = dbPath.toString()
+    private val dataPathStr: String get() = dataPath.toString()
 
-    private val dbPath: Path
+    private val dataPath: Path
         get() = Paths.get(pgsqlDataFolder).normalize()
 
     private fun getPgBin(exe: String): String {
@@ -57,7 +59,7 @@ class PgSqlCtl(
     }
 
     fun stopInternal(fast: Boolean): StopStatus {
-        val cmds = mutableListOf(getPgBin("pg_ctl"), "stop", "-t", "20", "-D", db)
+        val cmds = mutableListOf(getPgBin("pg_ctl"), "stop", "-t", "20", "-D", dataPathStr)
         if (fast) {
             cmds.add("-m")
             cmds.add("fast")
@@ -69,7 +71,7 @@ class PgSqlCtl(
     }
 
     override fun start() {
-        val exitCode = exec(getPgBin("pg_ctl"), "start", "-w", "-t", "300", "-D", db)
+        val exitCode = exec(getPgBin("pg_ctl"), "start", "-w", "-t", "300", "-D", dataPathStr)
         log.info(
             "Start: {}",
             if (exitCode == 0) "SUCCESSFUL" else "FAILED(exitCode:$exitCode)"
@@ -97,23 +99,23 @@ class PgSqlCtl(
     }
 
     override fun dbExist(): Boolean {
-        return dbPath.toFile().exists()
+        return dataPath.toFile().exists()
     }
 
     fun initDb(tcpPort: Int) {
-        if (dbExist()) throw PgdataAlreadyExists(db)
+        if (dbExist()) throw PgdataAlreadyExists(dataPathStr)
         val pwFile = pwFile
         val exitValue: Int
         exitValue = try {
             exec(
                 getPgBin("initdb"), "--no-locale", "-E", "UTF8", "-U", DsPostgreSqlProvider.USERNAME
-                , "-A", "md5", "-D", db, "--pwfile=" + pwFile.absolutePath
+                , "-A", "md5", "-D", dataPathStr, "--pwfile=" + pwFile.absolutePath
             )
         } finally {
             FileUtils.deleteQuietly(pwFile)
         }
         if (exitValue != 0) throw RuntimeException("Could not initialize database, initdb returned $exitValue")
-        pgSqlConfigFix.fixConfig(dbPath, tcpPort)
+        pgSqlConfigFix.fixConfig(dataPath, tcpPort)
     }
 
     private val pwFile: File

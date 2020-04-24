@@ -21,3 +21,11 @@ object PgRestore {
         PgSqlStarter.def.pgSqlCtl.pg_restore(DsPostgreSqlProvider.NAME, file.absolutePath)
     }
 }
+
+object PgRemoveDataFolder {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        PgSqlStarter.def.pgSqlCtl.stopFast()
+        File(PgDefaults.dataFolder).deleteRecursively()
+    }
+}

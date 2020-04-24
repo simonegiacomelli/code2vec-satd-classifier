@@ -20,12 +20,12 @@ class PersistenceTest {
     }
 
     @AfterTest
-    fun afterTest(){
+    fun afterTest() {
 
     }
 
     private fun setupTestDb() {
-        val p = Persistence(newTempFolder(), h2_options = ";DB_CLOSE_DELAY=-1;")
+        val p = Persistence(DbH2(newTempFolder(), h2_options = ";DB_CLOSE_DELAY=-1;"))
         p.setupDatabase()
     }
 

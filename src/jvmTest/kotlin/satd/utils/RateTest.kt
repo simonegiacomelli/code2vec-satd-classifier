@@ -8,7 +8,7 @@ internal class RateTest {
     @Test
     fun lowRate() {
         val clock = FakeClock()
-        val target = Rate(10, clock::get)
+        val target = Rate(10, time = clock::get)
 
         target.spin()
         target.spin()
@@ -18,7 +18,7 @@ internal class RateTest {
     @Test
     fun twoSlots() {
         val clock = FakeClock()
-        val target = Rate(10, clock::get)
+        val target = Rate(10, time = clock::get)
 
 
         target.spin()
@@ -35,7 +35,7 @@ internal class RateTest {
     @Test
     fun testCircularBuffer() {
         val clock = FakeClock()
-        val target = Rate(10, clock::get)
+        val target = Rate(10, time = clock::get)
 
 
         (1..40).forEach {
@@ -50,7 +50,7 @@ internal class RateTest {
     @Test
     fun noSpin() {
         val clock = FakeClock()
-        val target = Rate(1, clock::get)
+        val target = Rate(1, time = clock::get)
 
         target.spin()
         clock.time += 1001

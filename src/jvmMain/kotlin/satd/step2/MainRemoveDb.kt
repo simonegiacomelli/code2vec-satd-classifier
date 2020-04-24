@@ -8,6 +8,6 @@ fun main() {
     loglnStart("removeDb")
     logln("removing ${Folders.database_db1.toAbsolutePath()}")
     if (!Folders.database_db1.toFile().deleteRecursively())
-        throw IllegalStateException("Errore removing the database ${Folders.database_db1}")
+        throw Exception("Errore removing the database ${Folders.database_db1}")
     logln("Done")
 }
