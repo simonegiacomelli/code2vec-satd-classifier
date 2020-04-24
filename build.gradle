@@ -161,17 +161,17 @@ task MainTest1(type: JavaExec, dependsOn: [jvmJar]) {
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
 task pgsqlBackup(type: JavaExec, dependsOn: [jvmJar]) {
-    group = "database"
+    group = "application"
     main = "pgsql.PgBackup"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
 task pgsqlRestore(type: JavaExec, dependsOn: [jvmJar]) {
-    group = "database"
+    group = "application"
     main = "pgsql.PgRestore"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
 task pgsqlRemoveDataFolder(type: JavaExec, dependsOn: [jvmJar]) {
-    group = "database"
+    group = "application"
     main = "pgsql.PgRemoveDataFolder"
     standardInput = System.in
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
