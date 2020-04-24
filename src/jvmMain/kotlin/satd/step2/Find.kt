@@ -14,7 +14,6 @@ import org.eclipse.jgit.treewalk.EmptyTreeIterator
 import org.eclipse.jgit.treewalk.filter.PathSuffixFilter
 import satd.utils.Repo
 import satd.utils.logln
-import satd.utils.stats
 
 
 /**
@@ -42,6 +41,7 @@ class Find(val repo: Repo) {
     fun trackSatd() {
         try {
             logln("${repo.urlstr} SATD Find.trackSatd()") // ${git.stats()}
+            failIfToReject(git)
             trackSatdInternal()
             stat.done()
             blobSatd.repoIsCompleted()
