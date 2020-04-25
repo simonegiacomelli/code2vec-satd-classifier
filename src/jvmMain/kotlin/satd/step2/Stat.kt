@@ -34,7 +34,7 @@ class Stat(val repo: Repo, commitCount: Int) {
             logln(
                 "${p(age(), 10)} commit#:$commitn " +
                         "c/sec:${p(commitRate, 5)} src-done#:${p(sourceRate.spinCount, 6)} " +
-                        "satd#:${p(satdRate.spinCount, 2)} " +
+                        "satd#:${p(satdRate.spinCount, 3)} " +
                         //"satd/sec:$satdRate " +
                         "src/sec:${p(sourceRate, 5)} ${repo.urlstr} "
             )
