@@ -132,13 +132,13 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
         val descr = when {
             url == dup.url -> {
                 assert2(commit != dup.commit)
-                "same repository. commit $commit"
+                "same repository"
             }
             dup.commit == commit -> "(${dup.url} SAME commit id!"
             else -> "(${dup.url} commit ${dup.commit})"
         }
 
-        logln("${stat.repo.urlstr} DUPLICATE satd already in $descr - skipping code hash $codeHashStr")
+        logln("${stat.repo.urlstr} DUPLICATE satd already in $descr - skipping (commit $commit code hash $codeHashStr)")
         return false
     }
 
