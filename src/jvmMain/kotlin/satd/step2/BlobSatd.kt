@@ -16,6 +16,7 @@ import kotlin.reflect.KFunction1
 class BlobSatd(val repo: Repository, val stat: Stat) {
     val repoName = repo.workTree.name
     val cache = Cache(Folders.cache.resolve("repos/${stat.repo.userName}/${stat.repo.repoName}.txt").toFile())
+    val url = stat.repo.urlstr
 
     private fun processedSatdsYesCache(objectId: ObjectId): SourceInfo {
         stat.sourceRate.spin()
@@ -89,12 +90,10 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
                 val oldClean = "${req.oldClean}"
                 val newClean = "${req.newClean}"
                 val codeHashStr = "$oldClean\n------\n$newClean".sha1()
-                if (DbSatds.existsCodeHash(codeHashStr))
-                    logln("${stat.repo.urlstr} DUPLICATE satd skipping; it already has code hash $codeHashStr")
-                else
+                if (noDuplicates(codeHashStr, newCommitId))
                     DbSatds.insert {
                         it[this.repo] = repoName
-                        it[this.url] = stat.repo.urlstr
+                        it[this.url] = this@BlobSatd.url
                         it[this.commit] = "${newCommitId.name}"
                         it[this.old] = "${old.method}"
                         it[this.new] = "${new.method}"
@@ -126,6 +125,23 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
 
 
     }
+
+    private fun noDuplicates(codeHashStr: String, revCommit: RevCommit): Boolean {
+        val dup = DbSatds.duplicateCodeHash(codeHashStr) ?: return true
+        val commit = revCommit.id.name.orEmpty()
+        val descr = when {
+            url == dup.url -> {
+                assert2(commit != dup.commit)
+                "same repository. commit $commit"
+            }
+            dup.commit == commit -> "(${dup.url} SAME commit id!"
+            else -> "(${dup.url} commit ${dup.commit})"
+        }
+
+        logln("${stat.repo.urlstr} DUPLICATE satd already in $descr - skipping code hash $codeHashStr")
+        return false
+    }
+
 
     private fun String.sha1(): String {
         val bytes = MessageDigest.getInstance("SHA-1")

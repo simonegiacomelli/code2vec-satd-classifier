@@ -132,8 +132,13 @@ object DbSatds : LongIdTable() {
     val inner_methods = integer("inner_methods").nullable()
     val valid = integer("valid").nullable()
 
-    fun existsCodeHash(code_hash_str: String) = DbSatds.select { code_hash eq code_hash_str }.count() > 0
+    fun duplicateCodeHash(code_hash_str: String) =
+        slice(url, commit)
+            .select { code_hash eq code_hash_str }
+            .map { DuplicateSatd(it[url], it[commit]) }.firstOrNull()
 }
+
+data class DuplicateSatd(val url: String, val commit: String)
 
 object DbRepos : LongIdTable() {
     val url = varchar("url", 200).index(isUnique = true)

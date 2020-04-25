@@ -52,7 +52,7 @@ class PersistenceTest {
 
     private fun ignoreDuplcatesInvoke(code_hash: String, commitId: String = "commitid") {
         transaction {
-            if (!DbSatds.existsCodeHash(code_hash))
+            if (DbSatds.duplicateCodeHash(code_hash) == null)
                 DbSatds.insert {
                     it[this.repo] = "repo2"
                     it[this.commit] = commitId
