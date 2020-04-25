@@ -34,7 +34,8 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
         return SourceInfo(objectId, satdMethods.map { it.name to it }.toMap().toMutableMap())
     }
 
-    val processedSatds = determineProcessStrategy()
+    fun processedSatds(objectId: ObjectId): SourceInfo = processedSatdsPriv(objectId)
+    private val processedSatdsPriv = determineProcessStrategy()
 
     fun repoIsCompleted() {
         cache.store()
