@@ -45,7 +45,7 @@ class PersistenceTest {
     @Test
     fun `reasonable error should NOT be ignored`() {
         ignoreDuplcatesInvoke("hash1", "commit1")
-        assertFails("the value should be too big to be accepted") {
+        assertFails("the value is too big to fit in the database field and should not be accepted") {
             ignoreDuplcatesInvoke("hash2", "x".repeat(20000))
         }
     }
