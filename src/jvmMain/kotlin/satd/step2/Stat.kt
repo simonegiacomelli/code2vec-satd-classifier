@@ -32,7 +32,7 @@ class Stat(val repo: Repo, commitCount: Int) {
         AntiSpin(10000) {
             val commitn = p("${commitRate.spinCount}/$commitCount", 13)
             logln(
-                "${p(age(), 8)} commit#:$commitn " +
+                "${p(age(), 10)} commit#:$commitn " +
                         "c/sec:${p(commitRate, 5)} src-done#:${p(sourceRate.spinCount, 6)} " +
                         "satd#:${p(satdRate.spinCount, 2)} " +
                         //"satd/sec:$satdRate " +
