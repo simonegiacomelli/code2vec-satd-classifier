@@ -48,7 +48,6 @@ class Find(val repo: Repo) {
             DbRepos.done(repo.urlstr)
         } catch (ex: Throwable) {
             DbRepos.failed(repo.urlstr, ex, "Find.trackSatd()")
-            Exceptions(ex, git.repository.workTree.name).handle()
         } finally {
             try {
                 git.close()
