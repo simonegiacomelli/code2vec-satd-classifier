@@ -113,7 +113,6 @@ class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
         try {
             if (integrityMarker.exists()) {
                 newGit().use { RepoStatsFile.append(urlstr, it.stats()) }
-                repoRate.spin()
             }
         } catch (ex: Exception) {
             logln("exception $urls ${ex.javaClass.name} ${ex.message}")

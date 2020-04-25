@@ -20,7 +20,7 @@ fun main() {
             .also { repoRate.totRepo = it.size }
             .stream()
             .parallel()
-            .map { Repo(it).stat(); }
+            .map { Repo(it).stat().also { repoRate.spin() } }
             .toList()
     }.get()
     repoRate.logStat()
