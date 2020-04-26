@@ -1,10 +1,11 @@
 package satd.step2
 
+import org.jetbrains.exposed.sql.or
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.slf4j.LoggerFactory
-import pgsql.ctl.PgSqlCtl
 import satd.utils.*
 
 fun main() {
@@ -19,9 +20,35 @@ fun main() {
     persistence.setupDatabase()
     val rate = Rate(5000)
     val progress = AntiSpin(2000)
-    fun callbackp() {
-        logln("Row done:${rate.spinCount} rows/sec:$rate")
+    fun log(msg: String) {
+        logln("$msg Row done:${rate.spinCount} rows/sec:$rate")
     }
+
+    //TODO load commits and issues count from RepoList file behind getGithubUrls()
+
+    transaction {
+        DbRepos.apply {
+            slice(id, url).select { commits.less(0).or(issues.less(0)) }.orderBy(id)
+                .forEach { row ->
+                    try {
+                        update({ DbRepos.id eq row[DbRepos.id] }) {
+                            it[commits] = -2
+                            it[issues] = -2
+                        }
+                        rate.spin()
+
+                        progress.spin {
+                            log("DbRepos")
+                        }
+                    } catch (ex: Exception) {
+                        println("fault id ${row[DbSatds.id]}")
+                        throw ex
+                    }
+                }
+        }
+    }
+    logln("DbRepos done")
+    rate.reset()
     transaction {
         DbSatds.apply {
             selectAll().orderBy(id)
@@ -35,8 +62,9 @@ fun main() {
                             it[valid] = if (old.valid && new.valid) 1 else 0
                         }
                         rate.spin()
-
-                        progress.spin(::callbackp)
+                        progress.spin {
+                            log("DbSatds")
+                        }
                     } catch (ex: Exception) {
                         println("fault id ${row[id]}")
                         throw ex
