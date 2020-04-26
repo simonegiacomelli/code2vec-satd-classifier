@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
             .getGithubUrls()
             .also { repoRate.totRepo = it.size }
             .subtract(DbRepos.allDone().also { repoRate.alreadyDone(it.size) })
-            .take(config.batch_size.toIntOrNull() ?: 1000)
+            .take(config.batch_size.orEmpty().toIntOrNull() ?: 1000)
             .stream()
             .parallel()
             .map { Repo(it).clone().reportFailed() }

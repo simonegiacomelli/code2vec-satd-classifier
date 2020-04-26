@@ -29,15 +29,16 @@ class Config {
         }
     }
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String? {
         if (!initialized.isInitialized())
             throw UninitializedPropertyAccessException("Config is not loaded.")
-        return prop.getProperty(property.name).orEmpty()
+        return prop.getProperty(property.name)
     }
 
     val repos_path by this
     val thread_count by this
     val batch_size by this
+    val dataset_export_path by this
 }
 
 val config = Config()

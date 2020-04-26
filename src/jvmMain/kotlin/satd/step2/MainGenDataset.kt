@@ -7,8 +7,10 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
+import satd.utils.config
 import satd.utils.logln
 import satd.utils.loglnStart
+import java.io.File
 
 enum class types {
     training, validation, test
@@ -72,6 +74,9 @@ object MainGenDataset3 {
 }
 
 private fun generate(where: Op<Boolean>) {
+    config.load()
+    val workFolder = File( config.dataset_export_path ?:Folders.dataset.resolve("java-small").toString())
+
     class Dataset(val count: Int, val train: Double, val test: Double) {
 
         val trainCount = (count * train).toInt()
@@ -100,9 +105,6 @@ private fun generate(where: Op<Boolean>) {
     }
 
     class Main {
-
-
-        val workFolder = Folders.dataset.resolve("java-small").toFile()
 
         fun go() {
             loglnStart("GenDataset")
