@@ -92,6 +92,11 @@ task showdatabase(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.PersistenceKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+task MainStartSqlConsole(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.PersistenceKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
 task oom(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.utils.OOMKt"
