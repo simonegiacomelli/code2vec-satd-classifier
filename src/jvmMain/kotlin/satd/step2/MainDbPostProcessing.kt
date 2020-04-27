@@ -1,10 +1,7 @@
 package satd.step2
 
-import org.jetbrains.exposed.sql.or
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import org.slf4j.LoggerFactory
 import satd.utils.*
 
@@ -36,7 +33,7 @@ class DbPostProcessing {
         rate.reset()
         logln("Starting $title")
         act()
-        logRate("$title",postMsg = " COMPLETE")
+        logRate(title, postMsg = " COMPLETE")
         rate.reset()
     }
 
@@ -48,23 +45,40 @@ class DbPostProcessing {
     }
 
     private fun importGithubUrlList() {
-        transaction {
-            DbRepos.apply {
-                slice(id, url).select { commits.less(0).or(issues.less(0)) }.orderBy(id)
-                    .forEach { row ->
-                        try {
-                            update({ DbRepos.id eq row[DbRepos.id] }) {
-                                it[commits] = -2
-                                it[issues] = -2
+        RepoList
+            .getGithubUrlsExtended()
+            .chunked(1000)
+            .forEach { chunk ->
+                chunk.forEach { row ->
+                    val urlStr = row[1]
+                    val issueCount = row[2].toInt()
+                    val commitCount = row[3].toIntOrNull() ?: -3
+
+                    transaction {
+                        DbRepos.apply {
+                            try {
+                                if (select { (url eq urlStr) }.count() == 0)
+                                    insert {
+                                        it[url] = urlStr
+                                        it[done] = 0
+                                        it[issues] = issueCount
+                                        it[commits] = commitCount
+                                    }
+                                else
+                                    update({ url eq urlStr }) {
+                                        it[done] = 1
+                                        it[issues] = issueCount
+                                        it[commits] = commitCount
+                                    }
+                                spin()
+                            } catch (ex: Exception) {
+                                println("fault id $urlStr")
+                                throw ex
                             }
-                            spin()
-                        } catch (ex: Exception) {
-                            println("fault id ${row[DbSatds.id]}")
-                            throw ex
                         }
                     }
+                }
             }
-        }
     }
 
     private fun updateDbSatdsFields() {

@@ -51,6 +51,20 @@ class RepoList {
                 }
         }
 
+        fun getGithubUrlsExtended(): List<Array<String>> {
+            return repoTxtResource("satd/urls/github_mining/commit100_or_issue100/github-url-list.txt")
+                .openStream().use { inStream ->
+                    inStream.bufferedReader()
+                        .lines()
+                        .filter { !it.startsWith("#") }
+                        .filter { it.isNotEmpty() }
+                        .map { it.split("\t") }
+                        .sorted { t, t2 -> t[0].compareTo(t2[0]) }
+                        .map { arrayOf(it[0], "https://github.com/${it[1]}", it[2], it[3]) }
+                        .toList()
+                }
+        }
+
 
         fun get() = csv("satd/urls/android-50-thousand.csv")
         fun getUrls() = get().sortedBy { it.commits }.map { it.url }
