@@ -66,7 +66,6 @@ class DbPostProcessing {
                                     }
                                 else
                                     update({ url eq urlStr }) {
-                                        it[done] = 1
                                         it[issues] = issueCount
                                         it[commits] = commitCount
                                     }
