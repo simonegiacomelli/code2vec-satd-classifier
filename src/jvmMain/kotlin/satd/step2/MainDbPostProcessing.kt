@@ -1,8 +1,11 @@
 package satd.step2
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import org.slf4j.LoggerFactory
 import satd.utils.*
 
@@ -60,7 +63,7 @@ class DbPostProcessing {
                         DbRepos.apply {
                             fun UpdateBuilder<Number>.common() {
                                 val it = this
-                                it[createdAtStr] = createdAt
+                                it[created_at] = createdAt
                                 it[issues] = issueCount
                                 it[commits] = commitCount
                             }

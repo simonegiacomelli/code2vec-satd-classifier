@@ -8,14 +8,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.ds.PGSimpleDataSource
 import pgsql.DsPostgreSqlProvider
 import pgsql.PgSqlStarter
-import satd.utils.Folders
 import satd.utils.RepoCsvRow
-import satd.utils.hostname
 import satd.utils.logln
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
 import javax.sql.DataSource
@@ -149,7 +146,7 @@ object DbRepos : LongIdTable() {
     val commits = integer("commits").default(-1)
     val sizeMB = integer("sizeMB").default(-1)
     val issues = integer("issues").default(-1)
-    val createdAtStr = varchar("createdAtStr", 20).default("")
+    val created_at = varchar("created_at", 20).default("")
 
     fun allDone(): List<String> = transaction { slice(url).select { done eq 1 }.map { it[url] } }
 
