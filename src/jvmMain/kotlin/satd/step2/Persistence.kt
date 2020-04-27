@@ -149,6 +149,7 @@ object DbRepos : LongIdTable() {
     val commits = integer("commits").default(-1)
     val sizeMB = integer("sizeMB").default(-1)
     val issues = integer("issues").default(-1)
+    val createdAtStr = varchar("createdAtStr", 20).default("")
 
     fun allDone(): List<String> = transaction { slice(url).select { done eq 1 }.map { it[url] } }
 

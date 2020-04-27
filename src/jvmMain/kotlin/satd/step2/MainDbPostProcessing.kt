@@ -1,6 +1,7 @@
 package satd.step2
 
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 import satd.utils.*
@@ -50,24 +51,29 @@ class DbPostProcessing {
             .chunked(1000)
             .forEach { chunk ->
                 chunk.forEach { row ->
+                    val createdAt = row[0]
                     val urlStr = row[1]
                     val issueCount = row[2].toInt()
                     val commitCount = row[3].toIntOrNull() ?: -3
 
                     transaction {
                         DbRepos.apply {
+                            fun UpdateBuilder<Number>.common() {
+                                val it = this
+                                it[createdAtStr] = createdAt
+                                it[issues] = issueCount
+                                it[commits] = commitCount
+                            }
                             try {
                                 if (select { (url eq urlStr) }.count() == 0)
-                                    insert {
+                                    insert { it ->
                                         it[url] = urlStr
                                         it[done] = 0
-                                        it[issues] = issueCount
-                                        it[commits] = commitCount
+                                        it.common()
                                     }
                                 else
-                                    update({ url eq urlStr }) {
-                                        it[issues] = issueCount
-                                        it[commits] = commitCount
+                                    update({ url eq urlStr }) { it ->
+                                        it.common()
                                     }
                                 spin()
                             } catch (ex: Exception) {
@@ -109,3 +115,4 @@ class DbPostProcessing {
     }
 
 }
+
