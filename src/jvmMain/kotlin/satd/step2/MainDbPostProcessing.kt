@@ -16,7 +16,7 @@ class DbPostProcessing {
     val log = LoggerFactory.getLogger("MainDbPostProcessing")
     val rate = Rate(5000)
     val progress = AntiSpin(2000)
-
+    val current = StringBuilder()
     fun go() {
         loglnStart("MainDbPostProcessing")
 
@@ -31,10 +31,20 @@ class DbPostProcessing {
     }
 
     private fun task(title: String, act: () -> Unit) {
-        logln("Starting $title")
+        current.clear()
+        current.append(title)
         rate.reset()
+        logln("Starting $title")
         act()
-        log("{$title} completed")
+        logRate("$title",postMsg = " COMPLETE")
+        rate.reset()
+    }
+
+    private fun spin() {
+        rate.spin()
+        progress.spin {
+            logRate(current.toString())
+        }
     }
 
     private fun importGithubUrlList() {
@@ -47,11 +57,7 @@ class DbPostProcessing {
                                 it[commits] = -2
                                 it[issues] = -2
                             }
-                            rate.spin()
-
-                            progress.spin {
-                                log("DbRepos")
-                            }
+                            spin()
                         } catch (ex: Exception) {
                             println("fault id ${row[DbSatds.id]}")
                             throw ex
@@ -74,10 +80,7 @@ class DbPostProcessing {
                                 it[new_clean_token_count] = new.tokenCount
                                 it[valid] = if (old.valid && new.valid) 1 else 0
                             }
-                            rate.spin()
-                            progress.spin {
-                                log("DbSatds")
-                            }
+                            spin()
                         } catch (ex: Exception) {
                             println("fault id ${row[id]}")
                             throw ex
@@ -88,8 +91,8 @@ class DbPostProcessing {
         }
     }
 
-    private fun log(msg: String) {
-        logln("$msg Row done:${rate.spinCount} rows/sec:$rate")
+    private fun logRate(msg: String, postMsg: String = "") {
+        logln("$msg Row done:${rate.spinCount} rows/sec:$rate$postMsg")
     }
 
 }
