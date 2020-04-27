@@ -72,7 +72,7 @@ class DbPostProcessing {
                                     }
                                 spin()
                             } catch (ex: Exception) {
-                                println("fault id $urlStr")
+                                logln("fault id $urlStr")
                                 throw ex
                             }
                         }
@@ -96,7 +96,7 @@ class DbPostProcessing {
                             }
                             spin()
                         } catch (ex: Exception) {
-                            println("fault id ${row[id]}")
+                            logln("fault id ${row[id]}")
                             throw ex
                         }
                     }
