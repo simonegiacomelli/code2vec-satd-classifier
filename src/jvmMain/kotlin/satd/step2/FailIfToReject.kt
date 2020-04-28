@@ -23,7 +23,7 @@ fun failIfToReject(git: Git) {
 private fun containsAll(git: Git, bad: Set<String>): Boolean {
     git.log().all().call().toList().take(10).forEach { child ->
         child!!.apply {
-            if (containsAllCommit(git.repository, this, setOf("Android.mk", "CleanSpec.mk")))
+            if (containsAllCommit(git.repository, this, bad))
                 return true
         }
 
