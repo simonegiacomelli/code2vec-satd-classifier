@@ -4,8 +4,8 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step2.assert2
 import satd.step2.persistence
+import satd.step2.toSequence
 import java.io.File
-import java.sql.ResultSet
 
 
 fun main() {
@@ -48,8 +48,4 @@ fun main() {
     }
 }
 
-private fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
-    while (next()) {
-        yield((1..metaData.columnCount).map { getObject(it) }.toTypedArray())
-    }
-}
+

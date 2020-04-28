@@ -4,6 +4,7 @@ import org.h2.jdbcx.JdbcDataSource
 import org.h2.tools.Server
 import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.ds.PGSimpleDataSource
 import pgsql.DsPostgreSqlProvider
@@ -15,6 +16,7 @@ import java.io.StringWriter
 import java.nio.file.Path
 import java.sql.Connection
 import java.sql.DriverManager
+import java.sql.ResultSet
 import javax.sql.DataSource
 
 interface IDb {
@@ -52,7 +54,9 @@ class DbPgsql(
     , val user: String = DsPostgreSqlProvider.USERNAME
     , val pass: String = DsPostgreSqlProvider.PASSWORD
 ) : IDb {
-
+    init {
+        Class.forName("org.postgresql.Driver")
+    }
     override val url = "jdbc:postgresql://$hostname:$port/$databaseName"
     val urlMaster = "jdbc:postgresql://$hostname:$port/postgres"
 
@@ -70,7 +74,6 @@ class DbPgsql(
     }
 
     override fun startDatabase() {
-        Class.forName("org.postgresql.Driver")
         PgSqlStarter.def.start()
         DsPostgreSqlProvider().init(connection(urlMaster))
     }
@@ -217,3 +220,9 @@ object DbRepos : LongIdTable() {
 //}
 
 
+fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
+    while (next()) {
+        yield((1..metaData.columnCount).map { getObject(it) }.toTypedArray())
+    }
+}
+fun Connection.query(sql: String) = prepareStatement(sql).executeQuery().toSequence()
