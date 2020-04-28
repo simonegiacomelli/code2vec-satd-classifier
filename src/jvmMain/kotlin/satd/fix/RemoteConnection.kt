@@ -4,7 +4,7 @@ import satd.step2.DbPgsql
 import satd.step2.query
 
 fun main() {
-    val p = DbPgsql(hostname = "foo.inf.usi.ch")
+    val p = DbPgsql(hostname = "10.1.1.120")
     val c = p.connection()
     c.query(
         "select done, count(*) from dbrepos " +
