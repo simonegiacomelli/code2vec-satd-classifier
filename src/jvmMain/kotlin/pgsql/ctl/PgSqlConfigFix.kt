@@ -3,7 +3,6 @@ package pgsql.ctl
 import core.FileUtils
 import org.slf4j.LoggerFactory
 import pgsql.DsPostgreSqlProvider
-import pgsql.ctl.IPgSqlConfigFix
 import java.nio.file.Path
 import java.util.regex.Pattern
 
@@ -29,7 +28,7 @@ class PgSqlConfigFix(
             "(^host\\s+\\w+\\s+\\w+\\s+::1/128\\s+\\w+)"
             , Pattern.MULTILINE
         ).matcher(hbaContent).replaceAll("#$1")
-s
+
         FileUtils.write(
             hbaFile,
             "$hbaContent\n" +
