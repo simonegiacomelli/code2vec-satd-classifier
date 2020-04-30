@@ -72,6 +72,7 @@ class DbPostProcessing {
                                     insert { it ->
                                         it[url] = urlStr
                                         it[done] = 0
+                                        it[success] = 0
                                         it.common()
                                     }
                                 else
