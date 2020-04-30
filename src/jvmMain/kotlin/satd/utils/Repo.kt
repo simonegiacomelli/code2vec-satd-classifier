@@ -19,7 +19,7 @@ class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
 
 
     val textProgressMonitor = TextProgressMonitor(url.toString())
-    val userFolder = File("$reposPath/$userName/")
+    val userFolder = File("$reposPath/$userName")
     val folder = userFolder.resolve(repoName)
     val integrityMarker = userFolder.resolve("$repoName.repo-ok.txt")
     var exception: Exception? = null
@@ -76,7 +76,7 @@ class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
         folder.deleteRecursively()
         integrityMarker.delete()
         //remove empty username folder
-        if (userFolder.list().isEmpty())
+        if (userFolder.exists() && userFolder.list()?.isEmpty() != false)
             userFolder.deleteRecursively()
 
     }
