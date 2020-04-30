@@ -27,6 +27,8 @@ fun main(args: Array<String>) {
             .map { Find(it).scanSatd() }
             .toList()
     }.get()
+
+    repoRate.logStat()
     logln("Done")
 
 }
