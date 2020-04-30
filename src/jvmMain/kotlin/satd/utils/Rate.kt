@@ -16,6 +16,7 @@ class Rate(val windowSecs: Int, val decimals: Int = 1, val time: () -> Long = Sy
     }
 
     fun reset(): Rate {
+        spinCount = 0
         counter.clear()
         counter.push(0)
         trackedSecond = currentSecond()
