@@ -53,13 +53,14 @@ class DbPostProcessing {
             .getGithubUrlsExtended()
             .chunked(1000)
             .forEach { chunk ->
-                chunk.forEach { row ->
-                    val createdAt = row[0]
-                    val urlStr = row[1]
-                    val issueCount = row[2].toInt()
-                    val commitCount = row[3].toIntOrNull() ?: -3
+                transaction {
+                    chunk.forEach { row ->
+                        val createdAt = row[0]
+                        val urlStr = row[1]
+                        val issueCount = row[2].toInt()
+                        val commitCount = row[3].toIntOrNull() ?: -3
 
-                    transaction {
+
                         DbRepos.apply {
                             fun UpdateBuilder<Number>.common() {
                                 val it = this

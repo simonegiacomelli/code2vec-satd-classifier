@@ -3,8 +3,8 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.utils.Folders
 import satd.utils.config
@@ -51,31 +51,41 @@ val where3 by lazy {
                 and valid.eq(1))
     }
 }
+val where4 by lazy {
+    val urls = DbRepos.run { slice(url).select { issues.greater(100) }.map { it[url] } }
+    DbSatds.run {
+        (parent_count.eq(1)
+                and new_clean_len.less(15)
+                and old_clean_len.less(15)
+                and valid.eq(1)
+                //and url.inList(urls)
+                )
+    }
+}
 
 object MainGenDataset1 {
     @JvmStatic
-    fun main(args: Array<String>) {
-        generate(where1)
-    }
+    fun main(args: Array<String>) = generate { where1 }
 }
 
 object MainGenDataset2 {
     @JvmStatic
-    fun main(args: Array<String>) {
-        generate(where2)
-    }
+    fun main(args: Array<String>) = generate { where2 }
 }
 
 object MainGenDataset3 {
     @JvmStatic
-    fun main(args: Array<String>) {
-        generate(where3)
-    }
+    fun main(args: Array<String>) = generate { where3 }
 }
 
-private fun generate(where: Op<Boolean>) {
+object MainGenDataset4 {
+    @JvmStatic
+    fun main(args: Array<String>) = generate { where4 }
+}
+
+private fun generate(where: () -> Op<Boolean>) {
     config.load()
-    val workFolder = File( config.dataset_export_path ?:Folders.dataset.resolve("java-small").toString())
+    val workFolder = File(config.dataset_export_path ?: Folders.dataset.resolve("java-small").toString())
 
     class Dataset(val count: Int, val train: Double, val test: Double) {
 
@@ -132,7 +142,7 @@ private fun generate(where: Op<Boolean>) {
 
         private fun queryOrdered(): Query =
             DbSatds.select {
-                where
+                where()
             }.orderBy(DbSatds.id)
 
         private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
