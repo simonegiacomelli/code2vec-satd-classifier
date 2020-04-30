@@ -1,0 +1,20 @@
+select dbrepos.url,created_at, count(dbsatds.*) from dbrepos left outer join dbsatds on (dbrepos.url = dbsatds.url)
+group by dbrepos.url,created_at
+order by created_at
+
+delete from dbrepos where created_at = '';
+
+update dbrepos set done = 0;
+delete from dbsatds;
+
+
+https://github.com/travis/cosmo	2008-02-27T20:02:42Z	4
+https://github.com/dustin/java-memcached-client	2008-02-29T21:22:38Z	1
+https://github.com/code-later/nostromo	2008-03-02T11:11:52Z	0
+https://github.com/britt/hivedb	2008-03-21T21:27:39Z	0
+https://github.com/myabc/nbgit	2008-03-22T18:13:32Z	1
+https://github.com/andreyvit/yoursway-sadr	2008-04-06T07:18:15Z	15
+https://github.com/dustin/diggwatch	2008-04-06T07:34:20Z	0
+https://github.com/dustin/spyjar	2008-04-06T07:52:44Z	1
+https://github.com/cyberfox/jbidwatcher	2008-04-08T22:26:02Z	5
+https://github.com/xenoterracide/school	2008-04-14T07:10:45Z	0

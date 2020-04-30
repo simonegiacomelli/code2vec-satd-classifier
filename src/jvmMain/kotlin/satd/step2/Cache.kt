@@ -33,6 +33,7 @@ open class Cache(val file: File) {
             file
                 .bufferedReader()
                 .useLines {
+                    //drop header
                     val seq = it.dropWhile { line -> line != "" }.drop(1)
 
                     seq.forEach {
@@ -44,6 +45,11 @@ open class Cache(val file: File) {
     }
 
     fun exists() = file.exists()
+
+    fun knowsNoSatd(): Boolean {
+        load()
+        return exists() && map.isEmpty()
+    }
 
 
 }

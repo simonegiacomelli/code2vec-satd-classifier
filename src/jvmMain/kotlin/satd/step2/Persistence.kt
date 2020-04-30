@@ -57,6 +57,7 @@ class DbPgsql(
     init {
         Class.forName("org.postgresql.Driver")
     }
+
     override val url = "jdbc:postgresql://$hostname:$port/$databaseName"
     val urlMaster = "jdbc:postgresql://$hostname:$port/postgres"
 
@@ -152,8 +153,12 @@ object DbRepos : LongIdTable() {
     val created_at = varchar("created_at", 20).default("")
 
     fun allDone(): List<String> = transaction { slice(url).select { done eq 1 }.map { it[url] } }
+    fun allTodo(): List<String> = transaction { slice(url).select { done eq 0 }.map { it[url] } }
 
-    fun done(urlstr: String) {
+    fun totalCount(): Int = transaction { selectAll().count() }
+    fun doneCount(): Int = transaction { select { done eq 1 }.count() }
+
+    fun done(urlstr: String, exstr: String = "") {
         logln("$urlstr SUCCESS")
         repoRate.spin()
         transaction {
@@ -161,10 +166,14 @@ object DbRepos : LongIdTable() {
                 insert {
                     it[url] = urlstr
                     it[done] = 1
+                    it[success] = 1
+                    it[message] = exstr
                 }
             else
                 update({ url eq urlstr }) {
                     it[done] = 1
+                    it[success] = 1
+                    it[message] = exstr
                 }
         }
     }
@@ -213,6 +222,7 @@ object DbRepos : LongIdTable() {
                 }
         }
     }
+
 }
 
 //class DbSatd(id: EntityID<Long>) : LongEntity(id) {
@@ -225,4 +235,5 @@ fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
         yield((1..metaData.columnCount).map { getObject(it) }.toTypedArray())
     }
 }
+
 fun Connection.query(sql: String) = prepareStatement(sql).executeQuery().toSequence()

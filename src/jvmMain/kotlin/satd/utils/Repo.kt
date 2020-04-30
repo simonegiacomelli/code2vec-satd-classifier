@@ -1,6 +1,7 @@
 package satd.utils
 
 import org.eclipse.jgit.api.Git
+import satd.step2.Cache
 import satd.step2.DbRepos
 import satd.step2.Exceptions
 import satd.step2.repoRate
@@ -18,15 +19,25 @@ class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
 
 
     val textProgressMonitor = TextProgressMonitor(url.toString())
-    val folder = File("$reposPath/$userName/$repoName")
-    val integrityMarker = File("$reposPath/$userName/$repoName.repo-ok.txt")
+    val userFolder = File("$reposPath/$userName/")
+    val folder = userFolder.resolve(repoName)
+    val integrityMarker = userFolder.resolve("$repoName.repo-ok.txt")
     var exception: Exception? = null
-    val failed get() = exception != null
+    val toScan get() = exception == null && !knowsNoSatd
+
+    private var knowsNoSatd = false
     fun newGit() = open(folder)
+    val cache = Cache(Folders.cache.resolve("repos/${userName}/${repoName}.txt").toFile())
 
     fun clone(): Repo {
         try {
-            cloneInternal()
+            knowsNoSatd = cache.knowsNoSatd()
+            if (knowsNoSatd) {
+                logln("$urlstr knowsNoSatd() Marking done and deleting repo")
+                DbRepos.done(urlstr, "cache.knowsNoSatd")
+                delete()
+            } else
+                cloneInternal()
         } catch (ex: Exception) {
             exception = ex
         }
@@ -45,7 +56,7 @@ class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
                 return
             }
             logln("$urlstr INTEGRITY CHECK failed. removing...")
-            folder.deleteRecursively()
+            delete()
             if (folder.exists()) throw IllegalStateException("folder.deleteRecursively() $folder")
 
         }
@@ -59,6 +70,15 @@ class Repo(val urlstr: String, private val reposPath: Path = Folders.repos) {
             .call()
         integrityMarker.writeText("")
         logln("$urlstr CLONING DONE")
+    }
+
+    fun delete() {
+        folder.deleteRecursively()
+        integrityMarker.delete()
+        //remove empty username folder
+        if (userFolder.list().isEmpty())
+            userFolder.deleteRecursively()
+
     }
 
     private fun repoOk(): Boolean {

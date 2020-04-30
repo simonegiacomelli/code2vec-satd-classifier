@@ -15,7 +15,7 @@ import kotlin.reflect.KFunction1
 
 class BlobSatd(val repo: Repository, val stat: Stat) {
     val repoName = repo.workTree.name
-    val cache = Cache(Folders.cache.resolve("repos/${stat.repo.userName}/${stat.repo.repoName}.txt").toFile())
+    val cache = stat.repo.cache
     val url = stat.repo.urlstr
 
     private fun processedSatdsYesCache(objectId: ObjectId): SourceInfo {

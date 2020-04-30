@@ -38,14 +38,19 @@ class Find(val repo: Repo) {
 
     val emptyTreeIterator = EmptyTreeIterator()
 
-    fun trackSatd() {
+    fun scanSatd() {
         try {
             logln("${repo.urlstr} SATD Find.trackSatd()") // ${git.stats()}
             failIfToReject(git)
-            trackSatdInternal()
+            scanSatdInternal()
             stat.done()
             blobSatd.repoIsCompleted()
             DbRepos.done(repo.urlstr)
+            //remove repo if it does not contain satd
+            if (repo.cache.knowsNoSatd()) {
+                logln("${repo.urlstr} NO SATD found. Removing repo")
+                repo.delete()
+            }
         } catch (ex: Throwable) {
             DbRepos.failed(repo.urlstr, ex, "Find.trackSatd()")
         } finally {
@@ -56,7 +61,7 @@ class Find(val repo: Repo) {
         }
     }
 
-    fun trackSatdInternal() {
+    fun scanSatdInternal() {
 
         git.log().all().call().toList().stream().parallel().forEach { child ->
             stat.commitRate.spin()
