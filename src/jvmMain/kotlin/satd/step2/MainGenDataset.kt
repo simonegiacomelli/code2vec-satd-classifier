@@ -3,15 +3,11 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step2.perf.Dataset
-import satd.utils.Folders
-import satd.utils.config
 import satd.utils.logln
 import satd.utils.loglnStart
-import java.io.File
 
 enum class types {
     training, validation, test
@@ -88,7 +84,7 @@ private fun generate(where: () -> Op<Boolean>) {
 
     val workFolder = Dataset().folder
 
-    class Dataset(val count: Int, val train: Double, val test: Double) {
+    class Partitions(val count: Int, val train: Double, val test: Double) {
 
         val trainCount = (count * train).toInt()
         val testCount = (count * test).toInt()
@@ -127,7 +123,7 @@ private fun generate(where: () -> Op<Boolean>) {
             persistence.setupDatabase()
 
             val typeIndexes = mutableMapOf<String, Int>()
-            val ds = Dataset(transaction { queryOrdered().count() }, 0.7, 0.15)
+            val ds = Partitions(transaction { queryOrdered().count() }, 0.7, 0.15)
             ds.print()
             ds.print2()
             transaction {
