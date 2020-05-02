@@ -5,7 +5,7 @@ import kotlin.streams.toList
 
 fun main(args: Array<String>) {
     loglnStart("removeCheckout")
-    config.load()
+
     HeapDumper.enable()
 
     repoRate.startStatAsync()

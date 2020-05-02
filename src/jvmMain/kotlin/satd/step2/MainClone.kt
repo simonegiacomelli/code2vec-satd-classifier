@@ -8,8 +8,6 @@ private val tmpFolder = File("data/tmp/git-stat")
 
 fun main() {
     loglnStart("clone")
-    config.load()
-//    HeapDumper.enable()
 
     val take = RepoList.getGithubUrls().take(30)
 

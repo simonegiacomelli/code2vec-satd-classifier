@@ -5,7 +5,7 @@ import kotlin.streams.toList
 
 fun main(args: Array<String>) {
     loglnStart("main")
-    config.load()
+
     HeapDumper.enable()
     Diagnosis.installALRM()
 

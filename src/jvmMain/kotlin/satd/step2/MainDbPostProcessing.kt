@@ -21,8 +21,6 @@ class DbPostProcessing {
     fun go() {
         loglnStart("MainDbPostProcessing")
 
-        config.load()
-
         persistence.setupDatabase()
 
         task("importGithubUrlList") { importGithubUrlList() }

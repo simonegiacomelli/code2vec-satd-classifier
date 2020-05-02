@@ -4,20 +4,19 @@ import java.io.File
 import java.util.*
 import kotlin.reflect.KProperty
 
-class Config {
-    val prop = Properties()
-    private val initialized = lazy { true }
-    fun load() {
-        loadConfFile("config.properties")
-        loadConfFile("config_$hostname.properties")
-        prop.forEach {
-            logln("configuration properties: ${it.key}=${it.value}")
+class Config(val workingDirectory: String = ".") {
+    val prop by lazy {
+        Properties().also { p ->
+            loadConfFile(p, "config.properties")
+            loadConfFile(p, "config_$hostname.properties")
+            p.forEach {
+                satd.utils.logln("configuration properties: ${it.key}=${it.value}")
+            }
         }
-        initialized.value
     }
 
-    private fun loadConfFile(filename: String) {
-        File(filename).apply {
+    private fun loadConfFile(prop: Properties, filename: String) {
+        File(workingDirectory, filename).apply {
             if (exists())
                 inputStream()
                     .use {
@@ -25,13 +24,11 @@ class Config {
                         prop.load(it)
                     }
             else
-                logln("Config file does not exists: $absolutePath does")
+                logln("Config file does not exists: $absolutePath")
         }
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): String? {
-        if (!initialized.isInitialized())
-            throw UninitializedPropertyAccessException("Config is not loaded.")
         return prop.getProperty(property.name)
     }
 

@@ -5,7 +5,7 @@ import kotlin.streams.toList
 
 fun main() {
     loglnStart("repoStats")
-    config.load()
+
 
     repoRate.startStatAsync()
 

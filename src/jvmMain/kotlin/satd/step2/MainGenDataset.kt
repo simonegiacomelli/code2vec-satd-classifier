@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
+import satd.step2.perf.Dataset
 import satd.utils.Folders
 import satd.utils.config
 import satd.utils.logln
@@ -84,8 +85,8 @@ object MainGenDataset4 {
 }
 
 private fun generate(where: () -> Op<Boolean>) {
-    config.load()
-    val workFolder = File(config.dataset_export_path ?: Folders.dataset.resolve("java-small").toString())
+
+    val workFolder = Dataset().folder
 
     class Dataset(val count: Int, val train: Double, val test: Double) {
 

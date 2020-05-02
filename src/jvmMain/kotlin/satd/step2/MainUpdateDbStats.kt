@@ -6,7 +6,7 @@ import kotlin.streams.toList
 fun main() {
     loglnStart("UpdateDbStats")
     logln("Starting pid: $pid")
-    config.load()
+
 
     persistence.setupDatabase()
 

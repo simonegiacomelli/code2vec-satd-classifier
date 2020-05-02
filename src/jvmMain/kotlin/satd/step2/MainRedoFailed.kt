@@ -8,7 +8,7 @@ import satd.utils.pid
 fun main() {
     loglnStart("redoFailed")
     logln("Starting pid: $pid")
-    config.load()
+
 
     persistence.setupDatabase()
 
