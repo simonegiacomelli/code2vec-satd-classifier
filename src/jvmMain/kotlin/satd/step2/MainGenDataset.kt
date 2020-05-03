@@ -3,6 +3,7 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step2.perf.Dataset
@@ -50,12 +51,13 @@ val where3 by lazy {
 }
 val where4 by lazy {
     val urls = DbRepos.run { slice(url).select { issues.greater(100) }.map { it[url] } }
+    println("repo count ${urls.size}")
     DbSatds.run {
         (parent_count.eq(1)
-                and new_clean_len.less(15)
-                and old_clean_len.less(15)
+                and new_clean_len.less(100)
+                and old_clean_len.less(100)
                 and valid.eq(1)
-                //and url.inList(urls)
+                and url.inList(urls)
                 )
     }
 }

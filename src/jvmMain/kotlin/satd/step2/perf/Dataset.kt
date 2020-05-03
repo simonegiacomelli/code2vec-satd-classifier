@@ -1,5 +1,11 @@
 package satd.step2.perf
 
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
+import satd.step2.DbEvals
+import satd.step2.DbRuns
+import satd.step2.assert2
+import satd.step2.persistence
 import satd.utils.Folders
 import satd.utils.config
 import java.io.File
@@ -15,18 +21,56 @@ class Dataset {
         @JvmStatic
         fun main(args: Array<String>) {
             Dataset().apply {
-                readEvaluation()
+                //evaluationPrint()
+                persistence.setupDatabase()
+                evaluationCopyInDb()
+            }
+        }
+    }
+
+    private fun Boolean.toShort(): Short {
+        return if (this) 1 else 0
+    }
+
+    fun evaluationCopyInDb() {
+        val id: Int = transaction { DbRuns.nextId() }
+        transaction {
+            sequence {
+                val s = evaluation.asIterable().iterator()
+                while (s.hasNext()) {
+                    yield(Pair(s.next(), s.next()))
+                }
+            }.forEach { (old, new) ->
+                assert2(old.first.satdId == new.first.satdId)
+                assert2(old.first.index == (new.first.index - 1))
+                val satdOk = (old.first.type == old.second).toShort()
+                val fixedOk = (new.first.type == new.second).toShort()
+                println("satd_id=${old.first.satdId} satd_ok=$satdOk fixed_ok=$fixedOk")
+                DbEvals.insert {
+                    it[run_id] = id
+                    it[satd_id] = old.first.satdId
+                    it[satd_ok] = satdOk
+                    it[fixed_ok] = fixedOk
+                }
             }
         }
 
-
     }
 
-    private fun readEvaluation() {
-        val evaluation = evaluatedTest
+    fun evaluationPrint() {
+        evaluation.forEach { println(it) }
+        val done = evaluation.size
+        val correct = evaluation.count { it.first.type == it.second }
+        val acc = round(correct.toDouble() / done * 1000) / 10
+        println("correct/done: $correct/$done accuracy: $acc %")
+    }
+
+    val evaluation: List<Pair<Sample, String>> by lazy {
+        evaluatedTest
             .listFiles()
             .orEmpty()
             .filter { it.name.endsWith(".java") }
+            .sorted()
             .map { file ->
                 val lines = file.bufferedReader(bufferSize = 64).lines().skip(1).limit(2).toList().filterNotNull()
                 val map = lines
@@ -34,23 +78,19 @@ class Dataset {
                     .associate { line ->
                         line.split(":").let { Pair(it[0].trim(), it[1].trim()) }
                     }
+                val type = map["Actual"] ?: error("Should contain Actual")
+                val prediction = map["Prediction"] ?: error("Should contain Prediction")
 
-                val p = Prediction(
-                    file.name.split("_")[1].toInt(),
-                    map["Actual"] ?: error("Should contain Actual"),
-                    map["Prediction"] ?: error("Should contain Prediction")
+                val nameParts = file.name.split("_")
+                val p = Sample(
+                    nameParts[1].toLong(),
+                    type,
+                    nameParts[0].toInt()
                 )
-                println(p)
-                p
+                Pair(p, prediction)
             }
-
-        val done = evaluation.size
-        val correct = evaluation.count { it.actual == it.prediction }
-        val acc = round(correct.toDouble() / done * 1000) / 10
-        println("correct/done: $correct/$done accuracy: $acc %")
-
     }
 
 }
 
-data class Prediction(val satdId: Int, val actual: String, val prediction: String)
+data class Sample(val satdId: Long, val type: String, val index: Int)

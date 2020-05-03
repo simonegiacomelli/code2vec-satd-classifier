@@ -2,13 +2,16 @@ package satd.step2
 
 import org.h2.jdbcx.JdbcDataSource
 import org.h2.tools.Server
+import org.jetbrains.exposed.dao.IntIdTable
 import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 import org.postgresql.ds.PGSimpleDataSource
 import pgsql.DsPostgreSqlProvider
 import pgsql.PgSqlStarter
+import satd.step2.DbRepos.default
 import satd.utils.RepoCsvRow
 import satd.utils.logln
 import java.io.PrintWriter
@@ -89,7 +92,7 @@ class Persistence(db: IDb) : IDb by db {
         Database.connect(dataSource())
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.createMissingTablesAndColumns(DbSatds, DbRepos)
+            SchemaUtils.createMissingTablesAndColumns(DbSatds, DbRepos, DbEvals)
         }
     }
 
@@ -228,7 +231,35 @@ object DbRepos : LongIdTable() {
 //class DbSatd(id: EntityID<Long>) : LongEntity(id) {
 //    companion object : LongEntityClass<DbSatd>(DbSatds)
 //}
+object DbRuns : IntIdTable() {
+/*
+    SELECT run_id, count(*) *2 , sum(cast(satd_ok+fixed_ok as decimal)) / (count(*)*2) FROM dbevals
+    group by run_id
 
+    SELECT s.pattern, satd_ok,fixed_ok, count(*) from dbevals  e join dbsatds s on (s.id = e.satd_id)
+    where e.run_id = 1
+    group by s.pattern, satd_ok, fixed_ok
+    order by s.pattern, satd_ok,fixed_ok
+*/
+    val hostname = varchar("hostname", 50).default("")
+    val username = varchar("username", 50).default("")
+    val create_time = datetime("create_time").nullable()
+    fun nextId(): Int = transaction {
+        val ins = insertAndGetId { row ->
+            row[username] = satd.utils.username
+            row[hostname] = satd.utils.hostname
+            row[create_time] = DateTime()
+        }
+        ins.value
+    }
+}
+
+object DbEvals : LongIdTable() {
+    val run_id = integer("run_id").references(DbRuns.id)
+    val satd_id = long("satd_id").references(DbSatds.id)
+    val satd_ok = short("satd_ok")
+    val fixed_ok = short("fixed_ok")
+}
 
 fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
     while (next()) {
