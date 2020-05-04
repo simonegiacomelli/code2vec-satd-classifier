@@ -50,14 +50,14 @@ val where3 by lazy {
     }
 }
 val where4 by lazy {
-    val urls = DbRepos.run { slice(url).select { issues.greater(100) }.map { it[url] } }
-    println("repo count ${urls.size}")
+    //val urls = DbRepos.run { slice(url).select { issues.greater(100) }.map { it[url] } }
+    //println("repo count ${urls.size}")
     DbSatds.run {
         (parent_count.eq(1)
                 and new_clean_len.less(100)
                 and old_clean_len.less(100)
                 and valid.eq(1)
-                and url.inList(urls)
+                //and url.inList(urls)
                 )
     }
 }
@@ -148,7 +148,7 @@ private fun generate(where: () -> Op<Boolean>) {
             val folder = workFolder.resolve(subfolder)
             folder.mkdirs()
             val filename = "${index.toString().padStart(6, '0')}_${it[DbSatds.id].toString()
-                .padStart(6, '0')}_${it[DbSatds.code_hash]}_$type.java"
+                .padStart(6, '0')}_$type.java"
             val content = wrapMethod(methodSource)
             try {
                 val cu = JavaParser().parse(content)!!
