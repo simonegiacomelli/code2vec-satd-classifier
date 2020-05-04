@@ -8,7 +8,6 @@ import satd.utils.Folders
 import satd.utils.config
 import java.io.File
 import kotlin.math.round
-import kotlin.streams.toList
 
 class MainImportPredictions {
     val folder: File =
@@ -76,15 +75,3 @@ class MainImportPredictions {
 
 }
 
-data class Sample(val satdId: Long, val type: String, val index: Int) {
-    fun filename(): String = index.toString().padStart(6, '0') +
-            "_" + satdId.toString().padStart(6, '0') +
-            "_$type.java"
-
-    companion object {
-        fun fromFilename(name: String): Sample {
-            val nameParts = name.substringBeforeLast(".").split("_")
-            return Sample(nameParts[1].toLong(), nameParts[nameParts.size - 1], nameParts[0].toInt())
-        }
-    }
-}

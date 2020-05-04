@@ -1,6 +1,5 @@
 package satd.step2.perf
 
-import satd.step2.Sample
 import satd.step2.assert2
 import java.io.File
 import kotlin.streams.toList
@@ -24,4 +23,21 @@ fun extractPrediction(file: File): Prediction {
 
 data class Prediction(val sample: Sample, val prediction: String, val confidence: Double) {
     val correct = sample.type == prediction
+}
+
+data class Sample(val satdId: Long, val type: String, val index: Int) {
+    fun filename(): String = index.toString().padStart(6, '0') +
+            "_" + satdId.toString().padStart(6, '0') +
+            "_$type.java"
+
+    companion object {
+        fun fromFilename(name: String): Sample {
+            val nameParts = name.substringBeforeLast(".").split("_")
+            return Sample(
+                nameParts[1].toLong(),
+                nameParts[nameParts.size - 1],
+                nameParts[0].toInt()
+            )
+        }
+    }
 }

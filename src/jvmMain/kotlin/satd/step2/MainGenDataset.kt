@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
+import satd.step2.perf.Sample
 import satd.utils.logln
 import satd.utils.loglnStart
 
@@ -146,7 +147,7 @@ private fun generate(where: () -> Op<Boolean>) {
         private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
             val folder = workFolder.resolve(subfolder)
             folder.mkdirs()
-            val filename = Sample(it[DbSatds.id].value,type,index).filename()
+            val filename = Sample(it[DbSatds.id].value, type, index).filename()
 
             val content = wrapMethod(methodSource)
             try {
