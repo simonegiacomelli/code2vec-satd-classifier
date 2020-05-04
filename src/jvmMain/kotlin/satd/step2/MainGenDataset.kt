@@ -9,9 +9,6 @@ import satd.step2.perf.Sample
 import satd.utils.logln
 import satd.utils.loglnStart
 
-enum class DatasetType {
-    TRAINING, VALIDATION, TEST
-}
 
 fun assert2(value: Boolean, msg: String) {
     assert2(value) { msg }
@@ -86,88 +83,80 @@ private fun generate(where: () -> Op<Boolean>) {
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
 
-    class Partitions(val count: Int, val train: Double, val test: Double) {
+    fun queryOrdered(): Query =
+        DbSatds.select {
+            where()
+        }.orderBy(DbSatds.id)
 
-        val trainCount = (count * train).toInt()
-        val testCount = (count * test).toInt()
-        val validationCount = (count - (trainCount + testCount))
+    fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
+        val folder = workFolder.resolve(subfolder)
+        folder.mkdirs()
 
-        val seq = genSeq().shuffled()
+        val filename = Sample(it[DbSatds.id].value, type, index).filename()
+        val content = wrapMethod(methodSource)
+        try {
+            val cu = JavaParser().parse(content)!!
+            if (!cu.result.isPresent) throw Exception("parse did not yield expected result")
 
-        private fun genSeq(): List<DatasetType> {
+            val methods = cu.result.get().types.filterNotNull().flatMap { it.methods }.filterNotNull()
+            assert2(methods.size == 1)
+            val method = methods.first()
+            method.name.identifier = type
 
-            assert2(train + test <= 1.0)
-
-            return List(trainCount) { DatasetType.TRAINING } +
-                    List(validationCount) { DatasetType.VALIDATION } +
-                    List(testCount) { DatasetType.TEST }
-        }
-
-        fun type(index: Int) = seq[index]
-        fun print() {
-            println("Dataset $validationCount + $testCount + $trainCount  = $count (validation + test + train = total)")
-        }
-
-        fun print2() {
-            println("Files ${validationCount * 2} + ${testCount * 2} + ${trainCount * 2} = ${count * 2} (validation + test + train = total)")
-        }
-    }
-
-    class Main {
-
-        fun go() {
-            loglnStart("GenDataset")
-            logln("Using workFolder: $workFolder")
-            workFolder.deleteRecursively()
-            assert2(!workFolder.exists())
-
-            workFolder.mkdirs()
-            persistence.setupDatabase()
-
-            val typeIndexes = mutableMapOf<String, Int>()
-            val ds = Partitions(transaction { queryOrdered().count() }, 0.7, 0.15)
-            ds.print()
-            ds.print2()
-            transaction {
-                queryOrdered().forEachIndexed() { idx, it ->
-                    val type = ds.type(idx).toString()
-                    val index = typeIndexes.getOrDefault(type, 0) + 2
-                    typeIndexes[type] = index
-                    writeSource(it[DbSatds.old_clean], it, "satd", type, index - 1)
-                    writeSource(it[DbSatds.new_clean], it, "fixed", type, index)
-                }
-            }
-        }
-
-        private fun queryOrdered(): Query =
-            DbSatds.select {
-                where()
-            }.orderBy(DbSatds.id)
-
-        private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
-            val folder = workFolder.resolve(subfolder)
-            folder.mkdirs()
-
-            val filename = Sample(it[DbSatds.id].value, type, index).filename()
-            val content = wrapMethod(methodSource)
-            try {
-                val cu = JavaParser().parse(content)!!
-                if (!cu.result.isPresent)
-                    throw Exception("parse did not yield expected result")
-
-                val methods = cu.result.get().types.filterNotNull().flatMap { it.methods }.filterNotNull()
-                assert2(methods.size == 1)
-                val method = methods.first()
-                method.name.identifier = type
-
-                folder.resolve(filename).writeText(wrapMethod(method.toString()))
-            } catch (ex: Exception) {
-                println("$filename\n$content")
-                throw ex
-            }
+            folder.resolve(filename).writeText(wrapMethod(method.toString()))
+        } catch (ex: Exception) {
+            println("$filename\n$content")
+            throw ex
         }
     }
 
-    Main().go()
+
+    loglnStart("GenDataset")
+    logln("Using workFolder: $workFolder")
+    workFolder.deleteRecursively()
+    assert2(!workFolder.exists())
+
+    workFolder.mkdirs()
+    persistence.setupDatabase()
+
+    val typeIndexes = mutableMapOf<String, Int>()
+    val partitions = Partitions(transaction { queryOrdered().count() }, 0.7, 0.15)
+    partitions.print()
+    partitions.print2()
+
+    transaction {
+        queryOrdered().forEachIndexed { idx, it ->
+            val type = partitions.sequence[idx]
+            val index = typeIndexes.getOrDefault(type, 0) + 2
+            typeIndexes[type] = index
+            writeSource(it[DbSatds.old_clean], it, "satd", type, index - 1)
+            writeSource(it[DbSatds.new_clean], it, "fixed", type, index)
+        }
+    }
 }
 
+private class Partitions(val count: Int, val train: Double, val test: Double) {
+
+    init {
+        assert2(train + test <= 1.0)
+    }
+
+    val trainCount = (count * train).toInt()
+    val testCount = (count * test).toInt()
+    val validationCount = (count - (trainCount + testCount))
+
+    val sequence = (repeatString("training", trainCount)
+            + repeatString("validation", validationCount)
+            + repeatString("test", testCount))
+        .shuffled()
+
+    private fun repeatString(str: String, count: Int) = List(count) { str }
+
+    fun print() {
+        println("Dataset $validationCount + $testCount + $trainCount  = $count (validation + test + train = total)")
+    }
+
+    fun print2() {
+        println("Files ${validationCount * 2} + ${testCount * 2} + ${trainCount * 2} = ${count * 2} (validation + test + train = total)")
+    }
+}
