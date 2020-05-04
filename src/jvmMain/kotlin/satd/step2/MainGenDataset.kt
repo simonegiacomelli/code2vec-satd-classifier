@@ -9,7 +9,7 @@ import satd.step2.perf.Sample
 import satd.utils.logln
 import satd.utils.loglnStart
 
-enum class types {
+enum class DatasetType {
     training, validation, test
 }
 
@@ -94,13 +94,13 @@ private fun generate(where: () -> Op<Boolean>) {
 
         val seq = genSeq().shuffled()
 
-        private fun genSeq(): List<types> {
+        private fun genSeq(): List<DatasetType> {
 
             assert2(train + test <= 1.0)
 
-            return List(trainCount) { types.training } +
-                    List(validationCount) { types.validation } +
-                    List(testCount) { types.test }
+            return List(trainCount) { DatasetType.training } +
+                    List(validationCount) { DatasetType.validation } +
+                    List(testCount) { DatasetType.test }
         }
 
         fun type(index: Int) = seq[index]
@@ -147,8 +147,8 @@ private fun generate(where: () -> Op<Boolean>) {
         private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
             val folder = workFolder.resolve(subfolder)
             folder.mkdirs()
-            val filename = Sample(it[DbSatds.id].value, type, index).filename()
 
+            val filename = Sample(it[DbSatds.id].value, type, index).filename()
             val content = wrapMethod(methodSource)
             try {
                 val cu = JavaParser().parse(content)!!
