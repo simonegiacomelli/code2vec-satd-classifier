@@ -276,6 +276,8 @@ object DbEvals : LongIdTable() {
     val satd_id = long("satd_id").references(DbSatds.id)
     val satd_ok = short("satd_ok")
     val fixed_ok = short("fixed_ok")
+    val satd_confidence = double("satd_confidence")
+    val fixed_confidence = double("fixed_confidence")
 }
 
 fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
