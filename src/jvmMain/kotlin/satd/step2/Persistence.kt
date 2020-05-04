@@ -240,6 +240,23 @@ object DbRuns : IntIdTable() {
     where e.run_id = 1
     group by s.pattern, satd_ok, fixed_ok
     order by s.pattern, satd_ok,fixed_ok
+
+
+//exporrt run in csv file
+    COPY (SELECT e.*,
+       r.*,
+       s.*
+FROM dbevals e
+  JOIN dbsatds s ON (s.id = e.satd_id)
+  JOIN dbrepos r ON (r.url = s.url)
+WHERE e.run_id = 1
+ORDER BY s.pattern,
+         satd_ok,
+         fixed_ok
+
+
+) TO '/tmp/satd-classfier-run-1.csv' CSV HEADER;
+
 */
     val hostname = varchar("hostname", 50).default("")
     val username = varchar("username", 50).default("")
