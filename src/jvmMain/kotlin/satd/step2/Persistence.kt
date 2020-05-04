@@ -242,9 +242,12 @@ object DbRuns : IntIdTable() {
     order by s.pattern, satd_ok,fixed_ok
 
 
-//exporrt run in csv file
-    COPY (SELECT e.*,
+//export run in csv file
+//link al commit r.url || '/commit/' || s.commit
+    COPY (
+    SELECT e.*,
        r.*,
+       r.url || '/commit/' || s.commit as commit_url,
        s.*
 FROM dbevals e
   JOIN dbsatds s ON (s.id = e.satd_id)
@@ -253,7 +256,6 @@ WHERE e.run_id = 1
 ORDER BY s.pattern,
          satd_ok,
          fixed_ok
-
 
 ) TO '/tmp/satd-classfier-run-1.csv' CSV HEADER;
 
