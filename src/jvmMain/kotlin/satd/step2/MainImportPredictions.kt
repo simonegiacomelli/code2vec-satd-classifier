@@ -1,18 +1,14 @@
-package satd.step2.perf
+package satd.step2
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.step2.DbEvals
-import satd.step2.DbRuns
-import satd.step2.assert2
-import satd.step2.persistence
 import satd.utils.Folders
 import satd.utils.config
 import java.io.File
 import kotlin.math.round
 import kotlin.streams.toList
 
-class Dataset {
+class MainImportPredictions {
     val folder: File =
         File(config.dataset_export_path ?: Folders.dataset.resolve("java-small").toAbsolutePath().toString())
     private val evaluatedTest: File = File("$folder-evaluated/test")
@@ -20,7 +16,7 @@ class Dataset {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            Dataset().apply {
+            MainImportPredictions().apply {
                 //evaluationPrint()
                 persistence.setupDatabase()
                 evaluationCopyInDb()

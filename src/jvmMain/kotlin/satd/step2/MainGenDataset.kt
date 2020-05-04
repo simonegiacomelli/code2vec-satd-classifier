@@ -3,10 +3,8 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.step2.perf.Dataset
 import satd.utils.logln
 import satd.utils.loglnStart
 
@@ -84,7 +82,7 @@ object MainGenDataset4 {
 
 private fun generate(where: () -> Op<Boolean>) {
 
-    val workFolder = Dataset().folder
+    val workFolder = MainImportPredictions().folder
 
     class Partitions(val count: Int, val train: Double, val test: Double) {
 
