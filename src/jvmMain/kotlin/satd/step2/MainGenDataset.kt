@@ -88,11 +88,17 @@ private fun generate(where: () -> Op<Boolean>) {
             where()
         }.orderBy(DbSatds.id)
 
-    fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
+    fun writeSource(
+        satdId: Long,
+        subfolder: String,
+        type: String,
+        methodSource: String,
+        index: Int
+    ) {
         val folder = workFolder.resolve(subfolder)
         folder.mkdirs()
 
-        val filename = Sample(it[DbSatds.id].value, type, index).filename()
+        val filename = Sample(satdId, type, index).filename()
         val content = wrapMethod(methodSource)
         try {
             val cu = JavaParser().parse(content)!!
@@ -126,11 +132,12 @@ private fun generate(where: () -> Op<Boolean>) {
 
     transaction {
         queryOrdered().forEachIndexed { idx, it ->
-            val type = partitions.sequence[idx]
-            val index = typeIndexes.getOrDefault(type, 0) + 2
-            typeIndexes[type] = index
-            writeSource(it[DbSatds.old_clean], it, "satd", type, index - 1)
-            writeSource(it[DbSatds.new_clean], it, "fixed", type, index)
+            val folder = partitions.sequence[idx]
+            val index = typeIndexes.getOrDefault(folder, 0) + 2
+            typeIndexes[folder] = index
+            val satdId = it[DbSatds.id].value
+            writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
+            writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
         }
     }
 }
