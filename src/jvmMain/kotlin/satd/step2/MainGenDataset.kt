@@ -82,7 +82,8 @@ object MainGenDataset4 {
 
 private fun generate(where: () -> Op<Boolean>) {
 
-    val workFolder = MainImportPredictions().folder
+    val mainImportPredictions = MainImportPredictions()
+    val workFolder = mainImportPredictions.folder
 
     class Partitions(val count: Int, val train: Double, val test: Double) {
 
@@ -145,8 +146,8 @@ private fun generate(where: () -> Op<Boolean>) {
         private fun writeSource(methodSource: String, it: ResultRow, type: String, subfolder: String, index: Int) {
             val folder = workFolder.resolve(subfolder)
             folder.mkdirs()
-            val filename = "${index.toString().padStart(6, '0')}_${it[DbSatds.id].toString()
-                .padStart(6, '0')}_$type.java"
+            val filename = Sample(it[DbSatds.id].value,type,index).filename()
+
             val content = wrapMethod(methodSource)
             try {
                 val cu = JavaParser().parse(content)!!
