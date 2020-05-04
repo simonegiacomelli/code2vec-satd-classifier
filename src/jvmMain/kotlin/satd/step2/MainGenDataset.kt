@@ -3,11 +3,13 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step2.perf.Sample
 import satd.utils.logln
 import satd.utils.loglnStart
+import java.io.File
 
 
 fun assert2(value: Boolean, msg: String) {
@@ -46,14 +48,20 @@ val where3 by lazy {
     }
 }
 val where4 by lazy {
-    //val urls = DbRepos.run { slice(url).select { issues.greater(100) }.map { it[url] } }
-    //println("repo count ${urls.size}")
+    val urls = DbRepos.run {
+        slice(url).select {
+            issues.greater(100).and(created_at.less("2016"))
+                .and(done.eq(1)).and(success.eq(1))
+        }.map { it[url] }
+    }
+
+    println("repo count ${urls.size}")
     DbSatds.run {
         (parent_count.eq(1)
                 and new_clean_len.less(100)
                 and old_clean_len.less(100)
                 and valid.eq(1)
-                //and url.inList(urls)
+                and url.inList(urls)
                 )
     }
 }
@@ -83,10 +91,6 @@ private fun generate(where: () -> Op<Boolean>) {
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
 
-    fun queryOrdered(): Query =
-        DbSatds.select {
-            where()
-        }.orderBy(DbSatds.id)
 
     fun writeSource(
         satdId: Long,
@@ -125,36 +129,51 @@ private fun generate(where: () -> Op<Boolean>) {
     workFolder.mkdirs()
     persistence.setupDatabase()
 
+    fun query(): Query = DbSatds.select { where() }
+
     val typeIndexes = mutableMapOf<String, Int>()
-    val partitions = Partitions(transaction { queryOrdered().count() }, 0.7, 0.15)
+    val partitions = Partitions(transaction { query().count() }, 0.7, 0.15)
     partitions.print()
     partitions.print2()
 
     transaction {
-        queryOrdered().forEachIndexed { idx, it ->
-            val folder = partitions.sequence[idx]
-            val index = typeIndexes.getOrDefault(folder, 0) + 2
-            typeIndexes[folder] = index
-            val satdId = it[DbSatds.id].value
-            writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
-            writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
-        }
+        val info = DatasetInfo.fromPartitions(partitions, where().toString())
+        query()
+            .orderBy(DbSatds.id)
+            .forEachIndexed { idx, it ->
+                val folder = partitions.sequence[idx]
+                val index = typeIndexes.getOrDefault(folder, 0) + 2
+                typeIndexes[folder] = index
+                val satdId = it[DbSatds.id].value
+                info.addSatdId(folder, satdId)
+                writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
+                writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
+            }
+        info.saveTo(workFolder.resolve("info.txt"))
     }
+
 }
 
-private class Partitions(val count: Int, val train: Double, val test: Double) {
+internal class Partitions(val count: Int, val trainPerc: Double, val testPerc: Double) {
 
-    init {
-        assert2(train + test <= 1.0)
+    companion object {
+        const val training = "training"
+        const val validation = "validation"
+        const val test = "test"
     }
 
-    val trainCount = (count * train).toInt()
-    val testCount = (count * test).toInt()
+    init {
+        assert2(trainPerc + testPerc <= 1.0)
+    }
+
+    val trainCount = (count * trainPerc).toInt()
+    val testCount = (count * testPerc).toInt()
     val validationCount = (count - (trainCount + testCount))
 
-    val sequence = (repeatString("training", trainCount)
-            + repeatString("validation", validationCount)
-            + repeatString("test", testCount))
+
+    val sequence = (repeatString(training, trainCount)
+            + repeatString(validation, validationCount)
+            + repeatString(test, testCount))
         .shuffled()
 
     private fun repeatString(str: String, count: Int) = List(count) { str }
@@ -166,4 +185,42 @@ private class Partitions(val count: Int, val train: Double, val test: Double) {
     fun print2() {
         println("Files ${validationCount * 2} + ${testCount * 2} + ${trainCount * 2} = ${count * 2} (validation + test + train = total)")
     }
+}
+
+class DatasetInfo(
+    val trainCount: Int,
+    val testCount: Int,
+    val validationCount: Int,
+    val where: String
+) {
+
+    val satdIds = mutableMapOf<String, MutableList<Long>>()
+    fun addSatdId(folder: String, satdId: Long) {
+        satdIds.getOrPut(folder) { mutableListOf() }.add(satdId)
+    }
+
+    fun saveTo(file: File) {
+        file.writeText(
+            "#DbSatd rows:\n" +
+                    "trainCount=$trainCount\n" +
+                    "testCount=$testCount\n" +
+                    "validationCount=$validationCount\n" +
+                    "where=${where.replace("\n", "\\n")}\n" +
+                    "${ids(Partitions.training)}\n" +
+                    "${ids(Partitions.test)}\n" +
+                    "${ids(Partitions.validation)}\n"
+        )
+    }
+
+    private fun ids(type: String): String {
+        val joinToString = satdIds[type].orEmpty().joinToString(" ")
+        return "$type-SatdIds=$joinToString"
+    }
+
+    companion object {
+        internal fun fromPartitions(p: Partitions, where: String): DatasetInfo =
+            DatasetInfo(p.trainCount, p.testCount, p.validationCount, where)
+    }
+
+
 }
