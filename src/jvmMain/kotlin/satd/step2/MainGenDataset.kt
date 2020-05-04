@@ -10,7 +10,7 @@ import satd.utils.logln
 import satd.utils.loglnStart
 
 enum class DatasetType {
-    training, validation, test
+    TRAINING, VALIDATION, TEST
 }
 
 fun assert2(value: Boolean, msg: String) {
@@ -98,9 +98,9 @@ private fun generate(where: () -> Op<Boolean>) {
 
             assert2(train + test <= 1.0)
 
-            return List(trainCount) { DatasetType.training } +
-                    List(validationCount) { DatasetType.validation } +
-                    List(testCount) { DatasetType.test }
+            return List(trainCount) { DatasetType.TRAINING } +
+                    List(validationCount) { DatasetType.VALIDATION } +
+                    List(testCount) { DatasetType.TEST }
         }
 
         fun type(index: Int) = seq[index]
