@@ -281,7 +281,17 @@ object DbEvals : LongIdTable() {
     val satd_confidence = double("satd_confidence")
     val fixed_confidence = double("fixed_confidence")
 }
+/*
+create table DbDups(
+id serial primary key,
+satd_id int8,
+kind char(1),
+hash char(32))
 
+
+create index dbdups1 on dbdups (hash)
+
+ */
 fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
     while (next()) {
         yield((1..metaData.columnCount).map { getObject(it) }.toTypedArray())
@@ -289,3 +299,5 @@ fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
 }
 
 fun Connection.query(sql: String) = prepareStatement(sql).executeQuery().toSequence()
+
+
