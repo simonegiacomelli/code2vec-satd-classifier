@@ -12,7 +12,8 @@ class Config(private val workingDirectory: String = ".") {
     val thread_count by this
     val batch_size by this
     val dataset_export_path by this
-    val code2vec_path by this
+    val code2vec_path by notNull("please specify code2vec path")
+
 
     val prop by lazy {
         Properties().also { p ->
@@ -37,8 +38,11 @@ class Config(private val workingDirectory: String = ".") {
         }
     }
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): String? {
-        return prop.getProperty(property.name)
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String? = prop.getProperty(property.name)
+
+    inner class notNull(val msg: String) {
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): String =
+            prop.getProperty(property.name) ?: error(msg)
     }
 
 }

@@ -3,6 +3,7 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.mod
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -24,11 +25,20 @@ fun assert2(value: Boolean, lazyMessage: () -> Any = {}) {
 }
 
 val where1 by lazy {
+//    val urls = DbRepos.run {
+//        slice(url).select {
+//            issues.greater(100).and(created_at.less("2016"))
+//                .and(done.eq(1)).and(success.eq(1))
+//        }.map { it[url] }
+//    }
+//    println("repo count ${urls.size}")
     DbSatds.run {
-        (accept.eq(1)
-                and parent_count.eq(1)
-                and new_clean_len.less(50)
-                and old_clean_len.less(50))
+        (parent_count.eq(1)
+                and new_clean_len.less(15)
+                and old_clean_len.less(15)
+                and valid.eq(1)
+//                and url.inList(urls)
+                )
     }
 }
 
@@ -58,8 +68,8 @@ val where4 by lazy {
     println("repo count ${urls.size}")
     DbSatds.run {
         (parent_count.eq(1)
-                and new_clean_len.less(100)
-                and old_clean_len.less(100)
+                and old_clean_token_count.less(2500)
+                and new_clean_token_count.less(2500)
                 and valid.eq(1)
                 and url.inList(urls)
                 )
@@ -86,7 +96,7 @@ object MainGenDataset4 {
     fun main(args: Array<String>) = generate { where4 }
 }
 
-private fun generate(where: () -> Op<Boolean>) {
+fun generate(where: () -> Op<Boolean>) {
 
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
@@ -109,7 +119,7 @@ private fun generate(where: () -> Op<Boolean>) {
             if (!cu.result.isPresent) throw Exception("parse did not yield expected result")
 
             val methods = cu.result.get().types.filterNotNull().flatMap { it.methods }.filterNotNull()
-            assert2(methods.size == 1)
+            assert2(methods.size == 1, "methods.size=${methods.size}")
             val method = methods.first()
             method.name.identifier = type
 
