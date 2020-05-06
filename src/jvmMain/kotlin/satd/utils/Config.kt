@@ -4,7 +4,16 @@ import java.io.File
 import java.util.*
 import kotlin.reflect.KProperty
 
-class Config(val workingDirectory: String = ".") {
+val config = Config()
+
+class Config(private val workingDirectory: String = ".") {
+
+    val repos_path by this
+    val thread_count by this
+    val batch_size by this
+    val dataset_export_path by this
+    val code2vec_path by this
+
     val prop by lazy {
         Properties().also { p ->
             loadConfFile(p, "config.properties")
@@ -16,7 +25,7 @@ class Config(val workingDirectory: String = ".") {
     }
 
     private fun loadConfFile(prop: Properties, filename: String) {
-        File(workingDirectory, filename).apply {
+        File(workingDirectory, filename).canonicalFile.apply {
             if (exists())
                 inputStream()
                     .use {
@@ -32,10 +41,4 @@ class Config(val workingDirectory: String = ".") {
         return prop.getProperty(property.name)
     }
 
-    val repos_path by this
-    val thread_count by this
-    val batch_size by this
-    val dataset_export_path by this
 }
-
-val config = Config()
