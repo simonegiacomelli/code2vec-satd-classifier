@@ -23,7 +23,7 @@ class DbPostProcessing {
 
         persistence.setupDatabase()
 
-        task("importGithubUrlList") { importGithubUrlList() }
+//        task("importGithubUrlList") { importGithubUrlList() }
         task("updateDbSatdsFields") { updateDbSatdsFields() }
 
         logln("Done")
