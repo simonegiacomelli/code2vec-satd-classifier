@@ -12,6 +12,7 @@ import kotlin.math.round
 class MainImportPredictions {
     val folder: File =
         File(config.dataset_export_path ?: Folders.dataset.resolve("java-small").toAbsolutePath().toString())
+    val infoFile = folder.resolve("info.txt")
     private val evaluatedTest: File = File("$folder-evaluated/test")
 
     companion object {
@@ -30,7 +31,7 @@ class MainImportPredictions {
     }
 
     fun evaluationCopyInDb() {
-        val id: Int = transaction { DbRuns.nextId() }
+        val id: Int = transaction { DbRuns.newRun(DatasetInfo.loadFrom(infoFile), result) }
         transaction {
             sequence {
                 val s = evaluation.asIterable().iterator()
@@ -56,12 +57,17 @@ class MainImportPredictions {
 
     }
 
-    fun evaluationPrint() {
-        evaluation.forEach { println(it) }
+    val result by lazy {
         val done = evaluation.size
         val correct = evaluation.count { it.correct }
-        val acc = round(correct.toDouble() / done * 1000) / 10
-        println("correct/done: $correct/$done accuracy: $acc %")
+        val accuracy = round(correct.toDouble() / done * 10000) / 100
+        Result(done, correct, accuracy)
+    }
+
+
+    fun evaluationPrint() {
+        evaluation.forEach { println(it) }
+        result.apply { println("correct/done: $correctCount/$totalCount accuracy: $accuracy %") }
     }
 
     val evaluation: List<Prediction> by lazy {
@@ -75,3 +81,4 @@ class MainImportPredictions {
 
 }
 
+data class Result(val totalCount: Int, val correctCount: Int, val accuracy: Double)

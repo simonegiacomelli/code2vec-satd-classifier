@@ -5,13 +5,11 @@ import org.h2.tools.Server
 import org.jetbrains.exposed.dao.IntIdTable
 import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.postgresql.ds.PGSimpleDataSource
 import pgsql.DsPostgreSqlProvider
 import pgsql.PgSqlStarter
-import satd.step2.DbRepos.default
 import satd.utils.RepoCsvRow
 import satd.utils.logln
 import java.io.PrintWriter
@@ -92,7 +90,7 @@ class Persistence(db: IDb) : IDb by db {
         Database.connect(dataSource())
         transaction {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.createMissingTablesAndColumns(DbSatds, DbRepos, DbEvals)
+            SchemaUtils.createMissingTablesAndColumns(DbSatds, DbRepos, DbRuns, DbEvals)
         }
     }
 
@@ -232,42 +230,63 @@ object DbRepos : LongIdTable() {
 //    companion object : LongEntityClass<DbSatd>(DbSatds)
 //}
 object DbRuns : IntIdTable() {
-/*
-    SELECT run_id, count(*) *2 , sum(cast(satd_ok+fixed_ok as decimal)) / (count(*)*2) FROM dbevals
-    group by run_id
+    /*
+        SELECT run_id, count(*) *2 , sum(cast(satd_ok+fixed_ok as decimal)) / (count(*)*2) FROM dbevals
+        group by run_id
 
-    SELECT s.pattern, satd_ok,fixed_ok, count(*) from dbevals  e join dbsatds s on (s.id = e.satd_id)
-    where e.run_id = 1
-    group by s.pattern, satd_ok, fixed_ok
-    order by s.pattern, satd_ok,fixed_ok
+        SELECT s.pattern, satd_ok,fixed_ok, count(*) from dbevals  e join dbsatds s on (s.id = e.satd_id)
+        where e.run_id = 1
+        group by s.pattern, satd_ok, fixed_ok
+        order by s.pattern, satd_ok,fixed_ok
 
 
-//export run in csv file
-//link al commit r.url || '/commit/' || s.commit
-    COPY (
-    SELECT e.*,
-       r.*,
-       r.url || '/commit/' || s.commit as commit_url,
-       s.*
-FROM dbevals e
-  JOIN dbsatds s ON (s.id = e.satd_id)
-  JOIN dbrepos r ON (r.url = s.url)
-WHERE e.run_id = 1
-ORDER BY s.pattern,
-         satd_ok,
-         fixed_ok
+    //export run in csv file
+    //link al commit r.url || '/commit/' || s.commit
+        COPY (
+        SELECT e.*,
+           r.*,
+           r.url || '/commit/' || s.commit as commit_url,
+           s.*
+    FROM dbevals e
+      JOIN dbsatds s ON (s.id = e.satd_id)
+      JOIN dbrepos r ON (r.url = s.url)
+    WHERE e.run_id = 1
+    ORDER BY s.pattern,
+             satd_ok,
+             fixed_ok
 
-) TO '/tmp/satd-classfier-run-1.csv' CSV HEADER;
+    ) TO '/tmp/satd-classfier-run-1.csv' CSV HEADER;
 
-*/
+    */
+    val create_time = datetime("create_time")
+    val total_count = integer("total_count")
+    val correct_count = integer("correct_count")
+    val accuracy = double("accuracy")
+    val train_count = integer("train_count")
+    val validation_count = integer("validation_count")
+    val test_count = integer("test_count")
     val hostname = varchar("hostname", 50).default("")
     val username = varchar("username", 50).default("")
-    val create_time = datetime("create_time").nullable()
-    fun nextId(): Int = transaction {
+    val satds_where = text("satds_where")
+    val train_ids = text("train_ids")
+    val validation_ids = text("validation_ids")
+    val test_ids = text("test_ids")
+
+    fun newRun(datasetInfo: DatasetInfo, result: Result): Int = transaction {
         val ins = insertAndGetId { row ->
+            row[total_count] = result.totalCount
+            row[correct_count] = result.correctCount
+            row[accuracy] = result.accuracy
+            row[create_time] = DateTime()
+            row[train_count] = datasetInfo.trainCount
+            row[validation_count] = datasetInfo.validationCount
+            row[test_count] = datasetInfo.testCount
+            row[satds_where] = datasetInfo.where
+            row[train_ids] = datasetInfo.satdIdsToString(Partitions.training)
+            row[validation_ids] = datasetInfo.satdIdsToString(Partitions.validation)
+            row[test_ids] = datasetInfo.satdIdsToString(Partitions.test)
             row[username] = satd.utils.username
             row[hostname] = satd.utils.hostname
-            row[create_time] = DateTime()
         }
         ins.value
     }
@@ -281,6 +300,7 @@ object DbEvals : LongIdTable() {
     val satd_confidence = double("satd_confidence")
     val fixed_confidence = double("fixed_confidence")
 }
+
 /*
 create table DbDups(
 id serial primary key,

@@ -3,14 +3,12 @@ package satd.step2
 import com.github.javaparser.JavaParser
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.mod
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
 import satd.step2.perf.Sample
 import satd.utils.logln
 import satd.utils.loglnStart
-import java.io.File
 
 
 fun assert2(value: Boolean, msg: String) {
@@ -100,6 +98,7 @@ fun generate(where: () -> Op<Boolean>) {
 
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
+    val infoFile = mainImportPredictions.infoFile
 
 
     fun writeSource(
@@ -159,7 +158,7 @@ fun generate(where: () -> Op<Boolean>) {
                 writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
                 writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
             }
-        info.saveTo(workFolder.resolve("info.txt"))
+        info.saveTo(infoFile)
     }
 
 }
@@ -170,6 +169,7 @@ internal class Partitions(val count: Int, val trainPerc: Double, val testPerc: D
         const val training = "training"
         const val validation = "validation"
         const val test = "test"
+        val all = listOf(training, validation, test)
     }
 
     init {
@@ -197,40 +197,3 @@ internal class Partitions(val count: Int, val trainPerc: Double, val testPerc: D
     }
 }
 
-class DatasetInfo(
-    val trainCount: Int,
-    val testCount: Int,
-    val validationCount: Int,
-    val where: String
-) {
-
-    val satdIds = mutableMapOf<String, MutableList<Long>>()
-    fun addSatdId(folder: String, satdId: Long) {
-        satdIds.getOrPut(folder) { mutableListOf() }.add(satdId)
-    }
-
-    fun saveTo(file: File) {
-        file.writeText(
-            "#DbSatd rows:\n" +
-                    "trainCount=$trainCount\n" +
-                    "testCount=$testCount\n" +
-                    "validationCount=$validationCount\n" +
-                    "where=${where.replace("\n", "\\n")}\n" +
-                    "${ids(Partitions.training)}\n" +
-                    "${ids(Partitions.test)}\n" +
-                    "${ids(Partitions.validation)}\n"
-        )
-    }
-
-    private fun ids(type: String): String {
-        val joinToString = satdIds[type].orEmpty().joinToString(" ")
-        return "$type-SatdIds=$joinToString"
-    }
-
-    companion object {
-        internal fun fromPartitions(p: Partitions, where: String): DatasetInfo =
-            DatasetInfo(p.trainCount, p.testCount, p.validationCount, where)
-    }
-
-
-}
