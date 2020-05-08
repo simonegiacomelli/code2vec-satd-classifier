@@ -23,19 +23,12 @@ fun assert2(value: Boolean, lazyMessage: () -> Any = {}) {
 }
 
 val where1 by lazy {
-//    val urls = DbRepos.run {
-//        slice(url).select {
-//            issues.greater(100).and(created_at.less("2016"))
-//                .and(done.eq(1)).and(success.eq(1))
-//        }.map { it[url] }
-//    }
-//    println("repo count ${urls.size}")
     DbSatds.run {
         (parent_count.eq(1)
                 and new_clean_len.less(15)
                 and old_clean_len.less(15)
                 and valid.eq(1)
-//                and url.inList(urls)
+                and url.inList(urlsIssuesGreaterThan100())
                 )
     }
 }
@@ -50,28 +43,30 @@ val where2 by lazy {
 val where3 by lazy {
     DbSatds.run {
         (parent_count.eq(1)
-                and old_clean_token_count.less(100)
-                and new_clean_token_count.less(100)
+                and old_clean_token_count.less(900)
+                and new_clean_token_count.less(900)
                 and valid.eq(1))
     }
 }
 val where4 by lazy {
-    val urls = DbRepos.run {
-        slice(url).select {
-            issues.greater(100).and(created_at.less("2016"))
-                .and(done.eq(1)).and(success.eq(1))
-        }.map { it[url] }
-    }
-
-    println("repo count ${urls.size}")
     DbSatds.run {
         (parent_count.eq(1)
                 and old_clean_token_count.less(2500)
                 and new_clean_token_count.less(2500)
                 and valid.eq(1)
-                and url.inList(urls)
+                and url.inList(urlsIssuesGreaterThan100())
                 )
     }
+}
+
+private fun urlsIssuesGreaterThan100(): List<String> {
+    val urls = DbRepos.run {
+        slice(url).select {
+            issues.greater(100).and(done.eq(1)).and(success.eq(1))
+        }.map { it[url] }
+    }
+    println("repo count ${urls.size}")
+    return urls
 }
 
 object MainGenDataset1 {

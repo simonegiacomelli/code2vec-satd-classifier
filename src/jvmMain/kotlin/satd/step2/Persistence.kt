@@ -239,6 +239,31 @@ object DbRuns : IntIdTable() {
         group by s.pattern, satd_ok, fixed_ok
         order by s.pattern, satd_ok,fixed_ok
 
+SELECT run_id,
+       COUNT(*),
+       SUM(satd_ok  ) /(COUNT(*)*1.0) accuracy_on_satd,
+       SUM(fixed_ok  ) /(COUNT(*)*1.0) accuracy_on_fixed,
+       SUM(satd_ok + fixed_ok  ) /(COUNT(*)*2.0) accuracy_overall
+FROM dbevals
+where satd_confidence > 0.95
+GROUP BY run_id
+
+//////////////export csv without source code
+ COPY (
+        SELECT e.*,
+       r.url || '/commit/' || s.commit AS commit_url,
+       r.*,
+s.id,pattern,commit_message,"commit",repo,old_len,new_len,old_clean_len,new_clean_len,clean_diff_ratio,code_hash,accept,parent_count,old_clean_token_count,new_clean_token_count,inner_methods,valid
+FROM dbevals e
+  JOIN dbsatds s ON (s.id = e.satd_id)
+  JOIN dbrepos r ON (r.url = s.url)
+WHERE e.run_id = 1
+ORDER BY s.pattern,
+         satd_ok,
+         fixed_ok
+    ) TO '/tmp/satd-classfier-run-1.csv' CSV HEADER;
+
+
 
     //export run in csv file
     //link al commit r.url || '/commit/' || s.commit
