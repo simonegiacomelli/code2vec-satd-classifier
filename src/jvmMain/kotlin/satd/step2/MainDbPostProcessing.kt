@@ -36,7 +36,6 @@ class DbPostProcessing {
                     }
             }
         }
-        return
 //        task("importGithubUrlList") { importGithubUrlList() }
         task("updateDbSatdsFields") { updateDbSatdsFields() }
 
