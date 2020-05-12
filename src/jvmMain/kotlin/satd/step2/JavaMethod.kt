@@ -4,6 +4,7 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.body.VariableDeclarator
 import com.github.javaparser.ast.expr.VariableDeclarationExpr
+import com.github.javaparser.ast.stmt.SwitchEntry
 import com.github.javaparser.ast.stmt.UnparsableStmt
 
 class JavaMethod(val content: String) {
@@ -43,6 +44,11 @@ class JavaMethod(val content: String) {
 
         if (body.findFirst(UnparsableStmt::class.java).isPresent)
             return false
+
+        //case with multiplel values
+        if (body.findAll(SwitchEntry::class.java).any {
+                it.labels.size > 1
+            }) return false
 
         //enum
         if (body.findAll(VariableDeclarator::class.java).any {

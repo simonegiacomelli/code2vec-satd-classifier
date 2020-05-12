@@ -53,6 +53,11 @@ class JavaMethodTest {
         assertFalse {  JavaMethod(src9).valid }
     }
 
+    @Test
+    fun `case with multiple values should not be valid to be compatible with cod2vec JavaExtractor`() {
+        assertFalse {  JavaMethod(src10).valid }
+    }
+
 
 }
 
@@ -171,6 +176,18 @@ const val src9 = """
                 String[] tokens = StringUtils.split(value);
                 for (int ix = 0; ix < tokens.length; ix++) store.registerToken(id, propname, tokens[ix]);
             }
+        }
+    }
+"""
+
+const val src10 ="""
+    @Override
+    public void fixed() {
+        switch(_skillType) {
+            case TRANSFORM, FISHING:
+                client.sendPacket(new AcquireSkillInfo(_skillType, s));
+            case CLASS:
+                client.sendPacket(new ExAcquireSkillInfo(activeChar, s)); 
         }
     }
 """
