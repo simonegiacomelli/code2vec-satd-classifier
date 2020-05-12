@@ -54,6 +54,7 @@ val where4 by lazy {
                 and old_clean_token_count.less(2500)
                 and new_clean_token_count.less(2500)
                 and valid.eq(1)
+                and accept.eq(1)
                 and url.inList(urlsIssuesGreaterThan100())
                 )
     }
@@ -113,7 +114,7 @@ fun generate(where: () -> Op<Boolean>) {
             if (!cu.result.isPresent) throw Exception("parse did not yield expected result")
 
             val methods = cu.result.get().types.filterNotNull().flatMap { it.methods }.filterNotNull()
-            assert2(methods.size == 1, "methods.size=${methods.size}")
+            assert2(methods.size == 1) { "methods.size=${methods.size} content=[[$content]]" }
             val method = methods.first()
             method.name.identifier = type
 

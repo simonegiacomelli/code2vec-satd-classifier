@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 fun main() {
     val workingDir = File(config.code2vec_path)
-    generate { where3 }
+    generate { where4 }
     workingDir.run {
         val conda = "conda run -n code2vec"
         runCommand("$conda ./preprocess.sh.exec.sh")

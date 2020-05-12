@@ -22,7 +22,21 @@ class DbPostProcessing {
         loglnStart("MainDbPostProcessing")
 
         persistence.setupDatabase()
-
+        task("detectDuplicatesAndUpdateAccept") {
+            transaction {
+                detectDuplicatesAndUpdateAccept
+                    .split(";")
+                    .forEach { sql ->
+                        logln("executing ${sql.trim()}")
+                        connection
+                            .createStatement()
+                            .use {
+                                it.execute(sql)
+                            }
+                    }
+            }
+        }
+        return
 //        task("importGithubUrlList") { importGithubUrlList() }
         task("updateDbSatdsFields") { updateDbSatdsFields() }
 
@@ -119,3 +133,28 @@ class DbPostProcessing {
 
 }
 
+
+val detectDuplicatesAndUpdateAccept = """
+    update DbSatds set ${DbSatds.valid.name} = 1;
+    
+    drop table if exists DbDups;
+    create table DbDups(
+    id serial primary key,
+    satd_id int8,
+    kind char(1),
+    hash char(32));
+
+    insert into dbdups (satd_id,kind,hash)  select id,'s',md5(old_clean) from dbsatds;
+    insert into dbdups (satd_id,kind,hash)  select id,'f',md5(new_clean) from dbsatds;
+
+
+    create index dbdups1 on dbdups (hash);
+
+    drop table if exists bad_ids ;
+    select s.satd_id s_id,f.satd_id f_id into temp bad_ids from dbdups s join dbdups f on (s.hash = f.hash and s.kind='s' and f.kind='f' );
+
+    update DbSatds set ${DbSatds.valid.name} = 1;
+
+    update dbsatds set accept = 0 where id in (select s_id from bad_ids union select f_id from bad_ids)
+    
+""".trimIndent()

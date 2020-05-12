@@ -231,6 +231,25 @@ object DbRepos : LongIdTable() {
 //}
 object DbRuns : IntIdTable() {
     /*
+
+
+SELECT run_id
+      ,satd_ok
+      ,COUNT(*)
+FROM dbevals
+where satd_confidence >= 0.97
+GROUP BY 1,2
+order by 1,2
+
+;
+SELECT run_id
+      ,fixed_ok
+      ,COUNT(*)
+FROM dbevals
+where fixed_confidence >= 0.97
+GROUP BY 1,2
+order by 1,2
+
         SELECT run_id, count(*) *2 , sum(cast(satd_ok+fixed_ok as decimal)) / (count(*)*2) FROM dbevals
         group by run_id
 
@@ -334,8 +353,13 @@ satd_id int8,
 kind char(1),
 hash char(32))
 
+insert into dbdups (satd_id,kind,hash)  select id,'s',md5(old_clean) from dbsatds;
+insert into dbdups (satd_id,kind,hash)  select id,'f',md5(new_clean) from dbsatds;
 
-create index dbdups1 on dbdups (hash)
+
+create index dbdups1 on dbdups (hash);
+select s.satd_id,f.satd_id from dbdups s join dbdups f on (s.hash = f.hash and s.kind='s' and f.kind='f' );
+
 
  */
 fun ResultSet.toSequence(): Sequence<Array<Any>> = sequence {
