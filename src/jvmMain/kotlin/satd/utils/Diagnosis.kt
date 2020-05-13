@@ -6,7 +6,7 @@ import java.lang.management.ManagementFactory
 import java.lang.management.ThreadMXBean
 
 
-val pid by lazy { ManagementFactory.getRuntimeMXBean().name.split("@")[0] }
+val pid by lazy { "too-slow" /*ManagementFactory.getRuntimeMXBean().name.split("@")[0] */ }
 
 fun main(args: Array<String>) {
     Diagnosis.installALRM()
