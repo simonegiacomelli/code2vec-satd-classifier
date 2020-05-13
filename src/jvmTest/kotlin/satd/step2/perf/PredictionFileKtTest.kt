@@ -1,5 +1,6 @@
 package satd.step2.perf
 
+import satd.step2.extractPrediction
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals

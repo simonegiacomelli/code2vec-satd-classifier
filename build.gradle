@@ -160,6 +160,11 @@ task MainGenDataset3(type: JavaExec, dependsOn: [jvmJar]) {
     main = "satd.step2.MainGenDataset3"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
 }
+task MainGenAndEval(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainGenAndEval"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
 task MainDiff1(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step2.MainDiff1"

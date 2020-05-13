@@ -1,6 +1,5 @@
-package satd.step2.perf
+package satd.step2
 
-import satd.step2.assert2
 import java.io.File
 import kotlin.streams.toList
 
@@ -15,7 +14,8 @@ fun extractPrediction(file: File): Prediction {
     val prerdictedClass = map["Prediction"] ?: error("Should contain Prediction")
     val split = lines.drop(2).first().split(" ")
     val v = split.first().trim().removePrefix("(").removeSuffix(")")
-    val sample: Sample = Sample.fromFilename(file.name)
+    val sample: Sample =
+        Sample.fromFilename(file.name)
     assert2(type == sample.type)
     val pred = Prediction(sample, prerdictedClass, v.toDouble())
     return pred

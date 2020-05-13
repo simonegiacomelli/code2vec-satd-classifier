@@ -6,7 +6,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.step2.perf.Sample
 import satd.utils.logln
 import satd.utils.loglnStart
 
@@ -90,7 +89,8 @@ object MainGenDataset4 {
     fun main(args: Array<String>) = generate { where4 }
 }
 
-fun generate(where: () -> Op<Boolean>) {
+
+fun generate(breakMode: Boolean = true, where: () -> Op<Boolean>) {
 
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
@@ -114,11 +114,13 @@ fun generate(where: () -> Op<Boolean>) {
             if (!cu.result.isPresent) throw Exception("parse did not yield expected result")
 
             val methods = cu.result.get().types.filterNotNull().flatMap { it.methods }.filterNotNull()
+
             assert2(methods.size == 1) { "methods.size=${methods.size} content=[[$content]]" }
             val method = methods.first()
             method.name.identifier = type
 
-            folder.resolve(filename).writeText(wrapMethod(method.toString()))
+            val breakString = if (breakMode && index % 2 == 0) " break! " else ""
+            folder.resolve(filename).writeText(wrapMethod(method.toString() + breakString))
         } catch (ex: Exception) {
             println("$filename\n$content")
             throw ex
@@ -134,7 +136,7 @@ fun generate(where: () -> Op<Boolean>) {
     workFolder.mkdirs()
     persistence.setupDatabase()
 
-    fun query(): Query = DbSatds.select { where() }
+    fun query() = DbSatds.select { where() }.orderBy(DbSatds.id).let { if (breakMode) it.take(100) else it }
 
     val typeIndexes = mutableMapOf<String, Int>()
     val partitions = Partitions(transaction { query().count() }, 0.7, 0.15)
@@ -144,7 +146,6 @@ fun generate(where: () -> Op<Boolean>) {
     transaction {
         val info = DatasetInfo.fromPartitions(partitions, where().toString())
         query()
-            .orderBy(DbSatds.id)
             .forEachIndexed { idx, it ->
                 val folder = partitions.sequence[idx]
                 val index = typeIndexes.getOrDefault(folder, 0) + 2

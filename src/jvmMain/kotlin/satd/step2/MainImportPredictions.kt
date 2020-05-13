@@ -2,8 +2,6 @@ package satd.step2
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.step2.perf.Prediction
-import satd.step2.perf.extractPrediction
 import satd.utils.Folders
 import satd.utils.config
 import java.io.File
