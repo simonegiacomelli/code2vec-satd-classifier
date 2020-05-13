@@ -1,5 +1,6 @@
 package satd.utils
 
+import java.lang.Exception
 import java.net.InetAddress
 import java.net.UnknownHostException
 
@@ -15,13 +16,14 @@ private fun hostname(): String {
     if (hostname != "") return hostname
 
     try {
-        val addr: InetAddress = InetAddress.getLocalHost()
-        return addr.hostName
-    } catch (ex: UnknownHostException) {
+        Runtime.getRuntime().exec("hostname").inputStream.use {
+            return it.bufferedReader().readLine().orEmpty()
+        }
+    } catch (ex: Exception) {
 
     }
 
-    Runtime.getRuntime().exec("hostname").inputStream.use {
-        return it.bufferedReader().readLine().orEmpty()
-    }
+    val addr: InetAddress = InetAddress.getLocalHost()
+    return addr.hostName
+
 }
