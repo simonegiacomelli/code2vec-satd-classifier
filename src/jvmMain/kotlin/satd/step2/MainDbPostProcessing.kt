@@ -21,24 +21,9 @@ class DbPostProcessing {
         loglnStart("MainDbPostProcessing")
 
         persistence.setupDatabase()
-        task("detectDuplicatesAndUpdateAccept") {
-            transaction {
-                detectDuplicatesAndUpdateAccept
-                    .split(";")
-                    .filter { it.trim().isNotEmpty() }
-                    .forEach { sql ->
-                        logln("executing ${sql.trim()}")
-                        connection
-                            .createStatement()
-                            .use {
-                                val recordCount = it.executeUpdate(sql)
-                                logln("Record affected: $recordCount")
-
-                            }
-                    }
-            }
-        }
+        task("detectCodeDuplicatesAndUpdateAccept") { executeAllStatements(detectCodeDuplicatesAndUpdateAccept) }
         task("extractJavaFeatures") { extractJavaFeatures() }
+        task("detectFeaturesDuplicatesAndUpdateAccept") { executeAllStatements(detectFeaturesDuplicatesAndUpdateAccept) }
         return
         task("updateDbSatdsFields") { updateDbSatdsFields() }
 
@@ -46,6 +31,24 @@ class DbPostProcessing {
         task("updateDbSatdsFields") { updateDbSatdsFields() }
 
         logln("Done")
+    }
+
+    private fun executeAllStatements(sqlList: String) {
+        transaction {
+            sqlList
+                .split(";")
+                .filter { it.trim().isNotEmpty() }
+                .forEach { sql ->
+                    logln("executing ${sql.trim()}")
+                    connection
+                        .createStatement()
+                        .use {
+                            val recordCount = it.executeUpdate(sql)
+                            logln("    Record affected: $recordCount")
+
+                        }
+                }
+        }
     }
 
     private fun task(title: String, act: () -> Unit) {
@@ -184,7 +187,7 @@ class DbPostProcessing {
 }
 
 
-val detectDuplicatesAndUpdateAccept = """
+val detectCodeDuplicatesAndUpdateAccept = """
     
     drop table if exists DbDups;
     create table DbDups(
@@ -203,6 +206,30 @@ val detectDuplicatesAndUpdateAccept = """
     select s.satd_id s_id,f.satd_id f_id into temp bad_ids from dbdups s join dbdups f on (s.hash = f.hash and s.kind='s' and f.kind='f' );
 
     update DbSatds set ${DbSatds.accept.name} = 1;
-    update DbSatds set ${DbSatds.accept.name} = 0 where id in (select s_id from bad_ids union select f_id from bad_ids);
-    update DbSatds set ${DbSatds.accept.name} = 0 where old_clean_token_count > 10000 or new_clean_token_count > 10000;
+    update DbSatds set ${DbSatds.accept.name} = -1 where id in (select s_id from bad_ids union select f_id from bad_ids);
+    update DbSatds set ${DbSatds.accept.name} = -1 where old_clean_token_count > 10000 or new_clean_token_count > 10000;
+""".trimIndent()
+
+val detectFeaturesDuplicatesAndUpdateAccept = """
+    
+    update DbSatds set ${DbSatds.accept.name} = 0 where (SUBSTRING(old_clean_features,1,1) = 'F' OR SUBSTRING(new_clean_features,1,1) = 'F');
+    
+    drop table if exists DbDups;
+    create table DbDups(
+    id serial primary key,
+    satd_id int8,
+    kind char(1),
+    hash char(32));
+
+
+    insert into dbdups (satd_id,kind,hash)  select id,'s',md5(old_clean_features) from dbsatds where ${DbSatds.accept.name} = 1;
+    insert into dbdups (satd_id,kind,hash)  select id,'f',md5(new_clean_features) from dbsatds where ${DbSatds.accept.name} = 1;
+
+
+    create index dbdups1 on dbdups (hash);
+
+    drop table if exists bad_ids ;
+    select s.satd_id s_id,f.satd_id f_id into temp bad_ids from dbdups s join dbdups f on (s.hash = f.hash and s.kind='s' and f.kind='f' );
+
+    update DbSatds set ${DbSatds.accept.name} = -2 where id in (select s_id from bad_ids union select f_id from bad_ids);
 """.trimIndent()
