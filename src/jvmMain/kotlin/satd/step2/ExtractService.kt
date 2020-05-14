@@ -30,7 +30,7 @@ fun main() {
 
 
 class ExtractService {
-    val s = Socket("localhost", 9999).also { it.soTimeout = 120*1000 }
+    val s = Socket("localhost", 9999).also { it.soTimeout = 5*60*1000 }
     val out by lazy { DataOutputStream(s.getOutputStream()) }
     val inp by lazy { DataInputStream(s.getInputStream()) }
 

@@ -21,24 +21,27 @@ class DbPostProcessing {
         loglnStart("MainDbPostProcessing")
 
         persistence.setupDatabase()
-        task("extractJavaFeatures") { extractJavaFeatures() }
-        return
-        task("updateDbSatdsFields") { updateDbSatdsFields() }
-
         task("detectDuplicatesAndUpdateAccept") {
             transaction {
                 detectDuplicatesAndUpdateAccept
                     .split(";")
+                    .filter { it.trim().isNotEmpty() }
                     .forEach { sql ->
                         logln("executing ${sql.trim()}")
                         connection
                             .createStatement()
                             .use {
-                                it.execute(sql)
+                                val recordCount = it.executeUpdate(sql)
+                                logln("Record affected: $recordCount")
+
                             }
                     }
             }
         }
+        task("extractJavaFeatures") { extractJavaFeatures() }
+        return
+        task("updateDbSatdsFields") { updateDbSatdsFields() }
+
 //        task("importGithubUrlList") { importGithubUrlList() }
         task("updateDbSatdsFields") { updateDbSatdsFields() }
 
@@ -145,7 +148,7 @@ class DbPostProcessing {
 
         transaction {
             DbSatds.apply {
-                val todo = old_clean_features.eq("").or(new_clean_features.eq(""))
+                val todo = accept.eq(1).and(old_clean_features.eq("").or(new_clean_features.eq("")))
                 println("Extracting features for ${slice().select { todo }.count()} rows")
                 slice(id, old_clean, new_clean).select { todo }.orderBy(id).asSequence().chunked(2000)
                     .forEach { chunk ->
@@ -200,6 +203,6 @@ val detectDuplicatesAndUpdateAccept = """
     select s.satd_id s_id,f.satd_id f_id into temp bad_ids from dbdups s join dbdups f on (s.hash = f.hash and s.kind='s' and f.kind='f' );
 
     update DbSatds set ${DbSatds.accept.name} = 1;
-    update dbsatds set  ${DbSatds.accept.name} = 0 where id in (select s_id from bad_ids union select f_id from bad_ids)
-    
+    update DbSatds set ${DbSatds.accept.name} = 0 where id in (select s_id from bad_ids union select f_id from bad_ids);
+    update DbSatds set ${DbSatds.accept.name} = 0 where old_clean_token_count > 10000 or new_clean_token_count > 10000;
 """.trimIndent()
