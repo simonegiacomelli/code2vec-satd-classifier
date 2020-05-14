@@ -28,19 +28,16 @@ fun main() {
         }
 }
 
+
 class ExtractService {
+    val s = Socket("localhost", 9999)
+    val out by lazy { DataOutputStream(s.getOutputStream()) }
+    val inp by lazy { DataInputStream(s.getInputStream()) }
+
     fun extract(source: String): String {
-        val s = Socket("localhost", 9999)
-        return DataOutputStream(s.getOutputStream()).use { inp ->
-            val features = DataInputStream(s.getInputStream()).use { out ->
-                inp.sendStringInChunk(source)
-                out.readChunkedString()
-            }
-            features
-        }
+        out.sendStringInChunk(source)
+        return inp.readChunkedString()
     }
-
-
 }
 
 private fun DataOutputStream.sendStringInChunk(source: String) {
