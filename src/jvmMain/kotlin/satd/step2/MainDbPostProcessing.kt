@@ -149,7 +149,6 @@ class DbPostProcessing {
                 println("Extracting features for ${slice().select { todo }.count()} rows")
                 slice(id, old_clean, new_clean).select { todo }.orderBy(id).asSequence().chunked(2000)
                     .forEach { chunk ->
-                        println("chunk!")
                         pool.submit {
                             chunk.chunked(100).stream().parallel().forEach { rows ->
                                 transaction {
