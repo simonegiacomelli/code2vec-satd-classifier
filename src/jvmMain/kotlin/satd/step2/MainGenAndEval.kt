@@ -11,7 +11,8 @@ object MainGenAndEval {
     fun main(args: Array<String>) {
         Shutdown.hook()
         val workingDir = File(config.code2vec_path)
-        generate(breakMode = true) { where4 }
+        generate(breakMode = false,limit = true) { where4 }
+        return
         workingDir.run {
 //        val conda = "conda run -n code2vec"
             val conda = "bash"

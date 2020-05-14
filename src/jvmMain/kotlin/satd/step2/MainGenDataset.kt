@@ -90,7 +90,7 @@ object MainGenDataset4 {
 }
 
 
-fun generate(breakMode: Boolean = true, where: () -> Op<Boolean>) {
+fun generate(breakMode: Boolean = false, limit: Boolean = false, where: () -> Op<Boolean>) {
 
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
@@ -136,7 +136,7 @@ fun generate(breakMode: Boolean = true, where: () -> Op<Boolean>) {
     workFolder.mkdirs()
     persistence.setupDatabase()
 
-    fun query() = DbSatds.select { where() }.orderBy(DbSatds.id).let { if (breakMode) it.take(100) else it }
+    fun query() = DbSatds.select { where() }.orderBy(DbSatds.id).let { if (limit) it.take(100) else it }
 
     val typeIndexes = mutableMapOf<String, Int>()
     val partitions = Partitions(transaction { query().count() }, 0.7, 0.15)

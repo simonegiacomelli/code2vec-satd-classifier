@@ -22,6 +22,10 @@ class DbPostProcessing {
         loglnStart("MainDbPostProcessing")
 
         persistence.setupDatabase()
+        task("extractJavaFeatures") { extractJavaFeatures() }
+        return
+        task("updateDbSatdsFields") { updateDbSatdsFields() }
+
         task("detectDuplicatesAndUpdateAccept") {
             transaction {
                 detectDuplicatesAndUpdateAccept
@@ -118,6 +122,34 @@ class DbPostProcessing {
                             spin()
                         } catch (ex: Exception) {
                             logln("fault id ${row[id]}")
+                            throw ex
+                        }
+                    }
+            }
+
+        }
+    }
+
+    private fun extractJavaFeatures() {
+        val extractService = ExtractService()
+        fun ext(code: String, header: String) {
+            val message = extractService.extract(code)
+            val p = message.split("\t", limit = 2)
+            if (p[0] != "OK")
+                println("$header $message")
+        }
+        transaction {
+            DbSatds.apply {
+                selectAll().orderBy(id)
+                    .forEach { row ->
+                        val id = row[id].value
+
+                        try {
+                            ext(row[old_clean], "$id old")
+                            ext(row[new_clean], "$id new")
+                            spin()
+                        } catch (ex: Exception) {
+                            logln("fault id $id")
                             throw ex
                         }
                     }
