@@ -19,7 +19,7 @@ fun main() {
                 .sortedBy { it.name }
                 .forEach {
                     println("Doing $it")
-                    val features = ExtractService().extract(it.readText())
+                    val features = ExtractService().extract(it.name, it.readText())
                     println(features)
                     out.appendln("${it.name} $features")
 //                readLine()
@@ -30,11 +30,12 @@ fun main() {
 
 
 class ExtractService {
-    val s = Socket("localhost", 9999)
+    val s = Socket("localhost", 9999).also { it.soTimeout = 30000 }
     val out by lazy { DataOutputStream(s.getOutputStream()) }
     val inp by lazy { DataInputStream(s.getInputStream()) }
 
-    fun extract(source: String): String {
+    fun extract(id: String, source: String): String {
+        out.sendStringInChunk(id)
         out.sendStringInChunk(source)
         return inp.readChunkedString()
     }

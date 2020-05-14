@@ -133,6 +133,8 @@ object DbSatds : LongIdTable() {
     val new_clean_token_count = integer("new_clean_token_count").nullable()
     val inner_methods = integer("inner_methods").nullable()
     val valid = integer("valid").nullable()
+    val old_clean_features = text("old_clean_features").default("")
+    val new_clean_features = text("new_clean_features").default("")
 
     fun duplicateCodeHash(code_hash_str: String) =
         slice(url, commit)

@@ -1,13 +1,12 @@
 package satd.step2
 
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import org.slf4j.LoggerFactory
 import satd.utils.*
+import kotlin.concurrent.getOrSet
 
 fun main() {
     DbPostProcessing().go()
@@ -56,6 +55,7 @@ class DbPostProcessing {
         rate.reset()
     }
 
+    @Synchronized
     private fun spin() {
         rate.spin()
         progress.spin {
@@ -131,27 +131,44 @@ class DbPostProcessing {
     }
 
     private fun extractJavaFeatures() {
-        val extractService = ExtractService()
-        fun ext(code: String, header: String) {
-            val message = extractService.extract(code)
+
+        val extractService = ThreadLocal<ExtractService>()
+
+        fun ext(id: String, code: String, header: String): String {
+            val message = extractService.getOrSet { ExtractService() }.extract(id, code)
             val p = message.split("\t", limit = 2)
-            if (p[0] != "OK")
-                println("$header $message")
+            return message
         }
+
+        val pool = forkJoinPool()
+        logln("Using pool: $pool")
+
         transaction {
             DbSatds.apply {
-                selectAll().orderBy(id)
-                    .forEach { row ->
-                        val id = row[id].value
-
-                        try {
-                            ext(row[old_clean], "$id old")
-                            ext(row[new_clean], "$id new")
-                            spin()
-                        } catch (ex: Exception) {
-                            logln("fault id $id")
-                            throw ex
-                        }
+                val todo = old_clean_features.eq("").or(new_clean_features.eq(""))
+                println("Extracting features for ${slice().select { todo }.count()} rows")
+                slice(id, old_clean, new_clean).select { todo }.orderBy(id).asSequence().chunked(2000)
+                    .forEach { chunk ->
+                        println("chunk!")
+                        pool.submit {
+                            chunk.chunked(100).stream().parallel().forEach { rows ->
+                                transaction {
+                                    rows.forEach { row ->
+                                        val id = row[id].value.toString()
+                                        try {
+                                            update({ DbSatds.id eq row[DbSatds.id] }) {
+                                                it[old_clean_features] = ext(id, row[old_clean], "$id old")
+                                                it[new_clean_features] = ext(id, row[new_clean], "$id new")
+                                            }
+                                            spin()
+                                        } catch (ex: Exception) {
+                                            logln("fault id $id")
+                                            throw ex
+                                        }
+                                    }
+                                }
+                            }
+                        }.get()
                     }
             }
 
