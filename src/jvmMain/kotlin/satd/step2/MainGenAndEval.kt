@@ -10,17 +10,15 @@ object MainGenAndEval {
     @JvmStatic
     fun main(args: Array<String>) {
         Shutdown.hook()
+        persistence.setupDatabase()
         val workingDir = File(config.code2vec_path)
-        generate(breakMode = false,limit = true) { where4 }
-        return
+        generate(breakMode = false,limit = false) { where1 }
         workingDir.run {
-//        val conda = "conda run -n code2vec"
             val conda = "bash"
             runCommand("$conda ./preprocess.sh")
             runCommand("$conda ./train.sh")
             runCommand("$conda ./evaluate_trained_model.sh")
         }
-        persistence.setupDatabase()
         MainImportPredictions().evaluationCopyInDb()
     }
 }

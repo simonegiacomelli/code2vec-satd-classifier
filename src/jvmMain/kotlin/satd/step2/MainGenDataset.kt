@@ -26,7 +26,11 @@ val where1 by lazy {
         (parent_count.eq(1)
                 and new_clean_len.less(15)
                 and old_clean_len.less(15)
+                and old_clean_token_count.less(200)
+                and new_clean_token_count.less(200)
+                //and clean_diff_ratio.less(0.25)
                 and valid.eq(1)
+                and accept.eq(1)
                 and url.inList(urlsIssuesGreaterThan100())
                 )
     }

@@ -19,17 +19,11 @@ class DbPostProcessing {
     val current = StringBuilder()
     fun go() {
         loglnStart("MainDbPostProcessing")
-
         persistence.setupDatabase()
         task("detectCodeDuplicatesAndUpdateAccept") { executeAllStatements(detectCodeDuplicatesAndUpdateAccept) }
         task("extractJavaFeatures") { extractJavaFeatures() }
         task("detectFeaturesDuplicatesAndUpdateAccept") { executeAllStatements(detectFeaturesDuplicatesAndUpdateAccept) }
-        return
         task("updateDbSatdsFields") { updateDbSatdsFields() }
-
-//        task("importGithubUrlList") { importGithubUrlList() }
-        task("updateDbSatdsFields") { updateDbSatdsFields() }
-
         logln("Done")
     }
 
