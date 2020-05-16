@@ -1,0 +1,221 @@
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:516: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:517: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:518: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:519: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:520: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:541: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:542: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:543: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:544: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:545: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorboard/compat/tensorflow_stub/dtypes.py:550: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+2020-02-18 19:43:24.725189: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-02-18 19:43:24,727 INFO     
+2020-02-18 19:43:24,727 INFO     
+2020-02-18 19:43:24,727 INFO     ---------------------------------------------------------------------
+2020-02-18 19:43:24,727 INFO     ---------------------------------------------------------------------
+2020-02-18 19:43:24,727 INFO     ---------------------- Creating word2vec model ----------------------
+2020-02-18 19:43:24,727 INFO     ---------------------------------------------------------------------
+2020-02-18 19:43:24,727 INFO     ---------------------------------------------------------------------
+2020-02-18 19:43:24,727 INFO     Checking number of examples ...
+2020-02-18 19:43:24,744 INFO         Number of train examples: 3770
+2020-02-18 19:43:24,747 INFO         Number of test examples: 812
+2020-02-18 19:43:24,747 INFO     ---------------------------------------------------------------------
+2020-02-18 19:43:24,747 INFO     ----------------- Configuration - Hyper Parameters ------------------
+2020-02-18 19:43:24,747 INFO     CODE_VECTOR_SIZE                          384
+2020-02-18 19:43:24,747 INFO     CSV_BUFFER_SIZE                           104857600
+2020-02-18 19:43:24,747 INFO     DEFAULT_EMBEDDINGS_SIZE                   128
+2020-02-18 19:43:24,747 INFO     DL_FRAMEWORK                              tensorflow
+2020-02-18 19:43:24,748 INFO     DROPOUT_KEEP_RATE                         0.75
+2020-02-18 19:43:24,748 INFO     EXPORT_CODE_VECTORS                       False
+2020-02-18 19:43:24,748 INFO     LOGS_PATH                                 None
+2020-02-18 19:43:24,748 INFO     MAX_CONTEXTS                              200
+2020-02-18 19:43:24,748 INFO     MAX_PATH_VOCAB_SIZE                       911417
+2020-02-18 19:43:24,748 INFO     MAX_TARGET_VOCAB_SIZE                     261245
+2020-02-18 19:43:24,748 INFO     MAX_TOKEN_VOCAB_SIZE                      1301136
+2020-02-18 19:43:24,748 INFO     MAX_TO_KEEP                               10
+2020-02-18 19:43:24,748 INFO     MODEL_LOAD_PATH                           None
+2020-02-18 19:43:24,748 INFO     MODEL_SAVE_PATH                           models/java-small/saved_model
+2020-02-18 19:43:24,748 INFO     NUM_BATCHES_TO_LOG_PROGRESS               100
+2020-02-18 19:43:24,748 INFO     NUM_TEST_EXAMPLES                         812
+2020-02-18 19:43:24,748 INFO     NUM_TRAIN_BATCHES_TO_EVALUATE             1800
+2020-02-18 19:43:24,748 INFO     NUM_TRAIN_EPOCHS                          20
+2020-02-18 19:43:24,748 INFO     NUM_TRAIN_EXAMPLES                        3770
+2020-02-18 19:43:24,748 INFO     PATH_EMBEDDINGS_SIZE                      128
+2020-02-18 19:43:24,748 INFO     PREDICT                                   False
+2020-02-18 19:43:24,748 INFO     READER_NUM_PARALLEL_BATCHES               6
+2020-02-18 19:43:24,748 INFO     RELEASE                                   False
+2020-02-18 19:43:24,748 INFO     SAVE_EVERY_EPOCHS                         1
+2020-02-18 19:43:24,748 INFO     SAVE_T2V                                  None
+2020-02-18 19:43:24,748 INFO     SAVE_W2V                                  None
+2020-02-18 19:43:24,748 INFO     SEPARATE_OOV_AND_PAD                      False
+2020-02-18 19:43:24,748 INFO     SHUFFLE_BUFFER_SIZE                       10000
+2020-02-18 19:43:24,748 INFO     TARGET_EMBEDDINGS_SIZE                    384
+2020-02-18 19:43:24,748 INFO     TEST_BATCH_SIZE                           1024
+2020-02-18 19:43:24,748 INFO     TEST_DATA_PATH                            data/java-small/java-small.val.c2v
+2020-02-18 19:43:24,748 INFO     TOKEN_EMBEDDINGS_SIZE                     128
+2020-02-18 19:43:24,749 INFO     TOP_K_WORDS_CONSIDERED_DURING_PREDICTION  10
+2020-02-18 19:43:24,749 INFO     TRAIN_BATCH_SIZE                          1024
+2020-02-18 19:43:24,749 INFO     TRAIN_DATA_PATH_PREFIX                    data/java-small/java-small
+2020-02-18 19:43:24,749 INFO     USE_TENSORBOARD                           False
+2020-02-18 19:43:24,749 INFO     VERBOSE_MODE                              1
+2020-02-18 19:43:24,749 INFO     _Config__logger                           <Logger code2vec (INFO)>
+2020-02-18 19:43:24,749 INFO     context_vector_size                       384
+2020-02-18 19:43:24,749 INFO     entire_model_load_path                    None
+2020-02-18 19:43:24,749 INFO     entire_model_save_path                    models/java-small/saved_model__entire-model
+2020-02-18 19:43:24,749 INFO     is_loading                                False
+2020-02-18 19:43:24,749 INFO     is_saving                                 True
+2020-02-18 19:43:24,749 INFO     is_testing                                True
+2020-02-18 19:43:24,749 INFO     is_training                               True
+2020-02-18 19:43:24,749 INFO     model_load_dir                            None
+2020-02-18 19:43:24,749 INFO     model_weights_load_path                   None
+2020-02-18 19:43:24,749 INFO     model_weights_save_path                   models/java-small/saved_model__only-weights
+2020-02-18 19:43:24,749 INFO     test_steps                                1
+2020-02-18 19:43:24,749 INFO     train_data_path                           data/java-small/java-small.train.c2v
+2020-02-18 19:43:24,749 INFO     train_steps_per_epoch                     4
+2020-02-18 19:43:24,749 INFO     word_freq_dict_path                       data/java-small/java-small.dict.c2v
+2020-02-18 19:43:24,749 INFO     ---------------------------------------------------------------------
+2020-02-18 19:43:24,749 INFO     Loading word frequencies dictionaries from: data/java-small/java-small.dict.c2v ... 
+2020-02-18 19:43:24,807 INFO     Done loading word frequencies dictionaries.
+2020-02-18 19:43:24,808 INFO     Word frequencies dictionaries loaded. Now creating vocabularies.
+2020-02-18 19:43:24,816 INFO     Created token vocab. size: 21648
+2020-02-18 19:43:24,933 INFO     Created path vocab. size: 210301
+2020-02-18 19:43:24,933 INFO     Created target vocab. size: 3
+2020-02-18 19:43:24,946 INFO     Done creating code2vec model
+2020-02-18 19:43:24,946 INFO     Starting training
+2020-02-18 19:43:26,699 INFO     Number of trainable params: 29838464
+2020-02-18 19:43:26,699 INFO     variable name: model/WORDS_VOCAB:0 -- shape: (21648, 128) -- #params: 2770944
+2020-02-18 19:43:26,699 INFO     variable name: model/TARGET_WORDS_VOCAB:0 -- shape: (3, 384) -- #params: 1152
+2020-02-18 19:43:26,699 INFO     variable name: model/ATTENTION:0 -- shape: (384, 1) -- #params: 384
+2020-02-18 19:43:26,700 INFO     variable name: model/PATHS_VOCAB:0 -- shape: (210301, 128) -- #params: 26918528
+2020-02-18 19:43:26,700 INFO     variable name: model/TRANSFORM:0 -- shape: (384, 384) -- #params: 147456
+2020-02-18 19:43:29,017 INFO     Initalized variables
+2020-02-18 19:43:30,286 INFO     Started reader...
+2020-02-18 19:43:42,200 INFO     Saved after 1 epochs in: models/java-small/saved_model_iter1
+2020-02-18 19:43:43,355 INFO     Starting evaluation
+2020-02-18 19:43:44,434 INFO     Done evaluating, epoch reached
+2020-02-18 19:43:44,435 INFO     Evaluation time: 0H:0M:2S
+2020-02-18 19:43:44,435 INFO     After 1 epochs -- top10_acc: [0.50123153 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5012315270935961, recall: 0.5012315270935961, F1: 0.5012315270935961
+2020-02-18 19:43:54,522 INFO     Saved after 2 epochs in: models/java-small/saved_model_iter2
+2020-02-18 19:43:54,579 INFO     Starting evaluation
+2020-02-18 19:43:55,161 INFO     Done evaluating, epoch reached
+2020-02-18 19:43:55,161 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:43:55,162 INFO     After 2 epochs -- top10_acc: [0.51231527 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5123152709359606, recall: 0.5123152709359606, F1: 0.5123152709359606
+2020-02-18 19:44:04,646 INFO     Saved after 3 epochs in: models/java-small/saved_model_iter3
+2020-02-18 19:44:04,718 INFO     Starting evaluation
+2020-02-18 19:44:05,286 INFO     Done evaluating, epoch reached
+2020-02-18 19:44:05,286 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:44:05,287 INFO     After 3 epochs -- top10_acc: [0.52832512 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5283251231527094, recall: 0.5283251231527094, F1: 0.5283251231527094
+2020-02-18 19:44:14,827 INFO     Saved after 4 epochs in: models/java-small/saved_model_iter4
+2020-02-18 19:44:14,885 INFO     Starting evaluation
+2020-02-18 19:44:15,469 INFO     Done evaluating, epoch reached
+2020-02-18 19:44:15,469 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:44:15,470 INFO     After 4 epochs -- top10_acc: [0.52832512 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5283251231527094, recall: 0.5283251231527094, F1: 0.5283251231527094
+2020-02-18 19:44:25,145 INFO     Saved after 5 epochs in: models/java-small/saved_model_iter5
+2020-02-18 19:44:25,201 INFO     Starting evaluation
+2020-02-18 19:44:25,772 INFO     Done evaluating, epoch reached
+2020-02-18 19:44:25,772 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:44:25,773 INFO     After 5 epochs -- top10_acc: [0.52093596 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.520935960591133, recall: 0.520935960591133, F1: 0.520935960591133
+2020-02-18 19:44:35,199 INFO     Saved after 6 epochs in: models/java-small/saved_model_iter6
+2020-02-18 19:44:35,251 INFO     Starting evaluation
+2020-02-18 19:44:35,837 INFO     Done evaluating, epoch reached
+2020-02-18 19:44:35,838 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:44:35,838 INFO     After 6 epochs -- top10_acc: [0.53448276 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5344827586206896, recall: 0.5344827586206896, F1: 0.5344827586206896
+WARNING:tensorflow:From /anaconda3/envs/code2vec/lib/python3.7/site-packages/tensorflow/python/training/saver.py:960: remove_checkpoint (from tensorflow.python.training.checkpoint_management) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use standard file APIs to delete files with this prefix.
+2020-02-18 19:44:45,582 INFO     Saved after 7 epochs in: models/java-small/saved_model_iter7
+2020-02-18 19:44:45,637 INFO     Starting evaluation
+2020-02-18 19:44:46,227 INFO     Done evaluating, epoch reached
+2020-02-18 19:44:46,228 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:44:46,228 INFO     After 7 epochs -- top10_acc: [0.54064039 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5406403940886699, recall: 0.5406403940886699, F1: 0.5406403940886699
+2020-02-18 19:44:55,769 INFO     Saved after 8 epochs in: models/java-small/saved_model_iter8
+2020-02-18 19:44:55,824 INFO     Starting evaluation
+2020-02-18 19:44:56,442 INFO     Done evaluating, epoch reached
+2020-02-18 19:44:56,443 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:44:56,443 INFO     After 8 epochs -- top10_acc: [0.5270936 1.        1.        1.        1.        1.        1.
+ 1.        1.        1.       ], precision: 0.5270935960591133, recall: 0.5270935960591133, F1: 0.5270935960591133
+2020-02-18 19:45:05,911 INFO     Saved after 9 epochs in: models/java-small/saved_model_iter9
+2020-02-18 19:45:05,960 INFO     Starting evaluation
+2020-02-18 19:45:06,572 INFO     Done evaluating, epoch reached
+2020-02-18 19:45:06,572 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:45:06,573 INFO     After 9 epochs -- top10_acc: [0.52955665 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5295566502463054, recall: 0.5295566502463054, F1: 0.5295566502463054
+2020-02-18 19:45:15,886 INFO     Saved after 10 epochs in: models/java-small/saved_model_iter10
+2020-02-18 19:45:15,935 INFO     Starting evaluation
+2020-02-18 19:45:16,539 INFO     Done evaluating, epoch reached
+2020-02-18 19:45:16,539 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:45:16,540 INFO     After 10 epochs -- top10_acc: [0.52339901 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5233990147783252, recall: 0.5233990147783252, F1: 0.5233990147783252
+2020-02-18 19:45:25,866 INFO     Saved after 11 epochs in: models/java-small/saved_model_iter11
+2020-02-18 19:45:25,914 INFO     Starting evaluation
+2020-02-18 19:45:26,524 INFO     Done evaluating, epoch reached
+2020-02-18 19:45:26,525 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:45:26,525 INFO     After 11 epochs -- top10_acc: [0.53078818 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5307881773399015, recall: 0.5307881773399015, F1: 0.5307881773399015
+2020-02-18 19:45:35,761 INFO     Saved after 12 epochs in: models/java-small/saved_model_iter12
+2020-02-18 19:45:35,810 INFO     Starting evaluation
+2020-02-18 19:45:36,405 INFO     Done evaluating, epoch reached
+2020-02-18 19:45:36,406 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:45:36,406 INFO     After 12 epochs -- top10_acc: [0.54187192 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.541871921182266, recall: 0.541871921182266, F1: 0.541871921182266
+2020-02-18 19:45:45,604 INFO     Saved after 13 epochs in: models/java-small/saved_model_iter13
+2020-02-18 19:45:45,653 INFO     Starting evaluation
+2020-02-18 19:45:46,251 INFO     Done evaluating, epoch reached
+2020-02-18 19:45:46,251 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:45:46,252 INFO     After 13 epochs -- top10_acc: [0.5320197 1.        1.        1.        1.        1.        1.
+ 1.        1.        1.       ], precision: 0.5320197044334976, recall: 0.5320197044334976, F1: 0.5320197044334976
+2020-02-18 19:45:55,441 INFO     Saved after 14 epochs in: models/java-small/saved_model_iter14
+2020-02-18 19:45:55,491 INFO     Starting evaluation
+2020-02-18 19:45:56,085 INFO     Done evaluating, epoch reached
+2020-02-18 19:45:56,085 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:45:56,086 INFO     After 14 epochs -- top10_acc: [0.52093596 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.520935960591133, recall: 0.520935960591133, F1: 0.520935960591133
+2020-02-18 19:46:05,392 INFO     Saved after 15 epochs in: models/java-small/saved_model_iter15
+2020-02-18 19:46:05,443 INFO     Starting evaluation
+2020-02-18 19:46:06,040 INFO     Done evaluating, epoch reached
+2020-02-18 19:46:06,041 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:46:06,041 INFO     After 15 epochs -- top10_acc: [0.53448276 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5344827586206896, recall: 0.5344827586206896, F1: 0.5344827586206896
+2020-02-18 19:46:15,199 INFO     Saved after 16 epochs in: models/java-small/saved_model_iter16
+2020-02-18 19:46:15,250 INFO     Starting evaluation
+2020-02-18 19:46:15,858 INFO     Done evaluating, epoch reached
+2020-02-18 19:46:15,859 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:46:15,859 INFO     After 16 epochs -- top10_acc: [0.54064039 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5406403940886699, recall: 0.5406403940886699, F1: 0.5406403940886699
+2020-02-18 19:46:25,149 INFO     Saved after 17 epochs in: models/java-small/saved_model_iter17
+2020-02-18 19:46:25,203 INFO     Starting evaluation
+2020-02-18 19:46:25,825 INFO     Done evaluating, epoch reached
+2020-02-18 19:46:25,826 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:46:25,826 INFO     After 17 epochs -- top10_acc: [0.53325123 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5332512315270936, recall: 0.5332512315270936, F1: 0.5332512315270936
+2020-02-18 19:46:35,323 INFO     Saved after 18 epochs in: models/java-small/saved_model_iter18
+2020-02-18 19:46:35,376 INFO     Starting evaluation
+2020-02-18 19:46:35,977 INFO     Done evaluating, epoch reached
+2020-02-18 19:46:35,977 INFO     Evaluation time: 0H:0M:0S
+2020-02-18 19:46:35,978 INFO     After 18 epochs -- top10_acc: [0.54433498 1.         1.         1.         1.         1.
+ 1.         1.         1.         1.        ], precision: 0.5443349753694581, recall: 0.5443349753694581, F1: 0.5443349753694581
+2020-02-18 19:46:39,482 INFO     Done training
+2020-02-18 19:46:40,991 INFO     Model saved in file: models/java-small/saved_model
+2020-02-18 19:46:40,991 INFO     Training time: 0H:3M:16S
+

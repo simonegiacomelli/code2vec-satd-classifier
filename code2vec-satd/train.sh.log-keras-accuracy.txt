@@ -1,0 +1,376 @@
+python3 -u code2vec.py --data data/java-small/java-small --test data/java-small/java-small.val.c2v --save models/java-small/saved_model --framework keras --tensorboard
+2020-02-25 10:36:03,261 INFO     
+2020-02-25 10:36:03,261 INFO     
+2020-02-25 10:36:03,261 INFO     ---------------------------------------------------------------------
+2020-02-25 10:36:03,261 INFO     ---------------------------------------------------------------------
+2020-02-25 10:36:03,261 INFO     ---------------------- Creating word2vec model ----------------------
+2020-02-25 10:36:03,261 INFO     ---------------------------------------------------------------------
+2020-02-25 10:36:03,261 INFO     ---------------------------------------------------------------------
+2020-02-25 10:36:03,261 INFO     Checking number of examples ...
+2020-02-25 10:36:03,262 INFO         Number of train examples: 3770
+2020-02-25 10:36:03,263 INFO         Number of test examples: 812
+2020-02-25 10:36:03,263 INFO     ---------------------------------------------------------------------
+2020-02-25 10:36:03,263 INFO     ----------------- Configuration - Hyper Parameters ------------------
+2020-02-25 10:36:03,263 INFO     CODE_VECTOR_SIZE                          384
+2020-02-25 10:36:03,263 INFO     CSV_BUFFER_SIZE                           104857600
+2020-02-25 10:36:03,263 INFO     DEFAULT_EMBEDDINGS_SIZE                   128
+2020-02-25 10:36:03,263 INFO     DL_FRAMEWORK                              keras
+2020-02-25 10:36:03,263 INFO     DROPOUT_KEEP_RATE                         0.75
+2020-02-25 10:36:03,263 INFO     EXPORT_CODE_VECTORS                       False
+2020-02-25 10:36:03,263 INFO     LOGS_PATH                                 None
+2020-02-25 10:36:03,263 INFO     MAX_CONTEXTS                              200
+2020-02-25 10:36:03,263 INFO     MAX_PATH_VOCAB_SIZE                       911417
+2020-02-25 10:36:03,263 INFO     MAX_TARGET_VOCAB_SIZE                     261245
+2020-02-25 10:36:03,263 INFO     MAX_TOKEN_VOCAB_SIZE                      1301136
+2020-02-25 10:36:03,263 INFO     MAX_TO_KEEP                               10
+2020-02-25 10:36:03,263 INFO     MODEL_LOAD_PATH                           None
+2020-02-25 10:36:03,263 INFO     MODEL_SAVE_PATH                           models/java-small/saved_model
+2020-02-25 10:36:03,263 INFO     NUM_BATCHES_TO_LOG_PROGRESS               100
+2020-02-25 10:36:03,263 INFO     NUM_TEST_EXAMPLES                         812
+2020-02-25 10:36:03,264 INFO     NUM_TRAIN_BATCHES_TO_EVALUATE             1800
+2020-02-25 10:36:03,264 INFO     NUM_TRAIN_EPOCHS                          20
+2020-02-25 10:36:03,264 INFO     NUM_TRAIN_EXAMPLES                        3770
+2020-02-25 10:36:03,264 INFO     PATH_EMBEDDINGS_SIZE                      128
+2020-02-25 10:36:03,264 INFO     PREDICT                                   False
+2020-02-25 10:36:03,264 INFO     READER_NUM_PARALLEL_BATCHES               6
+2020-02-25 10:36:03,264 INFO     RELEASE                                   False
+2020-02-25 10:36:03,264 INFO     SAVE_EVERY_EPOCHS                         1
+2020-02-25 10:36:03,264 INFO     SAVE_T2V                                  None
+2020-02-25 10:36:03,264 INFO     SAVE_W2V                                  None
+2020-02-25 10:36:03,264 INFO     SEPARATE_OOV_AND_PAD                      False
+2020-02-25 10:36:03,264 INFO     SHUFFLE_BUFFER_SIZE                       10000
+2020-02-25 10:36:03,264 INFO     TARGET_EMBEDDINGS_SIZE                    384
+2020-02-25 10:36:03,264 INFO     TEST_BATCH_SIZE                           1024
+2020-02-25 10:36:03,264 INFO     TEST_DATA_PATH                            data/java-small/java-small.val.c2v
+2020-02-25 10:36:03,264 INFO     TOKEN_EMBEDDINGS_SIZE                     128
+2020-02-25 10:36:03,264 INFO     TOP_K_WORDS_CONSIDERED_DURING_PREDICTION  2
+2020-02-25 10:36:03,264 INFO     TRAIN_BATCH_SIZE                          1024
+2020-02-25 10:36:03,264 INFO     TRAIN_DATA_PATH_PREFIX                    data/java-small/java-small
+2020-02-25 10:36:03,264 INFO     USE_TENSORBOARD                           True
+2020-02-25 10:36:03,264 INFO     VERBOSE_MODE                              1
+2020-02-25 10:36:03,264 INFO     _Config__logger                           <Logger code2vec (INFO)>
+2020-02-25 10:36:03,264 INFO     context_vector_size                       384
+2020-02-25 10:36:03,264 INFO     entire_model_load_path                    None
+2020-02-25 10:36:03,264 INFO     entire_model_save_path                    models/java-small/saved_model__entire-model
+2020-02-25 10:36:03,264 INFO     is_loading                                False
+2020-02-25 10:36:03,264 INFO     is_saving                                 True
+2020-02-25 10:36:03,264 INFO     is_testing                                True
+2020-02-25 10:36:03,264 INFO     is_training                               True
+2020-02-25 10:36:03,264 INFO     model_load_dir                            None
+2020-02-25 10:36:03,264 INFO     model_weights_load_path                   None
+2020-02-25 10:36:03,264 INFO     model_weights_save_path                   models/java-small/saved_model__only-weights
+2020-02-25 10:36:03,264 INFO     test_steps                                1
+2020-02-25 10:36:03,264 INFO     train_data_path                           data/java-small/java-small.train.c2v
+2020-02-25 10:36:03,265 INFO     train_steps_per_epoch                     4
+2020-02-25 10:36:03,265 INFO     word_freq_dict_path                       data/java-small/java-small.dict.c2v
+2020-02-25 10:36:03,265 INFO     ---------------------------------------------------------------------
+2020-02-25 10:36:03,265 INFO     Loading word frequencies dictionaries from: data/java-small/java-small.dict.c2v ... 
+2020-02-25 10:36:03,335 INFO     Done loading word frequencies dictionaries.
+2020-02-25 10:36:03,335 INFO     Word frequencies dictionaries loaded. Now creating vocabularies.
+2020-02-25 10:36:03,345 INFO     Created token vocab. size: 21648
+2020-02-25 10:36:03,473 INFO     Created path vocab. size: 210301
+2020-02-25 10:36:03,474 INFO     Created target vocab. size: 3
+2020-02-25 10:36:03.476711: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-02-25 10:36:03.490406: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x7fb14f770320 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-02-25 10:36:03.490420: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+WARNING:tensorflow:AutoGraph could not transform <bound method WordsSubtokenMetricBase.update_state of <keras_words_subtoken_metrics.WordsSubtokenPrecisionMetric object at 0x1644ced90>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: unexpected indent (<unknown>, line 36)
+WARNING:tensorflow:AutoGraph could not transform <bound method WordsSubtokenMetricBase.update_state of <keras_words_subtoken_metrics.WordsSubtokenRecallMetric object at 0x16449d810>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: unexpected indent (<unknown>, line 36)
+WARNING:tensorflow:AutoGraph could not transform <bound method WordsSubtokenMetricBase.update_state of <keras_words_subtoken_metrics.WordsSubtokenF1Metric object at 0x13797fe10>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: unexpected indent (<unknown>, line 36)
+2020-02-25 10:36:04,296 INFO     Model: "model"
+2020-02-25 10:36:04,297 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,297 INFO     Layer (type)                    Output Shape         Param #     Connected to                     
+2020-02-25 10:36:04,297 INFO     ==================================================================================================
+2020-02-25 10:36:04,297 INFO     input_1 (InputLayer)            [(None, 200)]        0                                            
+2020-02-25 10:36:04,297 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,297 INFO     input_2 (InputLayer)            [(None, 200)]        0                                            
+2020-02-25 10:36:04,297 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,297 INFO     input_3 (InputLayer)            [(None, 200)]        0                                            
+2020-02-25 10:36:04,297 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,297 INFO     token_embedding (Embedding)     (None, 200, 128)     2770944     input_1[0][0]                    
+2020-02-25 10:36:04,297 INFO                                                                      input_3[0][0]                    
+2020-02-25 10:36:04,297 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,297 INFO     path_embedding (Embedding)      (None, 200, 128)     26918528    input_2[0][0]                    
+2020-02-25 10:36:04,297 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,297 INFO     concatenate (Concatenate)       (None, 200, 384)     0           token_embedding[0][0]            
+2020-02-25 10:36:04,298 INFO                                                                      path_embedding[0][0]             
+2020-02-25 10:36:04,298 INFO                                                                      token_embedding[1][0]            
+2020-02-25 10:36:04,298 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,298 INFO     dropout (Dropout)               (None, 200, 384)     0           concatenate[0][0]                
+2020-02-25 10:36:04,298 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,298 INFO     time_distributed (TimeDistribut (None, 200, 384)     147456      dropout[0][0]                    
+2020-02-25 10:36:04,298 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,298 INFO     input_4 (InputLayer)            [(None, 200)]        0                                            
+2020-02-25 10:36:04,298 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,298 INFO     attention (AttentionLayer)      ((None, 384), (None, 384         time_distributed[0][0]           
+2020-02-25 10:36:04,298 INFO                                                                      input_4[0][0]                    
+2020-02-25 10:36:04,298 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,298 INFO     target_index (Dense)            (None, 3)            1152        attention[0][0]                  
+2020-02-25 10:36:04,298 INFO     ==================================================================================================
+2020-02-25 10:36:04,299 INFO     Total params: 29,838,464
+2020-02-25 10:36:04,299 INFO     Trainable params: 29,838,464
+2020-02-25 10:36:04,299 INFO     Non-trainable params: 0
+2020-02-25 10:36:04,299 INFO     __________________________________________________________________________________________________
+2020-02-25 10:36:04,544 INFO     Lookup tables created.
+2020-02-25 10:36:04,544 INFO     Done creating code2vec model
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x137a75c50>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14bfa9ed0>, <gast.gast.Return object at 0x14bfa9d90>]
+Train for 4 steps
+2020-02-25 10:36:04,910 INFO     Starting training...
+Epoch 1/20
+2020-02-25 10:36:09.132257: I tensorflow/core/profiler/lib/profiler_session.cc:225] Profiler session started.
+1/4 [======>.......................] - ETA: 12s - loss: 1.1002 - accuracy: 0.27252/4 [==============>...............] - ETA: 6s - loss: 1.0955 - accuracy: 0.3857 3/4 [=====================>........] - ETA: 2s - loss: 1.0905 - accuracy: 0.43132020-02-25 10:36:15,286 INFO     Completed epoch #1: {'loss': 1.0854896008968353, 'accuracy': 0.44726562}
+2020-02-25 10:36:15,286 INFO     Saving model after 1 epochs.
+2020-02-25 10:36:16,814 INFO     Done saving model.
+2020-02-25 10:36:16,814 INFO     Evaluating...
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14c229390>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14c58d2d0>, <gast.gast.Return object at 0x14c58d1d0>]
+1/1 [==============================] - 1s 1s/step - loss: 1.0520 - target_index_loss: 1.0520 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5062 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5062 - target_string_subtoken_recall: 0.5062 - target_string_subtoken_f1: 0.5062
+2020-02-25 10:36:18,189 INFO     Done evaluating (took 0:00:01). Evaluation results:
+2020-02-25 10:36:18,190 INFO         loss: 1.0520, f1: 0.5062, recall: 0.5062, precision: 0.5062
+2020-02-25 10:36:18,190 INFO         top1: 0.5062, top2: 1.0000
+4/4 [==============================] - 13s 3s/step - loss: 1.0855 - accuracy: 0.4473
+Epoch 2/20
+1/4 [======>.......................] - ETA: 6s - loss: 1.0552 - accuracy: 0.53222/4 [==============>...............] - ETA: 4s - loss: 1.0474 - accuracy: 0.51323/4 [=====================>........] - ETA: 2s - loss: 1.0384 - accuracy: 0.50622020-02-25 10:36:26,467 INFO     Completed epoch #2: {'loss': 1.0279045552015305, 'accuracy': 0.50512695}
+2020-02-25 10:36:26,467 INFO     Saving model after 2 epochs.
+2020-02-25 10:36:27,733 INFO     Done saving model.
+2020-02-25 10:36:27,733 INFO     Evaluating... (takes ~0:00:01)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14c58d150>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x1508b8310>, <gast.gast.Return object at 0x1508b8210>]
+1/1 [==============================] - 1s 690ms/step - loss: 0.9652 - target_index_loss: 0.9652 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5000 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5000 - target_string_subtoken_recall: 0.5000 - target_string_subtoken_f1: 0.5000
+2020-02-25 10:36:28,750 INFO     Done evaluating (took 0:00:01). Evaluation results:
+2020-02-25 10:36:28,750 INFO         loss: 0.9652, f1: 0.5000, recall: 0.5000, precision: 0.5000
+2020-02-25 10:36:28,750 INFO         top1: 0.5000, top2: 1.0000
+4/4 [==============================] - 11s 3s/step - loss: 1.0279 - accuracy: 0.5051
+Epoch 3/20
+1/4 [======>.......................] - ETA: 6s - loss: 0.9731 - accuracy: 0.50492/4 [==============>...............] - ETA: 4s - loss: 0.9580 - accuracy: 0.50593/4 [=====================>........] - ETA: 2s - loss: 0.9426 - accuracy: 0.51302020-02-25 10:36:37,488 INFO     Completed epoch #3: {'loss': 0.928412988781929, 'accuracy': 0.51416016}
+2020-02-25 10:36:37,489 INFO     Saving model after 3 epochs.
+2020-02-25 10:36:39,006 INFO     Done saving model.
+2020-02-25 10:36:39,006 INFO     Evaluating... (takes ~0:00:01)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x1508ea550>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x150e382d0>, <gast.gast.Return object at 0x1508b8290>]
+1/1 [==============================] - 1s 594ms/step - loss: 0.8476 - target_index_loss: 0.8476 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5012 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5012 - target_string_subtoken_recall: 0.5012 - target_string_subtoken_f1: 0.5012
+2020-02-25 10:36:39,818 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:36:39,818 INFO         loss: 0.8476, f1: 0.5012, recall: 0.5012, precision: 0.5012
+2020-02-25 10:36:39,818 INFO         top1: 0.5012, top2: 1.0000
+4/4 [==============================] - 11s 3s/step - loss: 0.9284 - accuracy: 0.5142
+Epoch 4/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.8546 - accuracy: 0.49022/4 [==============>...............] - ETA: 4s - loss: 0.8401 - accuracy: 0.49663/4 [=====================>........] - ETA: 2s - loss: 0.8249 - accuracy: 0.50462020-02-25 10:36:47,981 INFO     Completed epoch #4: {'loss': 0.8127832859754562, 'accuracy': 0.4975586}
+2020-02-25 10:36:47,981 INFO     Saving model after 4 epochs.
+2020-02-25 10:36:49,165 INFO     Done saving model.
+2020-02-25 10:36:49,166 INFO     Evaluating... (takes ~0:00:01)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14bffee10>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14fd303d0>, <gast.gast.Return object at 0x14fd302d0>]
+1/1 [==============================] - 1s 565ms/step - loss: 0.7525 - target_index_loss: 0.7525 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5000 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5000 - target_string_subtoken_recall: 0.5000 - target_string_subtoken_f1: 0.5000
+2020-02-25 10:36:49,942 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:36:49,943 INFO         loss: 0.7525, f1: 0.5000, recall: 0.5000, precision: 0.5000
+2020-02-25 10:36:49,943 INFO         top1: 0.5000, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.8128 - accuracy: 0.4976
+Epoch 5/20
+1/4 [======>.......................] - ETA: 6s - loss: 0.7524 - accuracy: 0.50002/4 [==============>...............] - ETA: 4s - loss: 0.7438 - accuracy: 0.50493/4 [=====================>........] - ETA: 2s - loss: 0.7369 - accuracy: 0.50202020-02-25 10:36:58,356 INFO     Completed epoch #5: {'loss': 0.7308159321546555, 'accuracy': 0.5036621}
+2020-02-25 10:36:58,356 INFO     Saving model after 5 epochs.
+2020-02-25 10:36:59,507 INFO     Done saving model.
+2020-02-25 10:36:59,507 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14fd63b50>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x15161d310>, <gast.gast.Return object at 0x1508b8290>]
+1/1 [==============================] - 1s 532ms/step - loss: 0.7066 - target_index_loss: 0.7066 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5246 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5246 - target_string_subtoken_recall: 0.5246 - target_string_subtoken_f1: 0.5246
+2020-02-25 10:37:00,203 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:37:00,203 INFO         loss: 0.7066, f1: 0.5246, recall: 0.5246, precision: 0.5246
+2020-02-25 10:37:00,204 INFO         top1: 0.5246, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.7308 - accuracy: 0.5037
+Epoch 6/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.7020 - accuracy: 0.58692/4 [==============>...............] - ETA: 4s - loss: 0.7001 - accuracy: 0.59133/4 [=====================>........] - ETA: 2s - loss: 0.6984 - accuracy: 0.56672020-02-25 10:37:08,391 INFO     Completed epoch #6: {'loss': 0.6965594738721848, 'accuracy': 0.5600586}
+2020-02-25 10:37:08,392 INFO     Saving model after 6 epochs.
+2020-02-25 10:37:09,528 INFO     Done saving model.
+2020-02-25 10:37:09,528 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x150e4dbd0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14fd92350>, <gast.gast.Return object at 0x14fd92250>]
+1/1 [==============================] - 1s 545ms/step - loss: 0.6940 - target_index_loss: 0.6940 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5271 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5271 - target_string_subtoken_recall: 0.5271 - target_string_subtoken_f1: 0.5271
+2020-02-25 10:37:10,228 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:37:10,229 INFO         loss: 0.6940, f1: 0.5271, recall: 0.5271, precision: 0.5271
+2020-02-25 10:37:10,229 INFO         top1: 0.5271, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.6966 - accuracy: 0.5601
+Epoch 7/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.6854 - accuracy: 0.60742/4 [==============>...............] - ETA: 3s - loss: 0.6839 - accuracy: 0.61873/4 [=====================>........] - ETA: 1s - loss: 0.6831 - accuracy: 0.62992020-02-25 10:37:17,965 INFO     Completed epoch #7: {'loss': 0.6825899481773376, 'accuracy': 0.6328125}
+2020-02-25 10:37:17,965 INFO     Saving model after 7 epochs.
+2020-02-25 10:37:19,104 INFO     Done saving model.
+2020-02-25 10:37:19,104 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14fd921d0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x1516e4250>, <gast.gast.Return object at 0x14fd922d0>]
+1/1 [==============================] - 1s 538ms/step - loss: 0.6899 - target_index_loss: 0.6899 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5333 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5333 - target_string_subtoken_recall: 0.5333 - target_string_subtoken_f1: 0.5333
+2020-02-25 10:37:19,796 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:37:19,796 INFO         loss: 0.6899, f1: 0.5333, recall: 0.5333, precision: 0.5333
+2020-02-25 10:37:19,796 INFO         top1: 0.5333, top2: 1.0000
+4/4 [==============================] - 10s 2s/step - loss: 0.6826 - accuracy: 0.6328
+Epoch 8/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.6782 - accuracy: 0.62112/4 [==============>...............] - ETA: 3s - loss: 0.6767 - accuracy: 0.65923/4 [=====================>........] - ETA: 1s - loss: 0.6759 - accuracy: 0.67552020-02-25 10:37:27,451 INFO     Completed epoch #8: {'loss': 0.6745938509702682, 'accuracy': 0.68603516}
+2020-02-25 10:37:27,451 INFO     Saving model after 8 epochs.
+2020-02-25 10:37:28,595 INFO     Done saving model.
+2020-02-25 10:37:28,595 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x151635b90>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x1516e4f50>, <gast.gast.Return object at 0x1516e1d10>]
+1/1 [==============================] - 1s 558ms/step - loss: 0.6882 - target_index_loss: 0.6882 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5209 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5209 - target_string_subtoken_recall: 0.5209 - target_string_subtoken_f1: 0.5209
+2020-02-25 10:37:29,328 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:37:29,328 INFO         loss: 0.6882, f1: 0.5209, recall: 0.5209, precision: 0.5209
+2020-02-25 10:37:29,328 INFO         top1: 0.5209, top2: 1.0000
+4/4 [==============================] - 10s 2s/step - loss: 0.6746 - accuracy: 0.6860
+Epoch 9/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.6662 - accuracy: 0.65532/4 [==============>...............] - ETA: 3s - loss: 0.6670 - accuracy: 0.64503/4 [=====================>........] - ETA: 1s - loss: 0.6648 - accuracy: 0.64782020-02-25 10:37:37,635 INFO     Completed epoch #9: {'loss': 0.6624477654695511, 'accuracy': 0.6386719}
+2020-02-25 10:37:37,635 INFO     Saving model after 9 epochs.
+2020-02-25 10:37:39,859 INFO     Done saving model.
+2020-02-25 10:37:39,859 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14ac79050>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14ac91290>, <gast.gast.Return object at 0x1516e4950>]
+1/1 [==============================] - 1s 851ms/step - loss: 0.6874 - target_index_loss: 0.6874 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5234 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5234 - target_string_subtoken_recall: 0.5234 - target_string_subtoken_f1: 0.5234
+2020-02-25 10:37:41,037 INFO     Done evaluating (took 0:00:01). Evaluation results:
+2020-02-25 10:37:41,037 INFO         loss: 0.6874, f1: 0.5234, recall: 0.5234, precision: 0.5234
+2020-02-25 10:37:41,037 INFO         top1: 0.5234, top2: 1.0000
+4/4 [==============================] - 12s 3s/step - loss: 0.6624 - accuracy: 0.6387
+Epoch 10/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.6581 - accuracy: 0.64262/4 [==============>...............] - ETA: 3s - loss: 0.6556 - accuracy: 0.67873/4 [=====================>........] - ETA: 1s - loss: 0.6530 - accuracy: 0.69862020-02-25 10:37:48,667 INFO     Completed epoch #10: {'loss': 0.6505835503339767, 'accuracy': 0.7109375}
+2020-02-25 10:37:48,667 INFO     Saving model after 10 epochs.
+2020-02-25 10:37:49,833 INFO     Done saving model.
+2020-02-25 10:37:49,833 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14ac79b50>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x1516e8310>, <gast.gast.Return object at 0x1516e8210>]
+1/1 [==============================] - 1s 546ms/step - loss: 0.6833 - target_index_loss: 0.6833 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5406 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5406 - target_string_subtoken_recall: 0.5406 - target_string_subtoken_f1: 0.5406
+2020-02-25 10:37:50,562 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:37:50,562 INFO         loss: 0.6833, f1: 0.5406, recall: 0.5406, precision: 0.5406
+2020-02-25 10:37:50,562 INFO         top1: 0.5406, top2: 1.0000
+4/4 [==============================] - 10s 2s/step - loss: 0.6506 - accuracy: 0.7109
+Epoch 11/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.6421 - accuracy: 0.69242/4 [==============>...............] - ETA: 3s - loss: 0.6391 - accuracy: 0.68163/4 [=====================>........] - ETA: 1s - loss: 0.6370 - accuracy: 0.68392020-02-25 10:37:58,236 INFO     Completed epoch #11: {'loss': 0.6351650655269623, 'accuracy': 0.7019043}
+2020-02-25 10:37:58,236 INFO     Saving model after 11 epochs.
+2020-02-25 10:37:59,398 INFO     Done saving model.
+2020-02-25 10:37:59,398 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x15162b5d0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14ad3a2d0>, <gast.gast.Return object at 0x14ad3a1d0>]
+1/1 [==============================] - 1s 541ms/step - loss: 0.6832 - target_index_loss: 0.6832 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5308 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5308 - target_string_subtoken_recall: 0.5308 - target_string_subtoken_f1: 0.5308
+2020-02-25 10:38:00,123 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:38:00,123 INFO         loss: 0.6832, f1: 0.5308, recall: 0.5308, precision: 0.5308
+2020-02-25 10:38:00,124 INFO         top1: 0.5308, top2: 1.0000
+4/4 [==============================] - 10s 2s/step - loss: 0.6352 - accuracy: 0.7019
+Epoch 12/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.6180 - accuracy: 0.73442/4 [==============>...............] - ETA: 3s - loss: 0.6177 - accuracy: 0.73293/4 [=====================>........] - ETA: 1s - loss: 0.6121 - accuracy: 0.75522020-02-25 10:38:07,604 INFO     Completed epoch #12: {'loss': 0.6074376106262207, 'accuracy': 0.77685547}
+2020-02-25 10:38:07,604 INFO     Saving model after 12 epochs.
+2020-02-25 10:38:08,738 INFO     Done saving model.
+2020-02-25 10:38:08,738 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14ad6b350>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14add32d0>, <gast.gast.Return object at 0x14add31d0>]
+1/1 [==============================] - 1s 528ms/step - loss: 0.6775 - target_index_loss: 0.6775 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5505 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5505 - target_string_subtoken_recall: 0.5505 - target_string_subtoken_f1: 0.5505
+2020-02-25 10:38:09,447 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:38:09,447 INFO         loss: 0.6775, f1: 0.5505, recall: 0.5505, precision: 0.5505
+2020-02-25 10:38:09,447 INFO         top1: 0.5505, top2: 1.0000
+4/4 [==============================] - 9s 2s/step - loss: 0.6074 - accuracy: 0.7769
+Epoch 13/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.5886 - accuracy: 0.82032/4 [==============>...............] - ETA: 3s - loss: 0.5897 - accuracy: 0.79443/4 [=====================>........] - ETA: 1s - loss: 0.5853 - accuracy: 0.79922020-02-25 10:38:16,950 INFO     Completed epoch #13: {'loss': 0.5790411978960037, 'accuracy': 0.8129883}
+2020-02-25 10:38:16,950 INFO     Saving model after 13 epochs.
+2020-02-25 10:38:18,089 INFO     Done saving model.
+2020-02-25 10:38:18,089 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14ae09990>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14ad5f590>, <gast.gast.Return object at 0x14ad52c10>]
+1/1 [==============================] - 1s 557ms/step - loss: 0.6756 - target_index_loss: 0.6756 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5530 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5530 - target_string_subtoken_recall: 0.5530 - target_string_subtoken_f1: 0.5530
+2020-02-25 10:38:18,834 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:38:18,834 INFO         loss: 0.6756, f1: 0.5530, recall: 0.5530, precision: 0.5530
+2020-02-25 10:38:18,834 INFO         top1: 0.5530, top2: 1.0000
+4/4 [==============================] - 9s 2s/step - loss: 0.5790 - accuracy: 0.8130
+Epoch 14/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.5495 - accuracy: 0.86432/4 [==============>...............] - ETA: 3s - loss: 0.5472 - accuracy: 0.86573/4 [=====================>........] - ETA: 1s - loss: 0.5418 - accuracy: 0.85612020-02-25 10:38:26,541 INFO     Completed epoch #14: {'loss': 0.5348826944828033, 'accuracy': 0.8613281}
+2020-02-25 10:38:26,541 INFO     Saving model after 14 epochs.
+2020-02-25 10:38:27,698 INFO     Done saving model.
+2020-02-25 10:38:27,698 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14add0b90>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14ae7a310>, <gast.gast.Return object at 0x14adffd50>]
+1/1 [==============================] - 1s 977ms/step - loss: 0.6778 - target_index_loss: 0.6778 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5456 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5456 - target_string_subtoken_recall: 0.5456 - target_string_subtoken_f1: 0.5456
+2020-02-25 10:38:28,865 INFO     Done evaluating (took 0:00:01). Evaluation results:
+2020-02-25 10:38:28,865 INFO         loss: 0.6778, f1: 0.5456, recall: 0.5456, precision: 0.5456
+2020-02-25 10:38:28,865 INFO         top1: 0.5456, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.5349 - accuracy: 0.8613
+Epoch 15/20
+1/4 [======>.......................] - ETA: 6s - loss: 0.5044 - accuracy: 0.88962/4 [==============>...............] - ETA: 4s - loss: 0.5031 - accuracy: 0.89263/4 [=====================>........] - ETA: 2s - loss: 0.4954 - accuracy: 0.89582020-02-25 10:38:36,927 INFO     Completed epoch #15: {'loss': 0.4885694086551666, 'accuracy': 0.8937988}
+2020-02-25 10:38:36,928 INFO     Saving model after 15 epochs.
+2020-02-25 10:38:38,085 INFO     Done saving model.
+2020-02-25 10:38:38,085 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14ae78f50>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14c2d8390>, <gast.gast.Return object at 0x14ae7a290>]
+1/1 [==============================] - 1s 529ms/step - loss: 0.6770 - target_index_loss: 0.6770 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5517 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5517 - target_string_subtoken_recall: 0.5517 - target_string_subtoken_f1: 0.5517
+2020-02-25 10:38:38,773 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:38:38,773 INFO         loss: 0.6770, f1: 0.5517, recall: 0.5517, precision: 0.5517
+2020-02-25 10:38:38,773 INFO         top1: 0.5517, top2: 1.0000
+4/4 [==============================] - 10s 2s/step - loss: 0.4886 - accuracy: 0.8938
+Epoch 16/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.4656 - accuracy: 0.91022/4 [==============>...............] - ETA: 3s - loss: 0.4463 - accuracy: 0.91893/4 [=====================>........] - ETA: 2s - loss: 0.4381 - accuracy: 0.91702020-02-25 10:38:46,960 INFO     Completed epoch #16: {'loss': 0.4334944933652878, 'accuracy': 0.9157715}
+2020-02-25 10:38:46,960 INFO     Saving model after 16 epochs.
+2020-02-25 10:38:48,125 INFO     Done saving model.
+2020-02-25 10:38:48,125 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14c252410>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14c2d87d0>, <gast.gast.Return object at 0x14c2d8490>]
+1/1 [==============================] - 1s 590ms/step - loss: 0.6877 - target_index_loss: 0.6877 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5431 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5431 - target_string_subtoken_recall: 0.5431 - target_string_subtoken_f1: 0.5431
+2020-02-25 10:38:49,006 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:38:49,006 INFO         loss: 0.6877, f1: 0.5431, recall: 0.5431, precision: 0.5431
+2020-02-25 10:38:49,007 INFO         top1: 0.5431, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.4335 - accuracy: 0.9158
+Epoch 17/20
+1/4 [======>.......................] - ETA: 6s - loss: 0.3979 - accuracy: 0.93162/4 [==============>...............] - ETA: 4s - loss: 0.3906 - accuracy: 0.93603/4 [=====================>........] - ETA: 1s - loss: 0.3812 - accuracy: 0.93622020-02-25 10:38:56,916 INFO     Completed epoch #17: {'loss': 0.3727053329348564, 'accuracy': 0.9387207}
+2020-02-25 10:38:56,916 INFO     Saving model after 17 epochs.
+2020-02-25 10:38:58,107 INFO     Done saving model.
+2020-02-25 10:38:58,108 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14c2d80d0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x15162cf50>, <gast.gast.Return object at 0x15162cb50>]
+1/1 [==============================] - 1s 617ms/step - loss: 0.6942 - target_index_loss: 0.6942 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5468 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5468 - target_string_subtoken_recall: 0.5468 - target_string_subtoken_f1: 0.5468
+2020-02-25 10:38:59,017 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:38:59,017 INFO         loss: 0.6942, f1: 0.5468, recall: 0.5468, precision: 0.5468
+2020-02-25 10:38:59,018 INFO         top1: 0.5468, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.3727 - accuracy: 0.9387
+Epoch 18/20
+1/4 [======>.......................] - ETA: 6s - loss: 0.3223 - accuracy: 0.94532/4 [==============>...............] - ETA: 4s - loss: 0.3174 - accuracy: 0.94343/4 [=====================>........] - ETA: 2s - loss: 0.3141 - accuracy: 0.94242020-02-25 10:39:07,110 INFO     Completed epoch #18: {'loss': 0.3070879951119423, 'accuracy': 0.9458008}
+2020-02-25 10:39:07,110 INFO     Saving model after 18 epochs.
+2020-02-25 10:39:08,298 INFO     Done saving model.
+2020-02-25 10:39:08,298 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14ad76610>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14acfef90>, <gast.gast.Return object at 0x14acfea10>]
+1/1 [==============================] - 1s 580ms/step - loss: 0.7191 - target_index_loss: 0.7191 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5505 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5505 - target_string_subtoken_recall: 0.5505 - target_string_subtoken_f1: 0.5505
+2020-02-25 10:39:09,028 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:39:09,028 INFO         loss: 0.7191, f1: 0.5505, recall: 0.5505, precision: 0.5505
+2020-02-25 10:39:09,028 INFO         top1: 0.5505, top2: 1.0000
+4/4 [==============================] - 10s 3s/step - loss: 0.3071 - accuracy: 0.9458
+Epoch 19/20
+1/4 [======>.......................] - ETA: 5s - loss: 0.2826 - accuracy: 0.95702/4 [==============>...............] - ETA: 3s - loss: 0.2691 - accuracy: 0.95512020-02-25 10:39:12.963923: W tensorflow/core/common_runtime/base_collective_executor.cc:217] BaseCollectiveExecutor::StartAbort Out of range: End of sequence
+	 [[{{node IteratorGetNext}}]]
+WARNING:tensorflow:Your input ran out of data; interrupting training. Make sure that your dataset or generator can generate at least `steps_per_epoch * epochs` batches (in this case, 80 batches). You may need to use the repeat() function when building your dataset.
+2020-02-25 10:39:13,097 INFO     Completed epoch #19: {'loss': 0.27216656769862013, 'accuracy': 0.9551435}
+2020-02-25 10:39:13,097 INFO     Saving model after 19 epochs.
+2020-02-25 10:39:14,166 INFO     Done saving model.
+2020-02-25 10:39:14,166 INFO     Evaluating... (takes ~0:00:00)
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x14c2d2ed0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x14fd492d0>, <gast.gast.Return object at 0x14fd491d0>]
+1/1 [==============================] - 1s 537ms/step - loss: 0.7261 - target_index_loss: 0.7261 - target_string_loss: 0.0000e+00 - target_index_top1_acc: 0.5517 - target_index_top2_acc: 1.0000 - target_string_subtoken_precision: 0.5517 - target_string_subtoken_recall: 0.5517 - target_string_subtoken_f1: 0.5517
+2020-02-25 10:39:14,848 INFO     Done evaluating (took 0:00:00). Evaluation results:
+2020-02-25 10:39:14,848 INFO         loss: 0.7261, f1: 0.5517, recall: 0.5517, precision: 0.5517
+2020-02-25 10:39:14,849 INFO         top1: 0.5517, top2: 1.0000
+2/4 [==============>...............] - ETA: 5s - loss: 0.2701 - accuracy: 0.95512020-02-25 10:39:14,852 INFO     <tensorflow.python.keras.callbacks.History object at 0x14bfefe50>
