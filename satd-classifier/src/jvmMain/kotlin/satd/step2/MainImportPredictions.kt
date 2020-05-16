@@ -8,7 +8,7 @@ import java.io.File
 import kotlin.math.round
 
 class MainImportPredictions {
-    val folder: File = File(config.dataset_export_path)
+    val folder: File = File(config.dataset_export_path).absoluteFile.normalize()
     val infoFile = folder.resolve("info.txt")
     private val evaluatedTest: File = File("$folder-evaluated/test")
 

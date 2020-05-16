@@ -12,7 +12,7 @@ object MainGenAndEval {
     fun main(args: Array<String>) {
         Shutdown.hook()
         persistence.setupDatabase()
-        val workingDir = File(config.code2vec_path)
+        val workingDir = File(config.code2vec_path).absoluteFile.normalize()
         Generate(breakMode = false,limit = false) { where1 }.filesWithJavaFeatures()
         workingDir.run {
             val conda = "bash"
