@@ -6,8 +6,11 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.transactions.transaction
+import satd.utils.config
 import satd.utils.logln
 import satd.utils.loglnStart
+import java.io.BufferedWriter
+import java.io.File
 
 
 fun assert2(value: Boolean, msg: String) {
@@ -24,14 +27,14 @@ fun assert2(value: Boolean, lazyMessage: () -> Any = {}) {
 val where1 by lazy {
     DbSatds.run {
         (parent_count.eq(1)
-                and new_clean_len.less(15)
-                and old_clean_len.less(15)
-                and old_clean_token_count.less(200)
-                and new_clean_token_count.less(200)
+//                and new_clean_len.less(10)
+//                and old_clean_len.less(10)
+                and old_clean_token_count.less(100)
+                and new_clean_token_count.less(100)
                 //and clean_diff_ratio.less(0.25)
                 and valid.eq(1)
                 and accept.eq(1)
-                and url.inList(urlsIssuesGreaterThan100())
+                //and url.inList(urlsIssuesGreaterThan100())
                 )
     }
 }
@@ -93,15 +96,18 @@ object MainGenDataset4 {
     fun main(args: Array<String>) = generate { where4 }
 }
 
+fun generate(breakMode: Boolean = false, limit: Boolean = false, where: () -> Op<Boolean>) =
+    Generate(breakMode, limit, where).filesForJavaExtractor()
 
-fun generate(breakMode: Boolean = false, limit: Boolean = false, where: () -> Op<Boolean>) {
+class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val where: () -> Op<Boolean>) {
 
     val mainImportPredictions = MainImportPredictions()
     val workFolder = mainImportPredictions.folder
     val infoFile = mainImportPredictions.infoFile
+    val javaFeatureFolder = File(config.code2vec_path)
 
 
-    fun writeSource(
+    private fun writeSource(
         satdId: Long,
         subfolder: String,
         type: String,
@@ -131,35 +137,120 @@ fun generate(breakMode: Boolean = false, limit: Boolean = false, where: () -> Op
         }
     }
 
+    fun filesWithJavaFeatures() {
 
-    loglnStart("GenDataset")
-    logln("Using workFolder: $workFolder")
-    workFolder.deleteRecursively()
-    assert2(!workFolder.exists())
+        loglnStart("GenDataset-filesForJavaExtractor")
+        logln("Using workFolder: $workFolder")
+        workFolder.deleteRecursively()
+        assert2(!workFolder.exists())
 
-    workFolder.mkdirs()
-    persistence.setupDatabase()
+        workFolder.mkdirs()
+        persistence.setupDatabase()
 
-    fun query() = DbSatds.select { where() }.orderBy(DbSatds.id).let { if (limit) it.take(100) else it }
+        fun query() = DbSatds.run {
+            slice(id, old_clean, new_clean, old_clean_features, new_clean_features).select { where() }
+                .orderBy(DbSatds.id).let { if (limit) it.take(100) else it }
+        }
 
-    val typeIndexes = mutableMapOf<String, Int>()
-    val partitions = Partitions(transaction { query().count() }, 0.7, 0.15)
-    partitions.print()
-    partitions.print2()
 
-    transaction {
-        val info = DatasetInfo.fromPartitions(partitions, where().toString())
-        query()
-            .forEachIndexed { idx, it ->
-                val folder = partitions.sequence[idx]
-                val index = typeIndexes.getOrDefault(folder, 0) + 2
-                typeIndexes[folder] = index
-                val satdId = it[DbSatds.id].value
-                info.addSatdId(folder, satdId)
-                writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
-                writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
+        val typeIndexes = mutableMapOf<String, Int>()
+        val testFeat = File(javaFeatureFolder, "java-small.test.raw.txt")
+        val valiFeat = File(javaFeatureFolder, "java-small.val.raw.txt")
+        val traiFeat = File(javaFeatureFolder, "java-small.train.raw.txt")
+        listOf(testFeat, valiFeat, traiFeat)
+            .apply {
+                forEach { delete(it) }
+                map { File(it.absolutePath + ".full") }.forEach { delete(it) }
             }
-        info.saveTo(infoFile)
+//        println("ok cancellati")
+//        readLine()
+        val traiApp = traiFeat.bufferedWriter()
+        val valiApp = valiFeat.bufferedWriter()
+        val testApp = testFeat.bufferedWriter()
+
+        transaction {
+            val recordCount = query().count()
+            val partitions = Partitions(recordCount, 0.7, 0.15)
+            partitions.print()
+            partitions.print2()
+
+            val info = DatasetInfo.fromPartitions(partitions, where().toString())
+            query()
+                .forEachIndexed { idx, it ->
+                    val folder = partitions.sequence[idx]
+                    val index = typeIndexes.getOrDefault(folder, 0) + 2
+                    typeIndexes[folder] = index
+                    val satdId = it[DbSatds.id].value
+                    info.addSatdId(folder, satdId)
+                    if (folder == Partitions.test) {
+                        writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
+                        writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
+                    }
+
+                    val app = when (folder) {
+                        Partitions.validation -> valiApp
+                        Partitions.training -> traiApp
+                        Partitions.test -> testApp
+                        else -> error("unrecognized folder $folder")
+                    }
+                    append(app,"satd",it[DbSatds.old_clean_features])
+                    append(app,"fixed",it[DbSatds.new_clean_features])
+
+
+
+                }
+            valiApp.close()
+            traiApp.close()
+            testApp.close()
+            info.saveTo(infoFile)
+        }
+    }
+
+    private fun append(buf: BufferedWriter, type: String, features: String) {
+        val f = features.split("\t", limit = 2)[1]
+        val f2 = type + " "+   f.substringAfter(" ")
+//        println(features)
+//        println("  \t$f2")
+        buf.appendln(f2)
+
+    }
+
+    private fun delete(it: File) {
+        println("delete $it")
+        if (it.exists()) assert2(it.delete())
+    }
+
+    fun filesForJavaExtractor() {
+
+        loglnStart("GenDataset-filesWithJavaFeatures")
+        logln("Using workFolder: $workFolder")
+        workFolder.deleteRecursively()
+        assert2(!workFolder.exists())
+
+        workFolder.mkdirs()
+        persistence.setupDatabase()
+
+        fun query() = DbSatds.select { where() }.orderBy(DbSatds.id).let { if (limit) it.take(100) else it }
+
+        val typeIndexes = mutableMapOf<String, Int>()
+        val partitions = Partitions(transaction { query().count() }, 0.7, 0.15)
+        partitions.print()
+        partitions.print2()
+
+        transaction {
+            val info = DatasetInfo.fromPartitions(partitions, where().toString())
+            query()
+                .forEachIndexed { idx, it ->
+                    val folder = partitions.sequence[idx]
+                    val index = typeIndexes.getOrDefault(folder, 0) + 2
+                    typeIndexes[folder] = index
+                    val satdId = it[DbSatds.id].value
+                    info.addSatdId(folder, satdId)
+                    writeSource(satdId, folder, "satd", it[DbSatds.old_clean], index - 1)
+                    writeSource(satdId, folder, "fixed", it[DbSatds.new_clean], index)
+                }
+            info.saveTo(infoFile)
+        }
     }
 
 }

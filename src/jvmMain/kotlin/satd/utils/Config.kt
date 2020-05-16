@@ -11,8 +11,8 @@ class Config(private val workingDirectory: String = ".") {
     val repos_path by this
     val thread_count by this
     val batch_size by this
-    val dataset_export_path by this
     val code2vec_path by notNull("please specify code2vec path")
+    val dataset_export_path get()= "$code2vec_path/build-dataset/java-small"
 
 
     val prop by lazy {

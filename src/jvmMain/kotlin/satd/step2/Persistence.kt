@@ -84,7 +84,7 @@ class DbPgsql(
 
 class Persistence(db: IDb) : IDb by db {
 
-    fun setupDatabase() {
+    val inited by lazy {
         logln("Jdbc url: [$url]")
         startDatabase()
         Database.connect(dataSource())
@@ -92,6 +92,11 @@ class Persistence(db: IDb) : IDb by db {
             addLogger(StdOutSqlLogger)
             SchemaUtils.createMissingTablesAndColumns(DbSatds, DbRepos, DbRuns, DbEvals)
         }
+        true
+    }
+
+    fun setupDatabase() {
+        inited
     }
 
     fun startWebServer() {

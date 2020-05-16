@@ -7,20 +7,22 @@ import java.util.concurrent.TimeUnit
 
 
 object MainGenAndEval {
+
     @JvmStatic
     fun main(args: Array<String>) {
         Shutdown.hook()
         persistence.setupDatabase()
         val workingDir = File(config.code2vec_path)
-        generate(breakMode = false,limit = false) { where1 }
+        Generate(breakMode = false,limit = false) { where1 }.filesWithJavaFeatures()
         workingDir.run {
             val conda = "bash"
-            runCommand("$conda ./preprocess.sh")
+            runCommand("$conda ./preprocess-only-histograms.sh")
             runCommand("$conda ./train.sh")
             runCommand("$conda ./evaluate_trained_model.sh")
         }
         MainImportPredictions().evaluationCopyInDb()
     }
+
 }
 
 private fun File.runCommand(command: String) {
