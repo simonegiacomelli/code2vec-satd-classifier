@@ -1,0 +1,59 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'maven'
+
+group = 'JavaExtractor'
+version = '0.0.1-SNAPSHOT'
+
+description = """JPredict"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+
+
+repositories {
+    jcenter()
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    mavenCentral()
+    maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'com.github.javaparser', name: 'javaparser-core', version:'3.0.0-alpha.4'
+    compile group: 'commons-io', name: 'commons-io', version:'1.3.2'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.9.8'
+    compile group: 'args4j', name: 'args4j', version:'2.33'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.5'
+    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test', version:'1.3.72'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+buildscript {
+    ext.kotlin_version = '1.3.72'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+task runSocketServer(type: JavaExec) {
+    group = "application"
+    main = 'JavaExtractor.SocketServer.AppKt'
+    standardInput = System.in
+    classpath = sourceSets.main.runtimeClasspath
+    args = []
+}
