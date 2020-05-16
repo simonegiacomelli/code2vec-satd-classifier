@@ -5,3 +5,6 @@
 **/.idea/**
 *.tar.gz
 **/log.txt
+build-dataset
+logs/scalars
+java-small.*raw.txt
