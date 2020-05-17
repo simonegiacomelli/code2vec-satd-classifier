@@ -3,13 +3,15 @@ package satd.step2
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 import kotlin.math.round
 
 fun main() {
     persistence.setupDatabase()
 
     val header = "run_id,positive_class,confidence,precision,recall,accuracy,f1".replace(",", "\t")
-    val confidences = listOf(0.5, 0.6, 0.7, 0.8, 0.9)
+    val confidences = listOf(0.5, 0.6, 0.7, 0.8, 0.9, 0.0)
 
     transaction {
         val runIdList = DbRuns.run { slice(id).selectAll().map { it[id].value } }.toList()
@@ -18,7 +20,7 @@ fun main() {
             val actual = DbEvals.run { select { run_id.eq(runId) }.count() }
             assert2(expected == actual) { "run_id=$runId DbEvals row count expected=$expected actual=$actual" }
             confidences.map { confidence ->
-                val rs = connection.query(sql1(confidence)).toList()
+                val rs = connection.query(sql1(runId, confidence)).toList()
                 val map = rs.map { "${it[0]}-${it[1]}" to (it[2] as Number).toInt() }.toMap()
                 listOf("satd" to "fixed", "fixed" to "satd").map {
                     val posi = it.first
@@ -35,10 +37,11 @@ fun main() {
             }.flatten()
         }.flatten()
 
+        val tsv = listOf(header, *lines.toTypedArray()).joinToString("\n")
         println("")
-        println(header)
-        lines.forEach { println(it) }
-
+        println(tsv)
+        val stringSelection = StringSelection(tsv)
+        Toolkit.getDefaultToolkit().systemClipboard.setContents(stringSelection, stringSelection)
     }
 }
 
@@ -57,13 +60,13 @@ class RelevanceMeasures(val tp: Int, val tn: Int, val fp: Int, val fn: Int) {
 private fun Sequence<Array<Any>>.print() = forEach { println("  " + it.joinToString("\t")) }
 
 
-private fun sql1(confidence: Double) = """
+private fun sql1(runId: Int, confidence: Double) = """
     
 SELECT   'satd' kind,
        satd_ok,
        COUNT(*)
 FROM dbevals
-WHERE  run_id = 4
+WHERE  run_id = $runId
 AND   satd_confidence >= $confidence
 GROUP BY 1,
          2
@@ -72,7 +75,7 @@ SELECT   'fixed' kind,
        fixed_ok,
        COUNT(*)
 FROM dbevals
-WHERE  run_id = 4
+WHERE  run_id = $runId
 AND   fixed_confidence >=  $confidence
 GROUP BY 1,
          2
