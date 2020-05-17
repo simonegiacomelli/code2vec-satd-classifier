@@ -40,7 +40,7 @@ class PgSqlCtl(
     private val dataPathStr: String get() = dataPath.toString()
 
     private val dataPath: Path
-        get() = Paths.get(pgsqlDataFolder).normalize()
+        get() = Paths.get(pgsqlDataFolder).toAbsolutePath().normalize()
 
     private fun getPgBin(exe: String): String {
         val home: Path = Paths.get(pgsqlBinFolder).toAbsolutePath().normalize()
@@ -85,7 +85,8 @@ class PgSqlCtl(
         command.environment()["LANGUAGE"] = "EN"
         log.info("Running command: {}", java.lang.String.join(" ", command.command()))
         log.info("in {}", command.directory())
-        log.info("with environment [{}]", command.environment().map { "${it.key}=${it.value}" }.joinToString(", "))
+        log.info("with environment [{}]", command.environment()
+            .map { "${it.key}=${it.value}" }.joinToString(", ").replace("\n", "\\n"))
         val process = command.start()
         val globber = ProcessStreamGlobber(process, processName = File(tokens[0]).name)
         globber.startGlobber()
