@@ -1,0 +1,5 @@
+/content/code2vec-satd-classifier/satd-classifier/data/pgsql/bin/initdb --no-locale -E UTF8 -U root -A md5 -D /content/code2vec-satd-classifier/satd-classifier/data/database/pg --pwfile=/tmp/tmp8113978030791499844tmp
+
+sudo useradd -p $(openssl passwd -1 password) username
+
+chown username:username -R /content/code2vec-satd-classifier/satd-classifier/data
