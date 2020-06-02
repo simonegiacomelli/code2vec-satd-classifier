@@ -70,14 +70,14 @@ class InteractivePredictor:
             output.append('Actual:\t' + actual)
             for name_prob_pair in method_prediction.predictions:
                 output.append('\t(%f) predicted: %s' % (name_prob_pair['probability'], name_prob_pair['name']))
-            output.append('Attention:')
-            for attention_obj in method_prediction.attention_paths:
-                output.append('%f\tcontext: %s,%s,%s' % (
-                    attention_obj['score'], attention_obj['token1'], attention_obj['path'],
-                    attention_obj['token2']))
-            if self.config.EXPORT_CODE_VECTORS:
-                output.append('Code vector:')
-                output.append(' '.join(map(str, raw_prediction.code_vector)))
+            # output.append('Attention:')
+            # for attention_obj in method_prediction.attention_paths:
+            #     output.append('%f\tcontext: %s,%s,%s' % (
+            #         attention_obj['score'], attention_obj['token1'], attention_obj['path'],
+            #         attention_obj['token2']))
+            # if self.config.EXPORT_CODE_VECTORS:
+            #     output.append('Code vector:')
+            #     output.append(' '.join(map(str, raw_prediction.code_vector)))
         output_body = '\n'.join(output)
         Path(output_filename).write_text(
             '/*\n' + output_body + '\n*/' +
