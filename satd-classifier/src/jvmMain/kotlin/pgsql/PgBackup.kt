@@ -1,6 +1,7 @@
 package pgsql
 
 import satd.step2.DbPgsql
+import satd.step2.assert2
 import java.io.File
 
 val file by lazy { File("./data/backup/bk1") }
@@ -19,6 +20,7 @@ object PgRestore {
     @JvmStatic
     fun main(args: Array<String>) {
         DbPgsql(databaseName = DsPostgreSqlProvider.NAME).startDatabase()
+        assert2(file.exists()) { "Folder does not exists! $file" }
         PgSqlStarter.def.pgSqlCtl.pg_restore(DsPostgreSqlProvider.NAME, file.absolutePath)
         println("PgRestore end")
     }
