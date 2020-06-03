@@ -94,7 +94,7 @@ class PathContextReader:
         vocabs.target_vocab.get_word_to_index_lookup_table()
 
     #TODO SIMO verify consequences of having commented out the following
-    @tf.function
+    #tf.function
     def process_input_row(self, row_placeholder):
         parts = tf.io.decode_csv(
             row_placeholder, record_defaults=self.csv_record_defaults, field_delim=' ', use_quote_delim=False)
