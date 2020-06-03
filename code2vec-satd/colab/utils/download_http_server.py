@@ -32,6 +32,7 @@ def download_files_in_url(start_url, start_folder):
             os.makedirs(folder, exist_ok=True)
             filename = os.path.join(folder, url.split('/')[-1])
             if not os.path.exists(filename):
+                print('downloading', url, 'to', filename)
                 urllib.request.urlretrieve(url, filename)
 
 
