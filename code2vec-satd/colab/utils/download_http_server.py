@@ -36,4 +36,11 @@ def download_files_in_url(start_url, start_folder):
 
 
 if __name__ == '__main__':
-    download_files_in_url('http://foo.inf.usi.ch:8000/', './temp/download')
+    # download_files_in_url('http://foo.inf.usi.ch:8000/', './temp/download')
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Synthetic Dataset generation")
+    parser.add_argument("--url", type=str, dest="url", required=True, help="url to download from")
+    parser.add_argument("--folder", type=str, dest="folder", required=True, help="folder to download to")
+    args = parser.parse_args()
+    download_files_in_url(args.url, args.folder)
