@@ -2,7 +2,6 @@ package satd.step2
 
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import satd.utils.Folders
 import satd.utils.config
 import java.io.File
 import kotlin.math.round
@@ -18,7 +17,7 @@ class MainImportPredictions {
             MainImportPredictions().apply {
                 //evaluationPrint()
                 persistence.setupDatabase()
-                evaluationCopyInDb()
+                evaluationCopyInDb("")
             }
         }
     }
@@ -27,8 +26,8 @@ class MainImportPredictions {
         return if (this) 1 else 0
     }
 
-    fun evaluationCopyInDb() {
-        val id: Int = transaction { DbRuns.newRun(DatasetInfo.loadFrom(infoFile), result) }
+    fun evaluationCopyInDb(output: String) {
+        val id: Int = transaction { DbRuns.newRun(DatasetInfo.loadFrom(infoFile), result,output) }
         transaction {
             sequence {
                 val s = evaluation.asIterable().iterator()

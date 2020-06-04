@@ -323,8 +323,9 @@ ORDER BY s.pattern,
     val train_ids = text("train_ids")
     val validation_ids = text("validation_ids")
     val test_ids = text("test_ids")
+    val stdout = text("stdout").default("")
 
-    fun newRun(datasetInfo: DatasetInfo, result: Result): Int = transaction {
+    fun newRun(datasetInfo: DatasetInfo, result: Result, output: String): Int = transaction {
         val ins = insertAndGetId { row ->
             row[total_count] = result.totalCount
             row[correct_count] = result.correctCount
@@ -339,6 +340,7 @@ ORDER BY s.pattern,
             row[test_ids] = datasetInfo.satdIdsToString(Partitions.test)
             row[username] = satd.utils.username
             row[hostname] = satd.utils.hostname
+            row[stdout] = output
         }
         ins.value
     }
