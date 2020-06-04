@@ -9,6 +9,7 @@ import kotlin.math.round
 class MainImportPredictions {
     val folder: File = File(config.dataset_export_path).absoluteFile.normalize()
     val infoFile = folder.resolve("info.txt")
+    val outputFile = folder.resolve("output.txt")
     private val evaluatedTest: File = File("$folder-evaluated/test")
 
     companion object {
@@ -17,7 +18,7 @@ class MainImportPredictions {
             MainImportPredictions().apply {
                 //evaluationPrint()
                 persistence.setupDatabase()
-                evaluationCopyInDb("")
+                evaluationCopyInDb()
             }
         }
     }
@@ -26,8 +27,8 @@ class MainImportPredictions {
         return if (this) 1 else 0
     }
 
-    fun evaluationCopyInDb(output: String) {
-        val id: Int = transaction { DbRuns.newRun(DatasetInfo.loadFrom(infoFile), result,output) }
+    fun evaluationCopyInDb() {
+        val id: Int = transaction { DbRuns.newRun(DatasetInfo.loadFrom(infoFile), result, outputFile.readText()) }
         transaction {
             sequence {
                 val s = evaluation.asIterable().iterator()

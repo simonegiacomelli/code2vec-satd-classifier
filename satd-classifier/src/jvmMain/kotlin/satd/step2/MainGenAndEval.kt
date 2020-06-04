@@ -15,6 +15,7 @@ object MainGenAndEval {
         persistence.setupDatabase()
         val workingDir = File(config.code2vec_path).absoluteFile.normalize()
         Generate(breakMode = false, limit = false) { where1 }.filesWithJavaFeatures()
+
         val output = workingDir.run {
             val conda = "bash"
             arrayOf(
@@ -23,7 +24,9 @@ object MainGenAndEval {
                 , runCommand("$conda ./evaluate_trained_model.sh")
             ).joinToString("\n\n" + "-".repeat(100) + "\n\n")
         }
-        MainImportPredictions().evaluationCopyInDb(output)
+        val imp = MainImportPredictions()
+        imp.outputFile.writeText(output)
+        imp.evaluationCopyInDb()
     }
 
 }
