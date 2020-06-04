@@ -40,6 +40,8 @@ class InteractivePredictor:
         predictions = self.predict_fast()
         in_dir = Path('build-dataset/java-small/test')
         out_dir = Path('build-dataset/java-small-evaluated/test')
+        print('Starting evaluation of', in_dir)
+
         if out_dir.exists():
             shutil.rmtree(out_dir)
         out_dir.mkdir(parents=True)
@@ -53,11 +55,11 @@ class InteractivePredictor:
             if self.predict_file(input_filename, output_filename, [predictions[done]]):
                 correct += 1
             done += 1
-            print('correct/done: %d/%d accuracy: %s %%  -- overall done/tot %%: %s' % (
-                correct, done, round(correct / done * 1000) / 10, round(done / len(entries) * 1000) / 10))
+        print('correct/done: %d/%d accuracy: %s %%  -- overall done/tot %%: %s' % (
+            correct, done, round(correct / done * 1000) / 10, round(done / len(entries) * 1000) / 10))
 
     def predict_file(self, input_filename, output_filename, raw_prediction_results=None):
-        print(input_filename, '--->', output_filename)
+        # print(input_filename, '--->', output_filename)
         if raw_prediction_results is None:
             try:
                 predict_lines, _ = self.path_extractor.extract_paths(input_filename)
