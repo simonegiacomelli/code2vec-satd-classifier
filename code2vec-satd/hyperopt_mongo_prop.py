@@ -5,7 +5,11 @@ from satd_utils import prop2dict
 
 class MongoProp:
     def __init__(self):
-        prop_prop = prop2dict(Path('mongo.properties').read_text())
+        path = Path('mongo.properties')
+        if not path.exists():
+            content = input('Insert mongo.properties content')
+            path.write_text(content)
+        prop_prop = prop2dict(path.read_text())
         self.username, self.password, self.hostname = \
             prop_prop['username'], prop_prop['password'], prop_prop['hostname']
 
