@@ -5,7 +5,7 @@ from satd_utils import prop2dict
 
 class MongoProp:
     def __init__(self):
-        path = Path('mongo.properties')
+        path = Path('mongo.txt')
         if not path.exists():
             line = input('Insert mongo.properties content').split('\\n')
             content = '\n'.join([l.trim() for l in line])

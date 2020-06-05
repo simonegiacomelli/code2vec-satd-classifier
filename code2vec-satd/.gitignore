@@ -8,4 +8,4 @@
 build-dataset
 logs/scalars
 java-small.*raw.txt
-mongo.properties
+mongo.txt
