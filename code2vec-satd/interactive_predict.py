@@ -56,10 +56,11 @@ class InteractivePredictor:
             if self.predict_file(input_filename, output_filename, [predictions[done]]):
                 correct += 1
             done += 1
-        accuracy = round(correct / done * 1000) / 10
+        accuracy = round(correct / done * 1000) / 1000
         print('correct/done: %d/%d accuracy: %s %%  -- overall done/tot %%: %s' % (
-            correct, done, accuracy, round(done / len(entries) * 1000) / 10))
+            correct, done, accuracy * 100, round(done / len(entries) * 1000) / 10))
         (Path(dataset_path) / 'evaluation.txt').write_text(f'accuracy={accuracy}')
+
     def predict_file(self, input_filename, output_filename, raw_prediction_results=None):
         # print(input_filename, '--->', output_filename)
         if raw_prediction_results is None:
