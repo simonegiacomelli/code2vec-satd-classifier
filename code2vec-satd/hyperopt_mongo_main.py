@@ -13,7 +13,7 @@ import os
 def objective(clean_token_count_limit):
     return {
         'loss': float(clean_token_count_limit) ** 2,
-        'status': STATUS_OK,
+        'status': 'ok',
         # -- store other results like this
         'os_uname': os.uname(),
     }
@@ -29,6 +29,7 @@ def objective(clean_token_count_limit):
         'evaluation': evaluation,
         'attachments': {'info': info, 'output': output}
     }
+
 
 from hyperopt.mongoexp import MongoTrials
 import hyperopt
@@ -48,7 +49,7 @@ while True:
     prev_len = len(trials.results)
     max_eval = prev_len + 2
     print('trials of previous runs:', prev_len, best_trial)
-    print('next max_eval',max_eval)
+    print('next max_eval', max_eval)
     best = fmin(objective,
                 space=hp.quniform('clean_token_count_limit', 20, 60, 1),
                 algo=tpe.suggest,
