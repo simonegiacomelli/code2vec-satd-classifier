@@ -38,8 +38,9 @@ class InteractivePredictor:
 
     def predict(self):
         predictions = self.predict_fast()
-        in_dir = Path('build-dataset/java-small/test')
-        out_dir = Path('build-dataset/java-small-evaluated/test')
+        dataset_path = 'build-dataset/java-small'
+        in_dir = Path('%s/test' % dataset_path)
+        out_dir = Path('%s-evaluated/test' % dataset_path)
         print('Starting evaluation of', in_dir)
 
         if out_dir.exists():
@@ -55,9 +56,10 @@ class InteractivePredictor:
             if self.predict_file(input_filename, output_filename, [predictions[done]]):
                 correct += 1
             done += 1
+        accuracy = round(correct / done * 1000) / 10
         print('correct/done: %d/%d accuracy: %s %%  -- overall done/tot %%: %s' % (
-            correct, done, round(correct / done * 1000) / 10, round(done / len(entries) * 1000) / 10))
-
+            correct, done, accuracy, round(done / len(entries) * 1000) / 10))
+        (Path(dataset_path) / 'evaluation.txt').write_text(f'accuracy={accuracy}')
     def predict_file(self, input_filename, output_filename, raw_prediction_results=None):
         # print(input_filename, '--->', output_filename)
         if raw_prediction_results is None:
