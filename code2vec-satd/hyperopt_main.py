@@ -13,9 +13,10 @@ import os
 def objective(clean_token_count_limit):
     clean_token_count_limit = int(clean_token_count_limit)
     evaluation, info, output = full_pipeline.run(clean_token_count_limit)
-    precision = prop2dict(evaluation)['accuracy']
+    accuracy_str = prop2dict(evaluation)['accuracy']
+    accuracy = float(accuracy_str)
     return {
-        'loss': precision,
+        'loss': 1.0 - accuracy,
         'status': STATUS_OK,
         # -- store other results like this
         'os_uname': os.uname(),
@@ -31,7 +32,7 @@ else:
     trials = Trials()
 
 while True:
-    print('trials of previous runs:', len(trials.results))
+    print('trials of previous runs:', len(trials.results), trials.best_trial if len(trials.results)>0 else '')
     best = fmin(objective,
                 space=hp.quniform('clean_token_count_limit', 20, 60, 1),
                 algo=tpe.suggest,
