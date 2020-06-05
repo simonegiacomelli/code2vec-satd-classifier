@@ -118,7 +118,7 @@ object MainGenDatasetArgs {
                         )
             }
         }
-        generate { where }
+        Generate(breakMode = false, limit = false) { where }.filesWithJavaFeatures()
         Shutdown.addApplicationShutdownHook { println("Generation done") }
     }
 }
@@ -205,9 +205,11 @@ class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val w
         val valiFeat = File(javaFeatureFolder, "java-small.val.raw.txt")
         val traiFeat = File(javaFeatureFolder, "java-small.train.raw.txt")
         listOf(testFeat, valiFeat, traiFeat)
+            .map { it.absoluteFile.normalize() }
             .apply {
                 forEach { delete(it) }
                 map { File(it.absolutePath + ".full") }.forEach { delete(it) }
+
             }
 //        println("ok cancellati")
 //        readLine()
