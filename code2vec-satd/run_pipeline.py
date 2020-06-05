@@ -1,17 +1,38 @@
 import os
+import subprocess
+import shutil
+
+output_file = os.path.abspath('./build-dataset/java-small.output.txt')
+output_file_final = os.path.abspath('./build-dataset/java-small/output.txt')
+with open(output_file, 'w') as f:
+    f.write('Start')
 
 
-def run_command(command):
-    exit_status = os.system(command)
+# threading.Thread(target=lambda: os.system(f'tail -F {output_file}'), daemon=True).start()
+
+
+def run_command(command, cwd=None):
+    print(f'executing {command}')
+    p = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    with open(output_file, 'a') as f:
+        f.write(f'Executing {command}\n')
+        for line in iter(p.stdout.readline, b''):
+            line = line.decode('utf-8')
+            print(line, end='')
+            f.write(line)
+    p.wait()
+    exit_status = p.returncode
+
     if exit_status != 0:
         raise Exception(f'Exit status {exit_status} for {command}')
 
 
-def run_gradle(task, arguments):
-    run_command(f'cd ../satd-classifier && ./gradlew {task} -Parguments="{arguments}"')
+# test exit code
+# run_command(['./gradlew', 'MainGenDatasetArgs', f'-Parguments=--exit_status 7'], cwd='../satd-classifier')
 
 
-# run_gradle('MainGenDatasetArgs', '--exit_status 7') # test exit code
-
-run_gradle('MainGenDatasetArgs', '--clean_token_count_limit 20')
+run_command(['./gradlew', 'MainGenDatasetArgs', f"-Parguments=--clean_token_count_limit 20"], cwd='../satd-classifier')
 run_command('./preprocess-only-histograms.sh')
+run_command('./train.sh')
+run_command('./evaluate_trained_model.sh')
+shutil.move(output_file, output_file_final)
