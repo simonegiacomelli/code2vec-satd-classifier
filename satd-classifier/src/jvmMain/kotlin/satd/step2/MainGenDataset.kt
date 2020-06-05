@@ -97,8 +97,8 @@ object MainGenDatasetArgs {
 
     @JvmStatic
     fun main(args: Array<String>) = mainBody {
-
-
+        println("Arguments: " + args.map { "[$it]" }.joinToString(" "))
+        
         val sw = ArgParser(args).parseInto(::Args)
         sw.exit_status?.also {
             println("Exiting with status $it")
