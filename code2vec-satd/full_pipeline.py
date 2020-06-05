@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 
 
-def run(clean_token_count_limit):
+def run(clean_token_count_limit, verbose=False):
     dataset_path = Path('./build-dataset/java-small')
     output_file = os.path.abspath('%s.output.txt' % dataset_path)
     output_file_final = os.path.abspath('%s/output.txt' % dataset_path)
@@ -20,7 +20,8 @@ def run(clean_token_count_limit):
             f.write(f'Executing {command}\n')
             for line in iter(p.stdout.readline, b''):
                 line = line.decode('utf-8')
-                print(line, end='')
+                if verbose:
+                    print(line, end='')
                 f.write(line)
         p.wait()
         exit_status = p.returncode
@@ -31,7 +32,10 @@ def run(clean_token_count_limit):
     # test exit code
     # run_command(['./gradlew', 'MainGenDatasetArgs', f'-Parguments=--exit_status 7'], cwd='../satd-classifier')
 
-    run_command(['./gradlew', 'MainGenDatasetArgs', f'-Parguments=--clean_token_count_limit {clean_token_count_limit}'],
+    run_command(['./gradlew'
+                    , 'MainGenDatasetArgs'
+                    , f'-Parguments=--clean_token_count_limit {clean_token_count_limit}'
+                    , '--console=plain'],
                 cwd='../satd-classifier')
     run_command('./preprocess-only-histograms.sh')
     run_command('./train.sh')
