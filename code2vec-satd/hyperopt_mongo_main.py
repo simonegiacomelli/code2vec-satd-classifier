@@ -11,6 +11,12 @@ import os
 
 
 def objective(clean_token_count_limit):
+    return {
+        'loss': float(clean_token_count_limit) ** 2,
+        'status': STATUS_OK,
+        # -- store other results like this
+        'os_uname': os.uname(),
+    }
     clean_token_count_limit = int(clean_token_count_limit)
     evaluation, info, output = full_pipeline.run(clean_token_count_limit)
     accuracy_str = prop2dict(evaluation)['accuracy']
@@ -29,15 +35,29 @@ prop_prop = prop2dict(Path('mongo.properties').read_text())
 username, password, hostname = prop_prop['username'], prop_prop['password'], prop_prop['hostname']
 
 from hyperopt.mongoexp import MongoTrials
+import hyperopt
+from hyperopt_mongo_prop import MongoProp
 
-trials = MongoTrials(f'mongo://{username}:{password}@{hostname}/foo_db/jobs?authSource=admin', exp_key='exp1')
+mongo_url = MongoProp().mongo_url()
+print('mongo_url', mongo_url)
+
+trials = MongoTrials(mongo_url, exp_key='exp1')
 
 while True:
-    print('trials of previous runs:', len(trials.results), trials.best_trial if len(trials.results) > 0 else '')
+    best_trial = ''
+    try:
+        best_trial = 'best trial: ' + str(trials.best_trial)
+    except hyperopt.exceptions.AllTrialsFailed:
+        pass
+    prev_len = len(trials.results)
+    max_eval = prev_len + 2
+    print('trials of previous runs:', prev_len, best_trial)
+    print('next max_eval',max_eval)
     best = fmin(objective,
                 space=hp.quniform('clean_token_count_limit', 20, 60, 1),
                 algo=tpe.suggest,
-                max_evals=len(trials.results) + 1,
+                max_evals=max_eval,
                 show_progressbar=False,
-                trials=trials)
+                trials=trials,
+                max_queue_len=10)
     print(best)
