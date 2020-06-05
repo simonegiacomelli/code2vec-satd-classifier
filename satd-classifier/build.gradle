@@ -54,6 +54,8 @@ kotlin {
                 implementation 'org.jetbrains.exposed:exposed:0.17.6'
                 implementation "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
                 implementation 'com.google.code.gson:gson:2.8.6'
+                implementation group: 'com.xenomachina', name: 'kotlin-argparser', version: '2.0.7'
+
 //                implementation 'org.webjars.bower:diff2html:2.11.2'
             }
         }
@@ -143,6 +145,17 @@ task MainDbPostProcessing(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "satd.step2.MainDbPostProcessingKt"
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
+}
+
+task MainGenDatasetArgs(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "satd.step2.MainGenDatasetArgs"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
+    if(project.hasProperty('arguments')){
+        args(arguments.split(' '))
+    }
+    // ./gradlew MainGenDatasetArgs -Parguments="--exit_status 5"
 }
 
 task MainGenDataset1(type: JavaExec, dependsOn: [jvmJar]) {

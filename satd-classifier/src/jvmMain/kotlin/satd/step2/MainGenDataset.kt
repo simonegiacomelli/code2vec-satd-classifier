@@ -1,6 +1,11 @@
 package satd.step2
 
 import com.github.javaparser.JavaParser
+import com.xenomachina.argparser.ArgParser
+import com.xenomachina.argparser.SystemExitException
+import com.xenomachina.argparser.default
+import com.xenomachina.argparser.mainBody
+import core.Shutdown
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
@@ -11,6 +16,7 @@ import satd.utils.logln
 import satd.utils.loglnStart
 import java.io.BufferedWriter
 import java.io.File
+import kotlin.system.exitProcess
 
 
 fun assert2(value: Boolean, msg: String) {
@@ -74,6 +80,47 @@ private fun urlsIssuesGreaterThan100(): List<String> {
     }
     println("repo count ${urls.size}")
     return urls
+}
+
+object MainGenDatasetArgs {
+    class Args(parser: ArgParser) {
+        val clean_token_count_limit by parser.storing(
+            "--clean_token_count_limit",
+            help = "select only token_count_limit less than"
+        ) { toIntOrNull() }.default { null }
+        val exit_status by parser.storing(
+            "--exit_status",
+            help = "just exit immediatly with the specified exit status; for testing purposes"
+        ) { toIntOrNull() }.default { null }
+
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) = mainBody {
+
+
+        val sw = ArgParser(args).parseInto(::Args)
+        sw.exit_status?.also {
+            println("Exiting with status $it")
+            exitProcess(it)
+        }
+
+        val limit = sw.clean_token_count_limit ?: throw SystemExitException("Invalid arguments. Try option -h", 1)
+        println("Dataset generation start")
+        val where by lazy {
+            DbSatds.run {
+                (parent_count.eq(1)
+                        and old_clean_token_count.less(limit)
+                        and new_clean_token_count.less(limit)
+                        //and clean_diff_ratio.less(0.25)
+                        and valid.eq(1)
+                        and accept.eq(1)
+                        )
+            }
+        }
+        generate { where }
+        Shutdown.addApplicationShutdownHook { println("Generation done") }
+    }
 }
 
 object MainGenDataset1 {
@@ -193,9 +240,8 @@ class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val w
                         Partitions.test -> testApp
                         else -> error("unrecognized folder $folder")
                     }
-                    append(app,"satd",it[DbSatds.old_clean_features])
-                    append(app,"fixed",it[DbSatds.new_clean_features])
-
+                    append(app, "satd", it[DbSatds.old_clean_features])
+                    append(app, "fixed", it[DbSatds.new_clean_features])
 
 
                 }
@@ -208,7 +254,7 @@ class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val w
 
     private fun append(buf: BufferedWriter, type: String, features: String) {
         val f = features.split("\t", limit = 2)[1]
-        val f2 = type + " "+   f.substringAfter(" ")
+        val f2 = type + " " + f.substringAfter(" ")
 //        println(features)
 //        println("  \t$f2")
         buf.appendln(f2)
