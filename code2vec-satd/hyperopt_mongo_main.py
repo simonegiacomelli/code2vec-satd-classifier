@@ -30,10 +30,6 @@ def objective(clean_token_count_limit):
         'attachments': {'info': info, 'output': output}
     }
 
-
-prop_prop = prop2dict(Path('mongo.properties').read_text())
-username, password, hostname = prop_prop['username'], prop_prop['password'], prop_prop['hostname']
-
 from hyperopt.mongoexp import MongoTrials
 import hyperopt
 from hyperopt_mongo_prop import MongoProp
