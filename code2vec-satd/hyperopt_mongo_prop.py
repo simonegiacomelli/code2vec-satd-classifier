@@ -8,7 +8,7 @@ class MongoProp:
         path = Path('mongo.txt')
         if not path.exists():
             line = input('Insert mongo.properties content').split('\\n')
-            content = '\n'.join([l.trim() for l in line])
+            content = '\n'.join([l.strip() for l in line])
             path.write_text(content)
         prop_prop = prop2dict(path.read_text())
         self.username, self.password, self.hostname = \
