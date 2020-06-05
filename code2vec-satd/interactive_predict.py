@@ -88,6 +88,6 @@ class InteractivePredictor:
         output_body = '\n'.join(output)
         Path(output_filename).write_text(
             '/*\n' + output_body + '\n*/' +
-            '\n\n' + Path(input_filename).read_text()
+            '\n\n' + Path(input_filename).read_text('utf-8')
         )
         return prediction == actual
