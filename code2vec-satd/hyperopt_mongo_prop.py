@@ -7,7 +7,8 @@ class MongoProp:
     def __init__(self):
         path = Path('mongo.properties')
         if not path.exists():
-            content = input('Insert mongo.properties content')
+            line = input('Insert mongo.properties content').split('\\n')
+            content = '\n'.join([l.trim() for l in line])
             path.write_text(content)
         prop_prop = prop2dict(path.read_text())
         self.username, self.password, self.hostname = \
