@@ -28,8 +28,6 @@ def main():
         print('checking sources for user postgres and db files')
         system_log(
             'runuser -l postgres -c "cd; cd code2vec-satd-classifier && git pull || git clone https://github.com/simonegiacomelli/code2vec-satd-classifier"')
-        get_ipython().system_raw(
-            'runuser -l postgres -c "cd; cd ./code2vec-satd-classifier/code2vec-satd && python3 optuna_properties.py"')
         system_log(
             "runuser -l postgres -c 'cd; cd ./code2vec-satd-classifier/satd-classifier && cd data/pgsql || unzip -q ./pgsql_binaries/pgsql_linux.zip -d ./data && echo unzip done' ")
         system_log(
