@@ -54,7 +54,7 @@ while True:
                 space=hp.quniform('clean_token_count_limit', 20, 60, 1),
                 algo=tpe.suggest,
                 max_evals=max_eval,
-                show_progressbar=False,
+                show_progressbar=True,
                 trials=trials,
                 max_queue_len=10)
     print(best)
