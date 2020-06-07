@@ -11,8 +11,6 @@ def system_log(cmd, raise_exception=True):
 
 def main():
     print('ok, start!')
-    system_log(
-        'runuser -l postgres -c "cd; cd ./code2vec-satd-classifier/satd-classifier && python3 optuna_properties.py"')
     # check user postgres
     if system_log('runuser -l postgres -c "cd"', raise_exception=False) == 0:
         print('user postgres do exists.')
@@ -30,6 +28,8 @@ def main():
         print('checking sources for user postgres and db files')
         system_log(
             'runuser -l postgres -c "cd; cd code2vec-satd-classifier && git pull || git clone https://github.com/simonegiacomelli/code2vec-satd-classifier"')
+        system_log(
+            'runuser -l postgres -c "cd; cd ./code2vec-satd-classifier/satd-classifier && python3 optuna_properties.py"')
         system_log(
             "runuser -l postgres -c 'cd; cd ./code2vec-satd-classifier/satd-classifier && cd data/pgsql || unzip -q ./pgsql_binaries/pgsql_linux.zip -d ./data && echo unzip done' ")
         system_log(
