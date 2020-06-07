@@ -11,6 +11,8 @@ def system_log(cmd, raise_exception=True):
 
 def main():
     print('ok, start!')
+    system_log(
+        'runuser -l postgres -c "cd; cd ./code2vec-satd-classifier/satd-classifier && python3 optuna_properties.py"')
     # check user postgres
     if system_log('runuser -l postgres -c "cd"', raise_exception=False) == 0:
         print('user postgres do exists.')
@@ -30,9 +32,12 @@ def main():
             'runuser -l postgres -c "cd; cd code2vec-satd-classifier && git pull || git clone https://github.com/simonegiacomelli/code2vec-satd-classifier"')
         system_log(
             "runuser -l postgres -c 'cd; cd ./code2vec-satd-classifier/satd-classifier && cd data/pgsql || unzip -q ./pgsql_binaries/pgsql_linux.zip -d ./data && echo unzip done' ")
-        system_log("runuser -l postgres -c 'cd ./code2vec-satd-classifier &&  python3 code2vec-satd/colab/utils/download_http_server.py --url  http://foo.inf.usi.ch:8000/ --folder ./satd-classifier/data/backup/bk1'")
+        system_log(
+            "runuser -l postgres -c 'cd ./code2vec-satd-classifier &&  python3 code2vec-satd/colab/utils/download_http_server.py --url  http://foo.inf.usi.ch:8000/ --folder ./satd-classifier/data/backup/bk1'")
         # sadly, for how the pgsql restore program works, it is expected to receive an error exit code
-        system_log("runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew pgsqlRestore --console=plain > ~/pgsql-restore-out.txt 2>&1'", raise_exception=False)
+        system_log(
+            "runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew pgsqlRestore --console=plain > ~/pgsql-restore-out.txt 2>&1'",
+            raise_exception=False)
 
         get_ipython().system_raw(
             "runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew showdatabase  </dev/null > ~/pgsql-out.txt 2>&1 & disown '")
