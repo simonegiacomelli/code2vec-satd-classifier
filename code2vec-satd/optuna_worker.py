@@ -15,14 +15,16 @@ def objective(trial):
     accuracy_str = prop2dict(evaluation)['accuracy']
     accuracy = float(accuracy_str)
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
+    loss = 1.0 - accuracy
     user_data = {
-        'loss': 1.0 - accuracy,
+        'loss': loss,
         # -- store other results like this
         'os_uname': os.uname(),
         'evaluation': evaluation,
         'attachments': {'info': info, 'output': output}
     }
     trial.set_user_attr('user_data', user_data)
+    return loss
 
 if __name__ == '__main__':
     from optuna_properties import get_file_properties
