@@ -9,8 +9,7 @@ def system_log(cmd, raise_exception=True):
     return code
 
 
-if __name__ == '__main__':
-
+def main():
     print('ok, start!')
     # check user postgres
     if system_log('runuser -l postgres -c "cd"', raise_exception=False) == 0:
@@ -24,21 +23,27 @@ if __name__ == '__main__':
         for cmd in create_postgres_user.split('\n'):
             code = system_log(cmd.strip())
 
-
     print('pgsql out exists:', os.path.exists('/home/postgres/pgsql-out.txt'))
     if not os.path.exists('/home/postgres/pgsql-out.txt'):
         print('checking sources for user postgres and db files')
-        system_log('runuser -l postgres -c "cd; cd code2vec-satd-classifier && git pull || git clone https://github.com/simonegiacomelli/code2vec-satd-classifier"')
-        system_log("runuser -l postgres -c 'cd; cd ./code2vec-satd-classifier/satd-classifier && cd data/pgsql || unzip -q ./pgsql_binaries/pgsql_linux.zip -d ./data && echo unzip done' ")
+        system_log(
+            'runuser -l postgres -c "cd; cd code2vec-satd-classifier && git pull || git clone https://github.com/simonegiacomelli/code2vec-satd-classifier"')
+        system_log(
+            "runuser -l postgres -c 'cd; cd ./code2vec-satd-classifier/satd-classifier && cd data/pgsql || unzip -q ./pgsql_binaries/pgsql_linux.zip -d ./data && echo unzip done' ")
         ###        system_log("runuser -l postgres -c 'cd ./code2vec-satd-classifier &&  python3 code2vec-satd/colab/utils/download_http_server.py --url  http://foo.inf.usi.ch:8000/ --folder ./satd-classifier/data/backup/bk1'")
         # sadly, for how the pgsql restore program works, it is expected to receive an error exit code
         ###        system_log("runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew pgsqlRestore --console=plain'", raise_exception=False)
-        #import subprocess
+        # import subprocess
 
-        get_ipython().system_raw("runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew showdatabase  </dev/null > ~/pgsql-out2.txt 2>&1 & disown '",shell=True)
-
+        get_ipython().system_raw(
+            "runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew showdatabase  </dev/null > ~/pgsql-out2.txt 2>&1 & disown '",
+            shell=True)
 
     # system_log('pip install hyperopt==0.2.4')
     # system_log('pip install tensorflow==2.1.0')
 
     print('done')
+
+
+if __name__ == '__main__':
+    main()
