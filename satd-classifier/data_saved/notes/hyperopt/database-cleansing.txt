@@ -1,0 +1,4 @@
+--in order to shrink the size and easy the copy of the backup on colab for a first quick test
+delete from dbsatds where valid <> 1 or accept <> 1;
+delete from dbevals;
+delete from dbsatds where old_clean_token_count >= 50 or new_clean_token_count >= 50;
