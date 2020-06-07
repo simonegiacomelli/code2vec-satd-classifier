@@ -7,17 +7,19 @@ import full_pipeline
 from satd_utils import prop2dict
 
 
-def objective(trial:Trial):
+def objective(trial: Trial):
     # x = trial.suggest_uniform('x', -10, 10)
     # return (x - 2) ** 2
-    trial.set_user_attr('run',   {
+    clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 20, 60000, 1))
+    trial.set_user_attr('run', {
         'loss': 1.2,
         # -- store other results like this
         'os_uname': os.uname(),
-        'evaluation': 'hi',
+        'clean_token_count_limit': clean_token_count_limit,
         'attachments': {'info': 'info', 'output': 'output'}
     })
-    clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 20, 60000, 1))
+    if clean_token_count_limit < 10000:
+        return None
     return float(clean_token_count_limit) ** 2
 
 

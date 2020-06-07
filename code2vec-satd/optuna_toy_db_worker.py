@@ -16,7 +16,8 @@ def objective(trial):
 
 def main():
     from file_properties import FileProperties
-    db_url = FileProperties('optuna-properties.txt').db_url
+    from optuna_properties import get_file_properties
+    db_url = get_file_properties().db_url
     # db_url=sqlite:///example.db\nstudy_name=exp1
     # study_name = 'example-study'  # Unique identifier of the study.
     study = optuna.create_study(study_name='toy-db-experiment', storage=db_url, load_if_exists=True)
