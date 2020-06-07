@@ -84,9 +84,13 @@ class DbPgsql(
 
 class Persistence(db: IDb) : IDb by db {
 
-    val inited by lazy {
+    private val logOnce by lazy {
         logln("Jdbc url: [$url]")
+    }
+    private val startOnce by lazy {
         startDatabase()
+    }
+    private val initOnce by lazy {
         Database.connect(dataSource())
         transaction {
             addLogger(StdOutSqlLogger)
@@ -95,8 +99,11 @@ class Persistence(db: IDb) : IDb by db {
         true
     }
 
-    fun setupDatabase() {
-        inited
+    fun setupDatabase(startDatabase: Boolean = true) {
+        logOnce
+        if (startDatabase)
+            startOnce
+        initOnce
     }
 
     fun startWebServer() {

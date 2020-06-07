@@ -92,13 +92,12 @@ object MainGenDatasetArgs {
             "--exit_status",
             help = "just exit immediatly with the specified exit status; for testing purposes"
         ) { toIntOrNull() }.default { null }
-
     }
 
     @JvmStatic
     fun main(args: Array<String>) = mainBody {
         println("Arguments: " + args.map { "[$it]" }.joinToString(" "))
-        
+
         val sw = ArgParser(args).parseInto(::Args)
         sw.exit_status?.also {
             println("Exiting with status $it")
@@ -118,7 +117,7 @@ object MainGenDatasetArgs {
                         )
             }
         }
-        Generate(breakMode = false, limit = false) { where }.filesWithJavaFeatures()
+        Generate(breakMode = false, limit = false) { where }.filesWithJavaFeatures(startDatabase = false)
         Shutdown.addApplicationShutdownHook { println("Generation done") }
     }
 }
@@ -184,7 +183,7 @@ class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val w
         }
     }
 
-    fun filesWithJavaFeatures() {
+    fun filesWithJavaFeatures(startDatabase: Boolean = true) {
 
         loglnStart("GenDataset-filesForJavaExtractor")
         logln("Using workFolder: $workFolder")
