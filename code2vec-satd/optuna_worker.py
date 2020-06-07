@@ -7,24 +7,36 @@ from satd_utils import prop2dict
 
 
 def objective(trial):
-
     clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 20, 60, 1))
-
     clean_token_count_limit = int(clean_token_count_limit)
-    evaluation, info, output = full_pipeline.run(clean_token_count_limit)
-    accuracy_str = prop2dict(evaluation)['accuracy']
-    accuracy = float(accuracy_str)
+
+    loss = None
+    accuracy = None
+    evaluation, info, output = ('', '', '')
+    error = ''
+    try:
+        evaluation, info, output = full_pipeline.run(clean_token_count_limit)
+        accuracy_str = prop2dict(evaluation)['accuracy']
+        accuracy = float(accuracy_str)
+        loss = 1.0 - accuracy
+    except Exception as ex:
+        error = str(ex)
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
-    loss = 1.0 - accuracy
+
     user_data = {
         'loss': loss,
+        'accuracy': accuracy,
         # -- store other results like this
         'os_uname': os.uname(),
-        'evaluation': evaluation,
+        'clean_token_count_limit': clean_token_count_limit,
         'attachments': {'info': info, 'output': output}
     }
+    if error != '':
+        user_data['error'] = error
     trial.set_user_attr('user_data', user_data)
+
     return loss
+
 
 if __name__ == '__main__':
     from optuna_properties import get_file_properties
