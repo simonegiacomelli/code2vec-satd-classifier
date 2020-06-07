@@ -19,6 +19,8 @@ class PgSqlCtl(
     private val pgsqlBinFolder: String = PgDefaults.binFolder,
     private val pgsqlDataFolder: String = PgDefaults.dataFolder,
     private val pgsqlTcpPort: Int = PgDefaults.tcpPort,
+    private val pgsqlUsername: String = DsPostgreSqlProvider.USERNAME,
+    private val pgsqlPassword: String = DsPostgreSqlProvider.PASSWORD,
     private val pgSqlConfigFix: IPgSqlConfigFix = PgSqlConfigFix()
 ) : IPgSqlCtl {
     companion object {
@@ -86,7 +88,8 @@ class PgSqlCtl(
         log.info("Running command: {}", java.lang.String.join(" ", command.command()))
         log.info("in {}", command.directory())
         log.info("with environment [{}]", command.environment()
-            .map { "${it.key}=${it.value}" }.joinToString(", ").replace("\n", "\\n"))
+            .map { "${it.key}=${it.value}" }.joinToString(", ").replace("\n", "\\n")
+        )
         val process = command.start()
         val globber = ProcessStreamGlobber(process, processName = File(tokens[0]).name)
         globber.startGlobber()
@@ -103,13 +106,14 @@ class PgSqlCtl(
         return dataPath.toFile().exists()
     }
 
+
     fun initDb(tcpPort: Int) {
         if (dbExist()) throw PgdataAlreadyExists(dataPathStr)
         val pwFile = pwFile
         val exitValue: Int
         exitValue = try {
             exec(
-                getPgBin("initdb"), "--no-locale", "-E", "UTF8", "-U", DsPostgreSqlProvider.USERNAME
+                getPgBin("initdb"), "--no-locale", "-E", "UTF8", "-U", pgsqlUsername
                 , "-A", "md5", "-D", dataPathStr, "--pwfile=" + pwFile.absolutePath
             )
         } finally {
@@ -119,10 +123,11 @@ class PgSqlCtl(
         pgSqlConfigFix.fixConfig(dataPath, tcpPort)
     }
 
+
     private val pwFile: File
         get() {
             val pwFile = File.createTempFile("tmp", "tmp")
-            core.FileUtils.write(pwFile, DsPostgreSqlProvider.PASSWORD)
+            core.FileUtils.write(pwFile, pgsqlPassword)
             return pwFile
         }
 
@@ -133,7 +138,7 @@ class PgSqlCtl(
     fun pg_dump(databaseName: String, path: String) {
         val exitValue = try {
             val tokens = listOf(
-                getPgBin("pg_dump"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", DsPostgreSqlProvider.USERNAME
+                getPgBin("pg_dump"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", pgsqlUsername
                 , "-F", "d", "-b", "-c", "-W", "-f", path, databaseName
             )
 
@@ -156,7 +161,7 @@ class PgSqlCtl(
                             process.outputStream
                                 .bufferedWriter()
                                 .also {
-                                    it.write(DsPostgreSqlProvider.PASSWORD + "\n")
+                                    it.write(pgsqlPassword + "\n")
                                 }.flush()
 
 
@@ -184,7 +189,7 @@ class PgSqlCtl(
     fun pg_restore(databaseName: String, path: String) {
         val exitValue = try {
             val tokens = listOf(
-                getPgBin("pg_restore"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", DsPostgreSqlProvider.USERNAME
+                getPgBin("pg_restore"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", pgsqlUsername
                 , "-W", "-c", "-d", databaseName, path
             )
 
@@ -209,7 +214,7 @@ class PgSqlCtl(
                                 process.outputStream
                                     .bufferedWriter()
                                     .also {
-                                        it.write(DsPostgreSqlProvider.PASSWORD + "\n")
+                                        it.write(pgsqlPassword + "\n")
                                     }.flush()
                                 break
                             }

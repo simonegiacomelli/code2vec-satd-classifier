@@ -37,6 +37,16 @@ private class Args(parser: ArgParser) {
         help = "postgres data folder default: ${PgDefaults.dataFolder}"
     ).default(PgDefaults.dataFolder)
 
+    val username by parser.storing(
+        "--username",
+        help = "username"
+    ).default(DsPostgreSqlProvider.USERNAME)
+
+    val password by parser.storing(
+        "--password",
+        help = "password"
+    ).default(DsPostgreSqlProvider.PASSWORD)
+
     val bin_folder by parser.storing(
         "--bin_folder",
         help = "postgres binaries folder. default: ${PgDefaults.binFolder}"
@@ -51,7 +61,9 @@ private class Args(parser: ArgParser) {
             PgSqlCtl(
                 pgsqlDataFolder = data_folder,
                 pgsqlTcpPort = tcp_port,
-                pgsqlBinFolder = bin_folder
+                pgsqlBinFolder = bin_folder,
+                pgsqlUsername = username,
+                pgsqlPassword = password
             )
         }
     }

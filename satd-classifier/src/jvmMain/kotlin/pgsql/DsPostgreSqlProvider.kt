@@ -23,7 +23,7 @@ class DsPostgreSqlProvider {
                 statement.execute(
                     "CREATE DATABASE $NAME WITH OWNER = $USERNAME ENCODING = 'UTF8' " +
                             "TABLESPACE = pg_default LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;"
-
+//create database db with owner = foo encoding = 'UTF8' TABLESPACE = pg_default LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;
                 )
             }
         }
