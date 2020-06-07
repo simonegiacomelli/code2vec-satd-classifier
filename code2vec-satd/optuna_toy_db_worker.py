@@ -17,10 +17,9 @@ def objective(trial):
 def main():
     from file_properties import FileProperties
     db_url = FileProperties('optuna-properties.txt').db_url
-    study_name = FileProperties('optuna-properties.txt').study_name
     # db_url=sqlite:///example.db\nstudy_name=exp1
     # study_name = 'example-study'  # Unique identifier of the study.
-    study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True)
+    study = optuna.create_study(study_name='toy-db-experiment', storage=db_url, load_if_exists=True)
     study.optimize(objective, n_trials=1000)
 
 
