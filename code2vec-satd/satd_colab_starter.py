@@ -37,7 +37,7 @@ def main():
         get_ipython().system_raw(
             "runuser -l postgres -c 'cd ./code2vec-satd-classifier/satd-classifier && ./gradlew showdatabase  </dev/null > ~/pgsql-out.txt 2>&1 & disown '")
 
-    system_log('pip install hyperopt==0.2.4')
+    system_log('pip install optuna')
     system_log('pip install tensorflow==2.1.0')
 
     print('done')
