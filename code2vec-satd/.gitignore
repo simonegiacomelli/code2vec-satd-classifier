@@ -9,3 +9,4 @@ build-dataset
 logs/scalars
 java-small.*raw.txt
 mongo.txt
+optuna-properties.txt
