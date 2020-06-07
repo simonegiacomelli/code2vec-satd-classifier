@@ -191,7 +191,7 @@ class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val w
         assert2(!workFolder.exists())
 
         workFolder.mkdirs()
-        persistence.setupDatabase()
+        persistence.setupDatabase(startDatabase)
 
         fun query() = DbSatds.run {
             slice(id, old_clean, new_clean, old_clean_features, new_clean_features).select { where() }
