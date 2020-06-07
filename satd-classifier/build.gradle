@@ -211,4 +211,29 @@ task pgsqlRemoveDataFolder(type: JavaExec, dependsOn: [jvmJar]) {
     args = []
 }
 
+task pgsqlStartInstance(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "pgsql.PgStartInstance"
+    standardInput = System.in
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
+    if(project.hasProperty('arguments')){
+        args(arguments.split(' '))
+    }
+    // ./gradlew pgsqlCreateInstance -Parguments=""
+}
+
+
+task pgsqlStoptInstance(type: JavaExec, dependsOn: [jvmJar]) {
+    group = "application"
+    main = "pgsql.PgStopInstance"
+    standardInput = System.in
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
+    if(project.hasProperty('arguments')){
+        args(arguments.split(' '))
+    }
+    // ./gradlew pgsqlCreateInstance -Parguments=""
+}
+
 

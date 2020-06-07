@@ -1,6 +1,11 @@
 package pgsql
 
+import com.xenomachina.argparser.ArgParser
+import com.xenomachina.argparser.default
+import com.xenomachina.argparser.mainBody
+import pgsql.ctl.PgSqlCtl
 import satd.step2.DbPgsql
+import satd.step2.MainGenDatasetArgs
 import satd.step2.assert2
 import java.io.File
 
@@ -23,6 +28,48 @@ object PgRestore {
         assert2(file.exists()) { "Folder does not exists! $file" }
         PgSqlStarter.def.pgSqlCtl.pg_restore(DsPostgreSqlProvider.NAME, file.absolutePath)
         println("PgRestore end")
+    }
+}
+
+private class Args(parser: ArgParser) {
+    val data_folder by parser.storing(
+        "--data_folder",
+        help = "postgres data folder"
+    ).default { PgDefaults.dataFolder }
+
+    val bin_folder by parser.storing(
+        "--bin_folder",
+        help = "postgres binaries folder"
+    ).default { PgDefaults.binFolder }
+    val tcp_port by parser.storing(
+        "--tcp_port",
+        help = "tcp listening port"
+    ) { toInt() }.default { PgDefaults.tcpPort }
+
+    companion object {
+        operator fun invoke(args: Array<String>) = ArgParser(args).parseInto(::Args).run {
+            PgSqlCtl(
+                pgsqlDataFolder = data_folder,
+                pgsqlTcpPort = tcp_port,
+                pgsqlBinFolder = bin_folder
+            )
+        }
+    }
+}
+
+object PgStartInstance {
+    @JvmStatic
+    fun main(args: Array<String>) = mainBody {
+        PgSqlStarter(Args(args)).start(hookShutdown = false)
+        println("PgStartInstance end")
+    }
+}
+
+object PgStopInstance {
+    @JvmStatic
+    fun main(args: Array<String>) = mainBody {
+        Args(args).stop()
+        println("PgStopInstance end")
     }
 }
 
