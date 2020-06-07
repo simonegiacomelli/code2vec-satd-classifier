@@ -14,6 +14,7 @@ def objective(trial):
     evaluation, info, output = full_pipeline.run(clean_token_count_limit)
     accuracy_str = prop2dict(evaluation)['accuracy']
     accuracy = float(accuracy_str)
+    # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
     user_data = {
         'loss': 1.0 - accuracy,
         # -- store other results like this
