@@ -12,8 +12,8 @@ def system_log(cmd, raise_exception=True):
 def main():
     print('ok, start!')
     # check user postgres
-    from optuna_properties import get_file_properties
-    get_file_properties()
+    from optuna_properties import prefetch_file_properties
+    prefetch_file_properties()
 
     if system_log('runuser -l postgres -c "cd"', raise_exception=False) == 0:
         print('user postgres do exists.')
