@@ -34,17 +34,17 @@ object PgRestore {
 private class Args(parser: ArgParser) {
     val data_folder by parser.storing(
         "--data_folder",
-        help = "postgres data folder"
-    ).default { PgDefaults.dataFolder }
+        help = "postgres data folder default: ${PgDefaults.dataFolder}"
+    ).default(PgDefaults.dataFolder)
 
     val bin_folder by parser.storing(
         "--bin_folder",
-        help = "postgres binaries folder"
-    ).default { PgDefaults.binFolder }
+        help = "postgres binaries folder. default: ${PgDefaults.binFolder}"
+    ).default(PgDefaults.binFolder)
     val tcp_port by parser.storing(
         "--tcp_port",
-        help = "tcp listening port"
-    ) { toInt() }.default { PgDefaults.tcpPort }
+        help = "tcp listening port. default: ${PgDefaults.tcpPort}"
+    ) { toInt() }.default(PgDefaults.tcpPort)
 
     companion object {
         operator fun invoke(args: Array<String>) = ArgParser(args).parseInto(::Args).run {

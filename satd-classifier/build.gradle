@@ -220,7 +220,7 @@ task pgsqlStartInstance(type: JavaExec, dependsOn: [jvmJar]) {
     if(project.hasProperty('arguments')){
         args(arguments.split(' '))
     }
-    // ./gradlew pgsqlCreateInstance -Parguments=""
+    // ./gradlew pgsqlStartInstance -Parguments="-h"
 }
 
 
@@ -233,7 +233,7 @@ task pgsqlStoptInstance(type: JavaExec, dependsOn: [jvmJar]) {
     if(project.hasProperty('arguments')){
         args(arguments.split(' '))
     }
-    // ./gradlew pgsqlCreateInstance -Parguments=""
+    // ./gradlew pgsqlStoptInstance -Parguments="-h"
 }
 
 
