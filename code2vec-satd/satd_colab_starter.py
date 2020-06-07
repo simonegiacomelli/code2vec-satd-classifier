@@ -31,7 +31,7 @@ def main():
     print('pgsql out exists:', os.path.exists('/content/pgsql-out.txt'))
     if not os.path.exists('/content/pgsql-out.txt'):
         system_log(
-            "cd /content/code2vec-satd-classifier && python3 code2vec-satd/colab/utils/download_http_server.py --url http://foo.inf.usi.ch:8000/ --folder ./satd-classifier/data/backup/bk1'")
+            "cd /content/code2vec-satd-classifier && python3 code2vec-satd/colab/utils/download_http_server.py --url http://foo.inf.usi.ch:8000/ --folder ./satd-classifier/data/backup/bk1")
         # sadly, for how the pgsql restore program works, it is expected to receive an error exit code
         system_log('chown -R postgres:postgres /content')
         system_log(
