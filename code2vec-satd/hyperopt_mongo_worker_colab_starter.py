@@ -24,7 +24,6 @@ def system_log(cmd, raise_exception=True):
 
 
 if __name__ == '__main__':
-    import os
 
     print('ok, start!')
     # check user postgres
@@ -50,3 +49,5 @@ if __name__ == '__main__':
     # system_log('pip install tensorflow==2.1.0')
 
     print('done')
+    os.system('kill %d' % os.getpid())
+    print('done2')
