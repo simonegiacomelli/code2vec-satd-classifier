@@ -12,7 +12,7 @@ class DsPostgreSqlProvider {
         const val HOST = "localhost"
         const val NAME = "db"
         const val PORT = 1603
-        val USERNAME: String by lazy { System.getenv("USER") ?: "root" }
+        val USERNAME: String by lazy { System.getenv("USER") ?: "postgres" }
         const val PASSWORD = "usi"
     }
 
