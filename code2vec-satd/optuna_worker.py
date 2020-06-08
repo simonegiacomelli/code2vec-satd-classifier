@@ -48,3 +48,4 @@ if __name__ == '__main__':
     # study_name = 'example-study'  # Unique identifier of the study.
     study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True)
     study.optimize(objective, n_trials=10000)
+    print('done')
