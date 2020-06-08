@@ -10,7 +10,6 @@ def objective(trial):
     clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 20, 60, 1))
     clean_token_count_limit = int(clean_token_count_limit)
 
-    loss = None
     accuracy = None
     evaluation, info, output = ('', '', '')
     error = ''
@@ -18,13 +17,11 @@ def objective(trial):
         evaluation, info, output = full_pipeline.run(clean_token_count_limit)
         accuracy_str = prop2dict(evaluation)['accuracy']
         accuracy = float(accuracy_str)
-        loss = 1.0 - accuracy
     except Exception as ex:
         error = str(ex)
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
 
     user_data = {
-        'loss': loss,
         'accuracy': accuracy,
         # -- store other results like this
         'os_uname': os.uname(),
@@ -35,7 +32,7 @@ def objective(trial):
         user_data['error'] = error
     trial.set_user_attr('user_data', user_data)
 
-    return loss
+    return accuracy
 
 
 if __name__ == '__main__':
@@ -46,6 +43,6 @@ if __name__ == '__main__':
     study_name = prop.study_name
     # db_url=sqlite:///example.db\nstudy_name=exp1
     # study_name = 'example-study'  # Unique identifier of the study.
-    study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True)
+    study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True,direction='maximize')
     study.optimize(objective, n_trials=10000)
     print('done')
