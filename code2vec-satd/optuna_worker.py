@@ -11,10 +11,10 @@ def objective(trial):
     default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 64, 768, 1))
 
     accuracy = None
-    evaluation, info, output = ('', '', '')
+    evaluation, info, output = ('', '', [])
     error = ''
     try:
-        evaluation, info, output = full_pipeline.run(clean_token_count_limit, default_embeddings_size)
+        evaluation, info, _ = full_pipeline.run(clean_token_count_limit, default_embeddings_size, output=output)
         accuracy_str = prop2dict(evaluation)['accuracy']
         accuracy = float(accuracy_str)
     except Exception as ex:

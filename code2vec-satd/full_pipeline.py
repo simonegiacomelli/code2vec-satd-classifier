@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 
 
-def run(clean_token_count_limit, default_embeddings_size=256, verbose=False):
+def run(clean_token_count_limit, default_embeddings_size=256, verbose=False , output = []):
     dataset_path = Path('./build-dataset/java-small')
     dataset_path.mkdir(parents=True, exist_ok=True)
     output_file = os.path.abspath('%s.output.txt' % dataset_path)
@@ -59,7 +59,7 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False):
 
     evaluation = (dataset_path / 'evaluation.txt').read_text()
     info = (dataset_path / 'info.txt').read_text()
-    output = (dataset_path / 'output.txt').read_text()
+    # output = (dataset_path / 'output.txt').read_text()
     return evaluation, info, output
 
 
