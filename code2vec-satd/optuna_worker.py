@@ -18,7 +18,8 @@ def objective(trial):
         accuracy_str = prop2dict(evaluation)['accuracy']
         accuracy = float(accuracy_str)
     except Exception as ex:
-        error = str(ex)
+        import traceback
+        error = traceback.format_exc()
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
 
     user_data = {
