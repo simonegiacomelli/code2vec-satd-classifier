@@ -16,7 +16,7 @@ model_dir=models/${type}
 mkdir -p models/${model_dir}
 set -e
 
-GO="python3 -u code2vec.py --data ${data} --test ${test_data} --save ${model_dir}/saved_model --framework keras --tensorboard"
+GO="python3 -u code2vec.py --data ${data} --test ${test_data} --save ${model_dir}/saved_model default_embeddings_size 256 --framework keras --tensorboard"
 #open
 
 #GO="python3 -u code2vec.py --data ${data} --test ${test_data} --save ${model_dir}/saved_model "

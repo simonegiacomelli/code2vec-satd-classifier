@@ -39,8 +39,8 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False):
         model_dir = 'models/' + type
         os.makedirs(model_dir, exist_ok=True)
 
-        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --framework keras --tensorboard" % \
-             (data, test_data, model_dir)
+        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --default_embeddings_size %s --framework keras --tensorboard" % \
+             (data, test_data, model_dir, str(default_embeddings_size))
         run_command(GO.split(' '))
 
     # test exit code

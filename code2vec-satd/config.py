@@ -41,6 +41,9 @@ class Config:
                             help="path to store logs into. if not given logs are not saved to file.")
         parser.add_argument('-tb', '--tensorboard', dest='use_tensorboard', action='store_true',
                             help='use tensorboard during training')
+        parser.add_argument('--default_embeddings_size', dest='default_embeddings_size', type=int, required=False,
+                            default=None,
+                            help='set default_embeddings_size')
         return parser
 
     def set_defaults(self):
@@ -86,6 +89,14 @@ class Config:
         self.DL_FRAMEWORK = 'tensorflow' if not args.dl_framework else args.dl_framework
         self.USE_TENSORBOARD = args.use_tensorboard
 
+        # satd experiments
+        if args.default_embeddings_size is not None:
+            self.DEFAULT_EMBEDDINGS_SIZE = args.default_embeddings_size
+            self.TOKEN_EMBEDDINGS_SIZE = self.DEFAULT_EMBEDDINGS_SIZE
+            self.PATH_EMBEDDINGS_SIZE = self.DEFAULT_EMBEDDINGS_SIZE
+            self.CODE_VECTOR_SIZE = self.context_vector_size
+            self.TARGET_EMBEDDINGS_SIZE = self.CODE_VECTOR_SIZE
+
     def __init__(self, set_defaults: bool = False, load_from_args: bool = False, verify: bool = False):
         self.NUM_TRAIN_EPOCHS: int = 0
         self.SAVE_EVERY_EPOCHS: int = 0
@@ -113,15 +124,15 @@ class Config:
         self.SEPARATE_OOV_AND_PAD: bool = False
 
         # Automatically filled by `args`.
-        self.PREDICT: bool = False   # TODO: update README;
+        self.PREDICT: bool = False  # TODO: update README;
         self.MODEL_SAVE_PATH: Optional[str] = None
         self.MODEL_LOAD_PATH: Optional[str] = None
         self.TRAIN_DATA_PATH_PREFIX: Optional[str] = None
         self.TEST_DATA_PATH: Optional[str] = None
         self.RELEASE: bool = False
         self.EXPORT_CODE_VECTORS: bool = False
-        self.SAVE_W2V: Optional[str] = None   # TODO: update README;
-        self.SAVE_T2V: Optional[str] = None   # TODO: update README;
+        self.SAVE_W2V: Optional[str] = None  # TODO: update README;
+        self.SAVE_T2V: Optional[str] = None  # TODO: update README;
         self.VERBOSE_MODE: int = 0
         self.LOGS_PATH: Optional[str] = None
         self.DL_FRAMEWORK: str = ''  # in {'keras', 'tensorflow'}
