@@ -8,13 +8,13 @@ from satd_utils import prop2dict
 
 def objective(trial):
     clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 20, 60, 1))
-    clean_token_count_limit = int(clean_token_count_limit)
+    default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 64, 768, 1))
 
     accuracy = None
     evaluation, info, output = ('', '', '')
     error = ''
     try:
-        evaluation, info, output = full_pipeline.run(clean_token_count_limit)
+        evaluation, info, output = full_pipeline.run(clean_token_count_limit, default_embeddings_size)
         accuracy_str = prop2dict(evaluation)['accuracy']
         accuracy = float(accuracy_str)
     except Exception as ex:
@@ -43,6 +43,6 @@ if __name__ == '__main__':
     study_name = prop.study_name
     # db_url=sqlite:///example.db\nstudy_name=exp1
     # study_name = 'example-study'  # Unique identifier of the study.
-    study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True,direction='maximize')
+    study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True, direction='maximize')
     study.optimize(objective, n_trials=10000)
     print('done')
