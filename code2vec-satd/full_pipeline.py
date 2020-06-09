@@ -30,6 +30,19 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False):
         if exit_status != 0:
             raise Exception(f'Exit status {exit_status} for {command}')
 
+    def run_train():
+        type = 'java-small'
+        dataset_name = 'java-small'
+        data_dir = 'data/' + dataset_name
+        data = data_dir + '/' + dataset_name
+        test_data = data_dir + '/' + dataset_name + '.val.c2v'
+        model_dir = 'models/' + type
+        os.makedirs(model_dir, exist_ok=True)
+
+        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --framework keras --tensorboard" % \
+             (data, test_data, model_dir)
+        run_command(GO.split(' '))
+
     # test exit code
     # run_command(['./gradlew', 'MainGenDatasetArgs', f'-Parguments=--exit_status 7'], cwd='../satd-classifier')
 
@@ -39,7 +52,8 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False):
                     , '--console=plain'],
                 cwd='../satd-classifier')
     run_command('./preprocess-only-histograms.sh')
-    run_command('./train.sh')
+    # run_command('./train.sh')
+    run_train()
     run_command('./evaluate_trained_model.sh')
     shutil.move(output_file, output_file_final)
 
