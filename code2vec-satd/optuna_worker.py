@@ -21,7 +21,9 @@ def objective(trial):
         import traceback
         error = traceback.format_exc()
         print('error-01', error)
-        print('output-01', '\n'.join(output))
+        print('output-01-start', '\n'.join(output))
+        print('output-01-end  --------------------------------------------')
+        print('')
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
 
     user_data = {
