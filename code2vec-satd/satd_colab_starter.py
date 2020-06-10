@@ -1,5 +1,5 @@
 import os
-
+import urllib.request
 
 def system_log(cmd, raise_exception=True):
     print('Executing', cmd)
@@ -11,6 +11,7 @@ def system_log(cmd, raise_exception=True):
 
 def main():
     print('ok, start!')
+    urllib.request.urlretrieve('http://e.jako.pro:8000/optuna-properties.txt', 'optuna-properties.txt')
     from optuna_properties import prefetch_file_properties
     prefetch_file_properties()
     system_log(
