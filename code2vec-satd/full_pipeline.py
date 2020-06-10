@@ -65,4 +65,4 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False , ou
 
 
 if __name__ == '__main__':
-    print(run(20))
+    print(run(50, default_embeddings_size=100))
