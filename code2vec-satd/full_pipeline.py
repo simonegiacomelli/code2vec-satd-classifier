@@ -23,6 +23,7 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False , ou
                 line = line.decode('utf-8')
                 if verbose:
                     print(line, end='')
+                output.append(line)
                 f.write(line)
         p.wait()
         exit_status = p.returncode
