@@ -4,7 +4,7 @@ import shutil
 from pathlib import Path
 
 
-def run(clean_token_count_limit, default_embeddings_size=256, verbose=False , output = []):
+def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, output=[]):
     dataset_path = Path('./build-dataset/java-small')
     dataset_path.mkdir(parents=True, exist_ok=True)
     output_file = os.path.abspath('%s.output.txt' % dataset_path)
@@ -31,13 +31,13 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False , ou
         if exit_status != 0:
             raise Exception(f'Exit status {exit_status} for {command}')
 
+    dataset_name = 'java-small'
+    model_dir = 'models/' + dataset_name
+
     def run_train():
-        type = 'java-small'
-        dataset_name = 'java-small'
         data_dir = 'data/' + dataset_name
         data = data_dir + '/' + dataset_name
         test_data = data_dir + '/' + dataset_name + '.val.c2v'
-        model_dir = 'models/' + type
         os.makedirs(model_dir, exist_ok=True)
 
         GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --default_embeddings_size %s --framework keras --tensorboard" % \
@@ -55,7 +55,9 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False , ou
     run_command('./preprocess-only-histograms.sh')
     # run_command('./train.sh')
     run_train()
-    run_command('./evaluate_trained_model.sh')
+    # run_command('./evaluate_trained_model.sh')
+    run_command(('python3 code2vec.py --framework keras --load %s/saved_model --predict --default_embeddings_size %s'
+                 % (model_dir, str(default_embeddings_size))).split(' '))
     shutil.move(output_file, output_file_final)
 
     evaluation = (dataset_path / 'evaluation.txt').read_text()
