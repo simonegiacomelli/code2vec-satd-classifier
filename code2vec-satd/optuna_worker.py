@@ -20,6 +20,8 @@ def objective(trial):
     except Exception as ex:
         import traceback
         error = traceback.format_exc()
+        print('error-01', error)
+        print('output-01', '\n'.join(output))
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
 
     user_data = {
