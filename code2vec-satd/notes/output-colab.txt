@@ -1,0 +1,266 @@
+StartExecuting ['./gradlew', 'MainGenDatasetArgs', '-Parguments=--clean_token_count_limit 146', '--console=plain']
+
+> Configure project :
+Kotlin Multiplatform Projects are an experimental feature.
+
+> Task :compileKotlinJvm UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :jvmProcessResources UP-TO-DATE
+> Task :jvmMainClasses UP-TO-DATE
+> Task :jvmJar UP-TO-DATE
+
+> Task :MainGenDatasetArgs
+Arguments: [--clean_token_count_limit] [146]
+Dataset generation start
+main Loading: /home/postgres/Desktop/code2vec-satd-classifier/satd-classifier/config.properties
+main Config file does not exists: /home/postgres/Desktop/code2vec-satd-classifier/satd-classifier/config_649fc0dd8278.properties
+main configuration properties: code2vec_path=../code2vec-satd
+main Starting GenDataset-filesForJavaExtractor
+main pid: too-slow
+main Using workFolder: /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/build-dataset/java-small
+main Jdbc url: [jdbc:postgresql://localhost:1603/db]
+2020-06-10 20:00:15.854 [main] INFO  Exposed - Preparing create tables statements took 27ms
+2020-06-10 20:00:15.860 [main] INFO  Exposed - Executing create tables statements took 3ms
+2020-06-10 20:00:15.950 [main] INFO  Exposed - Extracting table columns took 90ms
+2020-06-10 20:00:16.010 [main] INFO  Exposed - Extracting column constraints took 58ms
+2020-06-10 20:00:16.011 [main] INFO  Exposed - Preparing alter table statements took 151ms
+2020-06-10 20:00:16.011 [main] INFO  Exposed - Executing alter table statements took 0ms
+2020-06-10 20:00:16.041 [main] INFO  Exposed - Checking mapping consistence took 29ms
+delete /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/java-small.test.raw.txt
+delete /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/java-small.val.raw.txt
+delete /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/java-small.train.raw.txt
+delete /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/java-small.test.raw.txt.full
+delete /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/java-small.val.raw.txt.full
+delete /home/postgres/Desktop/code2vec-satd-classifier/code2vec-satd/java-small.train.raw.txt.full
+Dataset 6152 + 6151 + 28705  = 41008 (validation + test + train = total)
+Files 12304 + 12302 + 57410 = 82016 (validation + test + train = total)
+Generation done
+
+BUILD SUCCESSFUL in 38s
+5 actionable tasks: 1 executed, 4 up-to-date
+Executing ./preprocess-only-histograms.sh
+Creating histograms from the training data
+2020-06-10 20:01:05.557670: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer.so.6'; dlerror: libnvinfer.so.6: cannot open shared object file: No such file or directory
+2020-06-10 20:01:05.557792: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer_plugin.so.6'; dlerror: libnvinfer_plugin.so.6: cannot open shared object file: No such file or directory
+2020-06-10 20:01:05.557807: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:30] Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+File: java-small.test.raw.txt
+Average total contexts: 180.86433100308892
+Average final (after sampling) contexts: 131.78353113314907
+Total examples: 12302
+Empty examples: 0
+Max number of contexts per word: 954
+File: java-small.val.raw.txt
+Average total contexts: 182.6387353706112
+Average final (after sampling) contexts: 132.13556566970092
+Total examples: 12304
+Empty examples: 0
+Max number of contexts per word: 1042
+File: java-small.train.raw.txt
+Average total contexts: 183.95836962201707
+Average final (after sampling) contexts: 133.18808569935553
+Total examples: 57410
+Empty examples: 0
+Max number of contexts per word: 1808
+Dictionaries saved to: data/java-small/java-small.dict.c2v
+Executing ['python3', '-u', 'code2vec.py', '--data', 'data/java-small/java-small', '--test', 'data/java-small/java-small.val.c2v', '--save', 'models/java-small/saved_model', '--default_embeddings_size', '330', '--framework', 'keras', '--tensorboard']
+2020-06-10 20:01:38.204747: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer.so.6'; dlerror: libnvinfer.so.6: cannot open shared object file: No such file or directory
+2020-06-10 20:01:38.204889: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'libnvinfer_plugin.so.6'; dlerror: libnvinfer_plugin.so.6: cannot open shared object file: No such file or directory
+2020-06-10 20:01:38.204915: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:30] Cannot dlopen some TensorRT libraries. If you would like to use Nvidia GPU with TensorRT, please make sure the missing libraries mentioned above are installed properly.
+2020-06-10 20:01:38,991 INFO
+2020-06-10 20:01:38,991 INFO
+2020-06-10 20:01:38,992 INFO     ---------------------------------------------------------------------
+2020-06-10 20:01:38,992 INFO     ---------------------------------------------------------------------
+2020-06-10 20:01:38,992 INFO     ---------------------- Creating word2vec model ----------------------
+2020-06-10 20:01:38,992 INFO     ---------------------------------------------------------------------
+2020-06-10 20:01:38,992 INFO     ---------------------------------------------------------------------
+2020-06-10 20:01:38,992 INFO     Checking number of examples ...
+2020-06-10 20:01:38,992 INFO         Number of train examples: 13190
+2020-06-10 20:01:38,992 INFO         Number of test examples: 2828
+2020-06-10 20:01:38,992 INFO     ---------------------------------------------------------------------
+2020-06-10 20:01:38,992 INFO     ----------------- Configuration - Hyper Parameters ------------------
+2020-06-10 20:01:38,992 INFO     CODE_VECTOR_SIZE                          990
+2020-06-10 20:01:38,992 INFO     CSV_BUFFER_SIZE                           104857600
+2020-06-10 20:01:38,992 INFO     DEFAULT_EMBEDDINGS_SIZE                   330
+2020-06-10 20:01:38,992 INFO     DL_FRAMEWORK                              keras
+2020-06-10 20:01:38,993 INFO     DROPOUT_KEEP_RATE                         0.75
+2020-06-10 20:01:38,993 INFO     EXPORT_CODE_VECTORS                       False
+2020-06-10 20:01:38,993 INFO     LOGS_PATH                                 None
+2020-06-10 20:01:38,993 INFO     MAX_CONTEXTS                              200
+2020-06-10 20:01:38,993 INFO     MAX_PATH_VOCAB_SIZE                       911417
+2020-06-10 20:01:38,993 INFO     MAX_TARGET_VOCAB_SIZE                     261245
+2020-06-10 20:01:38,993 INFO     MAX_TOKEN_VOCAB_SIZE                      1301136
+2020-06-10 20:01:38,993 INFO     MAX_TO_KEEP                               10
+2020-06-10 20:01:38,993 INFO     MODEL_LOAD_PATH                           None
+2020-06-10 20:01:38,993 INFO     MODEL_SAVE_PATH                           models/java-small/saved_model
+2020-06-10 20:01:38,993 INFO     NUM_BATCHES_TO_LOG_PROGRESS               100
+2020-06-10 20:01:38,993 INFO     NUM_TEST_EXAMPLES                         2828
+2020-06-10 20:01:38,993 INFO     NUM_TRAIN_BATCHES_TO_EVALUATE             1800
+2020-06-10 20:01:38,993 INFO     NUM_TRAIN_EPOCHS                          20
+2020-06-10 20:01:38,993 INFO     NUM_TRAIN_EXAMPLES                        13190
+2020-06-10 20:01:38,993 INFO     PATH_EMBEDDINGS_SIZE                      330
+2020-06-10 20:01:38,993 INFO     PREDICT                                   False
+2020-06-10 20:01:38,993 INFO     READER_NUM_PARALLEL_BATCHES               6
+2020-06-10 20:01:38,993 INFO     RELEASE                                   False
+2020-06-10 20:01:38,993 INFO     SAVE_EVERY_EPOCHS                         1
+2020-06-10 20:01:38,993 INFO     SAVE_T2V                                  None
+2020-06-10 20:01:38,993 INFO     SAVE_W2V                                  None
+2020-06-10 20:01:38,993 INFO     SEPARATE_OOV_AND_PAD                      False
+2020-06-10 20:01:38,994 INFO     SHUFFLE_BUFFER_SIZE                       10000
+2020-06-10 20:01:38,994 INFO     TARGET_EMBEDDINGS_SIZE                    990
+2020-06-10 20:01:38,994 INFO     TEST_BATCH_SIZE                           1024
+2020-06-10 20:01:38,994 INFO     TEST_DATA_PATH                            data/java-small/java-small.val.c2v
+2020-06-10 20:01:38,994 INFO     TOKEN_EMBEDDINGS_SIZE                     330
+2020-06-10 20:01:38,994 INFO     TOP_K_WORDS_CONSIDERED_DURING_PREDICTION  2
+2020-06-10 20:01:38,994 INFO     TRAIN_BATCH_SIZE                          1024
+2020-06-10 20:01:38,994 INFO     TRAIN_DATA_PATH_PREFIX                    data/java-small/java-small
+2020-06-10 20:01:38,994 INFO     USE_TENSORBOARD                           True
+2020-06-10 20:01:38,994 INFO     VERBOSE_MODE                              1
+2020-06-10 20:01:38,994 INFO     _Config__logger                           <Logger code2vec (INFO)>
+2020-06-10 20:01:38,994 INFO     context_vector_size                       990
+2020-06-10 20:01:38,994 INFO     entire_model_load_path                    None
+2020-06-10 20:01:38,994 INFO     entire_model_save_path                    models/java-small/saved_model__entire-model
+2020-06-10 20:01:38,994 INFO     is_loading                                False
+2020-06-10 20:01:38,994 INFO     is_saving                                 True
+2020-06-10 20:01:38,994 INFO     is_testing                                True
+2020-06-10 20:01:38,994 INFO     is_training                               True
+2020-06-10 20:01:38,994 INFO     model_load_dir                            None
+2020-06-10 20:01:38,994 INFO     model_weights_load_path                   None
+2020-06-10 20:01:38,994 INFO     model_weights_save_path                   models/java-small/saved_model__only-weights
+2020-06-10 20:01:38,994 INFO     test_steps                                3
+2020-06-10 20:01:38,994 INFO     train_data_path                           data/java-small/java-small.train.c2v
+2020-06-10 20:01:38,995 INFO     train_steps_per_epoch                     13
+2020-06-10 20:01:38,995 INFO     word_freq_dict_path                       data/java-small/java-small.dict.c2v
+2020-06-10 20:01:38,995 INFO     ---------------------------------------------------------------------
+2020-06-10 20:01:38,995 INFO     Loading word frequencies dictionaries from: data/java-small/java-small.dict.c2v ...
+2020-06-10 20:01:39,360 INFO     Done loading word frequencies dictionaries.
+2020-06-10 20:01:39,360 INFO     Word frequencies dictionaries loaded. Now creating vocabularies.
+2020-06-10 20:01:39,460 INFO     Created token vocab. size: 147299
+2020-06-10 20:01:40,198 INFO     Created path vocab. size: 760996
+2020-06-10 20:01:40,198 INFO     Created target vocab. size: 3
+2020-06-10 20:01:40.211931: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2020-06-10 20:01:40.228105: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.229117: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1555] Found device 0 with properties:
+pciBusID: 0000:00:04.0 name: Tesla P100-PCIE-16GB computeCapability: 6.0
+coreClock: 1.3285GHz coreCount: 56 deviceMemorySize: 15.90GiB deviceMemoryBandwidth: 681.88GiB/s
+2020-06-10 20:01:40.229422: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-06-10 20:01:40.231321: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-06-10 20:01:40.233154: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-06-10 20:01:40.233598: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-06-10 20:01:40.235463: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-06-10 20:01:40.236487: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10
+2020-06-10 20:01:40.241429: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2020-06-10 20:01:40.241618: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.242584: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.243432: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1697] Adding visible gpu devices: 0
+2020-06-10 20:01:40.244069: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2020-06-10 20:01:40.251313: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2300000000 Hz
+2020-06-10 20:01:40.251753: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55efdf5dca50 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-06-10 20:01:40.251791: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-06-10 20:01:40.354258: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.355275: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55efdf5dec00 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2020-06-10 20:01:40.355313: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Tesla P100-PCIE-16GB, Compute Capability 6.0
+2020-06-10 20:01:40.355616: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.356469: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1555] Found device 0 with properties:
+pciBusID: 0000:00:04.0 name: Tesla P100-PCIE-16GB computeCapability: 6.0
+coreClock: 1.3285GHz coreCount: 56 deviceMemorySize: 15.90GiB deviceMemoryBandwidth: 681.88GiB/s
+2020-06-10 20:01:40.356562: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-06-10 20:01:40.356599: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-06-10 20:01:40.356623: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10
+2020-06-10 20:01:40.356647: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10
+2020-06-10 20:01:40.356669: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10
+2020-06-10 20:01:40.356691: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10
+2020-06-10 20:01:40.356714: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2020-06-10 20:01:40.356801: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.357714: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.358615: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1697] Adding visible gpu devices: 0
+2020-06-10 20:01:40.358754: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.1
+2020-06-10 20:01:40.360168: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1096] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-06-10 20:01:40.360201: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1102]      0
+2020-06-10 20:01:40.360212: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] 0:   N
+2020-06-10 20:01:40.360397: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.361330: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:981] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-06-10 20:01:40.362212: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1241] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 15216 MB memory) -> physical GPU (device: 0, name: Tesla P100-PCIE-16GB, pci bus id: 0000:00:04.0, compute capability: 6.0)
+2020-06-10 20:01:40.376308: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 1004514720 exceeds 10% of system memory.
+2020-06-10 20:01:41.284873: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 1004514720 exceeds 10% of system memory.
+2020-06-10 20:01:41.569467: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 1004514720 exceeds 10% of system memory.
+2020-06-10 20:01:41.965169: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 194434680 exceeds 10% of system memory.
+2020-06-10 20:01:42.195994: W tensorflow/core/framework/cpu_allocator_impl.cc:81] Allocation of 194434680 exceeds 10% of system memory.
+WARNING:tensorflow:AutoGraph could not transform <bound method WordsSubtokenMetricBase.update_state of <keras_words_subtoken_metrics.WordsSubtokenPrecisionMetric object at 0x7f56de0f0410>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: unexpected indent (<unknown>, line 36)
+WARNING:tensorflow:AutoGraph could not transform <bound method WordsSubtokenMetricBase.update_state of <keras_words_subtoken_metrics.WordsSubtokenRecallMetric object at 0x7f56de10f250>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: unexpected indent (<unknown>, line 36)
+WARNING:tensorflow:AutoGraph could not transform <bound method WordsSubtokenMetricBase.update_state of <keras_words_subtoken_metrics.WordsSubtokenF1Metric object at 0x7f56de0a6890>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: unexpected indent (<unknown>, line 36)
+2020-06-10 20:01:43,982 INFO     Model: "model"
+2020-06-10 20:01:43,982 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,982 INFO     Layer (type)                    Output Shape         Param #     Connected to
+2020-06-10 20:01:43,982 INFO     ==================================================================================================
+2020-06-10 20:01:43,982 INFO     input_1 (InputLayer)            [(None, 200)]        0
+2020-06-10 20:01:43,982 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,982 INFO     input_2 (InputLayer)            [(None, 200)]        0
+2020-06-10 20:01:43,982 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,983 INFO     input_3 (InputLayer)            [(None, 200)]        0
+2020-06-10 20:01:43,983 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,983 INFO     token_embedding (Embedding)     (None, 200, 330)     48608670    input_1[0][0]
+2020-06-10 20:01:43,983 INFO                                                                      input_3[0][0]
+2020-06-10 20:01:43,983 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,983 INFO     path_embedding (Embedding)      (None, 200, 330)     251128680   input_2[0][0]
+2020-06-10 20:01:43,983 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,984 INFO     concatenate (Concatenate)       (None, 200, 990)     0           token_embedding[0][0]
+2020-06-10 20:01:43,984 INFO                                                                      path_embedding[0][0]
+2020-06-10 20:01:43,984 INFO                                                                      token_embedding[1][0]
+2020-06-10 20:01:43,984 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,984 INFO     dropout (Dropout)               (None, 200, 990)     0           concatenate[0][0]
+2020-06-10 20:01:43,984 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,984 INFO     time_distributed (TimeDistribut (None, 200, 990)     980100      dropout[0][0]
+2020-06-10 20:01:43,984 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,985 INFO     input_4 (InputLayer)            [(None, 200)]        0
+2020-06-10 20:01:43,985 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,985 INFO     attention (AttentionLayer)      ((None, 990), (None, 990         time_distributed[0][0]
+2020-06-10 20:01:43,985 INFO                                                                      input_4[0][0]
+2020-06-10 20:01:43,985 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:43,985 INFO     target_index (Dense)            (None, 3)            2970        attention[0][0]
+2020-06-10 20:01:43,985 INFO     ==================================================================================================
+2020-06-10 20:01:43,986 INFO     Total params: 300,721,410
+2020-06-10 20:01:43,986 INFO     Trainable params: 300,721,410
+2020-06-10 20:01:43,986 INFO     Non-trainable params: 0
+2020-06-10 20:01:43,986 INFO     __________________________________________________________________________________________________
+2020-06-10 20:01:45,215 INFO     Lookup tables created.
+2020-06-10 20:01:45,215 INFO     Done creating code2vec model
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x7f56de0eb410>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x7f56dde96d90>, <gast.gast.Return object at 0x7f56dde96d10>]
+WARNING:tensorflow:AutoGraph could not transform <bound method PathContextReader._map_raw_dataset_row_to_expected_model_input_form of <path_context_reader.PathContextReader object at 0x7f56de0eb5d0>> and will run it as-is.
+Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
+Cause: expected exactly one node node, found [<gast.gast.FunctionDef object at 0x7f56dde392d0>, <gast.gast.Return object at 0x7f56dde7f910>]
+Train for 13 steps
+2020-06-10 20:01:46,031 INFO     Starting training...
+Epoch 1/20
+2020-06-10 20:01:48.560579: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10
+2020-06-10 20:01:55.988304: I tensorflow/core/profiler/lib/profiler_session.cc:225] Profiler session started.
+2020-06-10 20:01:55.988456: I tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1259] Profiler found 1 GPUs
+2020-06-10 20:01:56.431689: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcupti.so.10.1
+2020-06-10 20:01:56.537004: E tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1307] function cupti_interface_->Subscribe( &subscriber_, (CUpti_CallbackFunc)ApiCallback, this)failed with error CUPTI_ERROR_INSUFFICIENT_PRIVILEGES
+2020-06-10 20:01:56.537840: E tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1346] function cupti_interface_->ActivityRegisterCallbacks( AllocCuptiActivityBuffer, FreeCuptiActivityBuffer)failed with error CUPTI_ERROR_INSUFFICIENT_PRIVILEGES
+
+ 1/13 [=>............................] - ETA: 2:06 - loss: 1.0962 - accuracy: 0.42092020-06-10 20:02:06.445976: E tensorflow/core/profiler/internal/gpu/cupti_tracer.cc:1329] function cupti_interface_->EnableCallback( 0 , subscriber_, CUPTI_CB_DOMAIN_DRIVER_API, cbid)failed with error CUPTI_ERROR_INVALID_PARAMETER
+2020-06-10 20:02:06.446149: I tensorflow/core/profiler/internal/gpu/device_tracer.cc:88]  GpuTracer has collected 0 callback api events and 0 activity events.
+
+ 2/13 [===>..........................] - ETA: 1:57 - loss: 1.0790 - accuracy: 0.4644
+ 3/13 [=====>........................] - ETA: 1:27 - loss: 1.0614 - accuracy: 0.4883
+ 4/13 [========>.....................] - ETA: 1:09 - loss: 1.0430 - accuracy: 0.4958
+ 5/13 [==========>...................] - ETA: 56s - loss: 1.0227 - accuracy: 0.4924 
+ 6/13 [============>.................] - ETA: 45s - loss: 1.0004 - accuracy: 0.4943
+ 7/13 [===============>..............] - ETA: 36s - loss: 0.9773 - accuracy: 0.4937
+ 8/13 [=================>............] - ETA: 29s - loss: 0.9545 - accuracy: 0.4950
+ 9/13 [===================>..........] - ETA: 22s - loss: 0.9323 - accuracy: 0.4950
+10/13 [======================>.......] - ETA: 16s - loss: 0.9119 - accuracy: 0.4973
+11/13 [========================>.....] - ETA: 10s - loss: 0.8936 - accuracy: 0.4985
+12/13 [==========================>...] - ETA: 5s - loss: 0.8776 - accuracy: 0.5000 2020-06-10 20:03:01.270191: W tensorflow/core/common_runtime/base_collective_executor.cc:217] BaseCollectiveExecutor::StartAbort Out of range: End of sequence
+	 [[{{node IteratorGetNext}}]]
+	 [[model/token_embedding/embedding_lookup/_12]]
+2020-06-10 20:03:01.270423: W tensorflow/core/common_runtime/base_collective_executor.cc:217] BaseCollectiveExecutor::StartAbort Out of range: End of sequence
+	 [[{{node IteratorGetNext}}]]
