@@ -75,14 +75,14 @@ class InteractivePredictor:
             for (name, score) in zip(raw_prediction.topk_predicted_words, raw_prediction.topk_predicted_words_scores):
                 if name != '<PAD_OR_OOV>':
                     output.append('\t(%f) predicted: [\'%s\']' % (score, name))
-                    confidence.append(f'{score}:{name}')
+                    confidence.append(f'{name}:{score}')
 
         output_body = '\n'.join(output)
         Path(output_filename).write_text(
             '/*\n' + output_body + '\n*/' +
             '\n\n' + Path(input_filename).read_text('utf-8')
         )
-        index, satd_id = map(int, input_filename.split('_')[:2])
+        index, satd_id = map(int, os.path.basename(input_filename).split('_')[:2])
         conf = ';'.join(confidence)
         eval_detail.write(f'{index}\t{satd_id}\t{prediction}\t{actual}\t{conf}\n')
         return prediction == actual
