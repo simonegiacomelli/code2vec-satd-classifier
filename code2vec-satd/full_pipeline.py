@@ -61,9 +61,10 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
     shutil.move(output_file, output_file_final)
 
     evaluation = (dataset_path / 'evaluation.txt').read_text()
+    evaluation_detail = (dataset_path / 'evaluation_detail.txt').read_text()
     info = (dataset_path / 'info.txt').read_text()
     # output = (dataset_path / 'output.txt').read_text()
-    return evaluation, info, output
+    return evaluation, evaluation_detail, info, output
 
 
 if __name__ == '__main__':

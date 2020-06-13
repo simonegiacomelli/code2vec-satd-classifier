@@ -1,10 +1,7 @@
-import traceback
-
 import os
-from pathlib import Path
 import shutil
+from pathlib import Path
 
-from common import common
 from extractor import Extractor
 
 SHOW_TOP_CONTEXTS = 10
@@ -50,30 +47,24 @@ class InteractivePredictor:
         assert len(predictions) == len(entries)
         done = 0
         correct = 0
+        eval_detail = (Path(dataset_path) / 'evaluation_detail.txt').open('w')
+        eval_detail.write(f'index\tsatd_id\tpredicted\tactual\tconfidence\n')
         for name in entries:
             input_filename = os.path.join(in_dir, name)
             output_filename = os.path.join(out_dir, name)
-            if self.predict_file(input_filename, output_filename, [predictions[done]]):
+            if self.predict_file(input_filename, output_filename, [predictions[done]], eval_detail):
                 correct += 1
             done += 1
+        eval_detail.close()
         accuracy = round(correct / done * 1000) / 1000
         print('correct/done: %d/%d accuracy: %s %%  -- overall done/tot %%: %s' % (
             correct, done, accuracy * 100, round(done / len(entries) * 1000) / 10))
         (Path(dataset_path) / 'evaluation.txt').write_text(f'accuracy={accuracy}')
 
-    def predict_file(self, input_filename, output_filename, raw_prediction_results=None):
+    def predict_file(self, input_filename, output_filename, raw_prediction_results, eval_detail):
         # print(input_filename, '--->', output_filename)
-        if raw_prediction_results is None:
-            try:
-                predict_lines, _ = self.path_extractor.extract_paths(input_filename)
-            except ValueError as e:
-                print(e)
-                print('press a key to continue...')
-                input()
-                return
-            raw_prediction_results = self.model.predict(predict_lines)
-
         output = []
+        confidence = []
         for raw_prediction in raw_prediction_results:
 
             prediction = raw_prediction.topk_predicted_words[0]
@@ -84,10 +75,14 @@ class InteractivePredictor:
             for (name, score) in zip(raw_prediction.topk_predicted_words, raw_prediction.topk_predicted_words_scores):
                 if name != '<PAD_OR_OOV>':
                     output.append('\t(%f) predicted: [\'%s\']' % (score, name))
+                    confidence.append(f'{score}:{name}')
 
         output_body = '\n'.join(output)
         Path(output_filename).write_text(
             '/*\n' + output_body + '\n*/' +
             '\n\n' + Path(input_filename).read_text('utf-8')
         )
+        index, satd_id = map(int, input_filename.split('_')[:2])
+        conf = ';'.join(confidence)
+        eval_detail.write(f'{index}\t{satd_id}\t{prediction}\t{actual}\t{conf}\n')
         return prediction == actual
