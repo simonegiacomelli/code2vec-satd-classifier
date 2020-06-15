@@ -10,7 +10,7 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
     output_file = os.path.abspath('%s.output.txt' % dataset_path)
     output_file_final = os.path.abspath('%s/output.txt' % dataset_path)
     with open(output_file, 'w') as f:
-        f.write('Start')
+        f.write(f'Start\n')
 
     # threading.Thread(target=lambda: os.system(f'tail -F {output_file}'), daemon=True).start()
 

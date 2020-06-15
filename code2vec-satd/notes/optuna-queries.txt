@@ -1,0 +1,8 @@
+
+select value_json::json->>'os_uname',state,count(*) from trial_user_attributes join trials on (trial_user_attributes.trial_id=trials.trial_id)
+where study_id = 55
+--and state = 'FAIL'
+--and value_json  like '%No space left on device%'
+group by 1,2
+order by 1,2
+
