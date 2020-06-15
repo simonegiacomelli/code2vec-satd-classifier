@@ -19,7 +19,7 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
         print(f'executing [{command_str}]')
         p = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         with open(output_file, 'a') as f:
-            f.write(f'Executing {command}\n')
+            f.write(f'Executing [{command_str}]\n')
             for line in iter(p.stdout.readline, b''):
                 line = line.decode('utf-8')
                 if verbose:
