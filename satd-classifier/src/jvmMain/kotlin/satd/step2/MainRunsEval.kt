@@ -10,11 +10,12 @@ import kotlin.math.round
 fun main() {
     persistence.setupDatabase()
 
-    val header = "run_id,positive_class,confidence,precision,recall,accuracy,f1".replace(",", "\t")
+    val header = "run_id,positive_class,confidence,tp,tn,fp,fn,precision,recall,accuracy,f1".replace(",", "\t")
     val confidences = listOf(0.5, 0.6, 0.7, 0.8, 0.9, 0.0)
 
     transaction {
-        val runIdList = DbRuns.run { slice(id).selectAll().map { it[id].value } }.toList()
+//        val runIdList = DbRuns.run { slice(id).selectAll().map { it[id].value } }.toList()
+        val runIdList = listOf(18)
         val lines = runIdList.map { runId ->
             val expected = DbRuns.run { slice(test_count).select { id.eq(runId) }.first()[test_count] }
             val actual = DbEvals.run { select { run_id.eq(runId) }.count() }
@@ -26,11 +27,11 @@ fun main() {
                     val posi = it.first
                     val nega = it.second
                     val tp = map["$posi-1"] ?: 0
-                    val fn = map["$posi-0"] ?: 0
                     val tn = map["$nega-1"] ?: 0
-                    val fp = map["$nega-0"] ?: 0
+                    val fp = map["$posi-0"] ?: 0
+                    val fn = map["$nega-0"] ?: 0
                     RelevanceMeasures(tp, tn, fp, fn).run {
-                        "$runId,$posi,$confidence,${precision.rounded},${recall.rounded},${accuracy.rounded},${f1.rounded}"
+                        "$runId,$posi,$confidence,$tp,$tn,$fp,$fn,${precision.rounded},${recall.rounded},${accuracy.rounded},${f1.rounded}"
                             .replace(",", "\t")
                     }
                 }
