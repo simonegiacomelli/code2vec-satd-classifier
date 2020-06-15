@@ -1,6 +1,7 @@
 import os
 import urllib.request
 
+
 def system_log(cmd, raise_exception=True):
     print('Executing', cmd)
     code = os.system(cmd)
@@ -10,13 +11,12 @@ def system_log(cmd, raise_exception=True):
 
 
 def main():
-    print('ok, start!')
+    print(f'ok, start! I\'m [{os.uname()}]')
     urllib.request.urlretrieve('http://e.jako.pro:8000/optuna-properties.txt', 'optuna-properties.txt')
     from optuna_properties import prefetch_file_properties
     prefetch_file_properties()
     system_log(
         'cd /content/code2vec-satd-classifier/satd-classifier && cd data/pgsql || unzip -q ./pgsql_binaries/pgsql_linux.zip -d ./data && echo unzip done')
-
 
     # check user postgres
     if system_log('runuser -l postgres -c "cd"', raise_exception=False) == 0:
