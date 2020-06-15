@@ -15,7 +15,9 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
     # threading.Thread(target=lambda: os.system(f'tail -F {output_file}'), daemon=True).start()
 
     def run_command(command, cwd=None):
-        command_str = ' '.join(command)
+        command_str = command
+        if isinstance(command, list):
+            command_str = ' '.join(command)
         print(f'executing [{command_str}]')
         p = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         with open(output_file, 'a') as f:
@@ -26,6 +28,7 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
                     print(line, end='')
                 output.append(line)
                 f.write(line)
+                f.flush()
         p.wait()
         exit_status = p.returncode
 
