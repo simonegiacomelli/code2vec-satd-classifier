@@ -75,7 +75,7 @@ class InteractivePredictor:
             for (name, score) in zip(raw_prediction.topk_predicted_words, raw_prediction.topk_predicted_words_scores):
                 if name != '<PAD_OR_OOV>':
                     output.append('\t(%f) predicted: [\'%s\']' % (score, name))
-                    confidence.append(f'{name}:{score}')
+                    confidence.append('%s:%f' % (name, score))
 
         output_body = '\n'.join(output)
         Path(output_filename).write_text(
