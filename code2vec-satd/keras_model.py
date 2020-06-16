@@ -1,4 +1,5 @@
 import tensorflow as tf
+from keras.callbacks import ModelCheckpoint
 from tensorflow import keras
 from tensorflow.keras.layers import Input, Embedding, Concatenate, Dropout, TimeDistributed, Dense
 from tensorflow.keras.callbacks import Callback
@@ -20,7 +21,7 @@ from keras_words_subtoken_metrics import WordsSubtokenPrecisionMetric, WordsSubt
 from config import Config
 from common import common
 from model_base import Code2VecModelBase, ModelEvaluationResults, ModelPredictionResults
-from keras_checkpoint_saver_callback import ModelTrainingStatus, ModelTrainingStatusTrackerCallback,\
+from keras_checkpoint_saver_callback import ModelTrainingStatus, ModelTrainingStatusTrackerCallback, \
     ModelCheckpointSaverCallback, MultiBatchCallback, ModelTrainingProgressLoggerCallback
 
 
@@ -152,8 +153,17 @@ class Code2VecModel(Code2VecModelBase):
             ModelTrainingProgressLoggerCallback(self.config, self.training_status),
         ]
         if self.config.is_saving:
-            keras_callbacks.append(ModelCheckpointSaverCallback(
-                self, self.config.SAVE_EVERY_EPOCHS, self.logger))
+            keras_callbacks.append(ModelCheckpointSaverCallback(self, self.config.SAVE_EVERY_EPOCHS, self.logger))
+            # keras_callbacks.append(
+            #     ModelCheckpoint(self.config.get_entire_model_path(self.config.MODEL_SAVE_PATH), monitor='val_accuracy', verbose=1, save_best_only=True,
+            #     mode='max'))
+            # # save vocabs
+            # model_save_path = self.config.MODEL_SAVE_PATH
+            # model_save_dir = '/'.join(model_save_path.split('/')[:-1])
+            # if not os.path.isdir(model_save_dir):
+            #     os.makedirs(model_save_dir, exist_ok=True)
+            # self.vocabs.save(self.config.get_vocabularies_path_from_model_path(model_save_path))
+            # # save vocabs end
         if self.config.is_testing:
             keras_callbacks.append(ModelEvaluationCallback(self))
         if self.config.USE_TENSORBOARD:
@@ -188,10 +198,10 @@ class Code2VecModel(Code2VecModelBase):
             verbose=self.config.VERBOSE_MODE)
         k = self.config.TOP_K_WORDS_CONSIDERED_DURING_PREDICTION
         return ModelEvaluationResults(
-            topk_acc=eval_res[3:k+3],
-            subtoken_precision=eval_res[k+3],
-            subtoken_recall=eval_res[k+4],
-            subtoken_f1=eval_res[k+5],
+            topk_acc=eval_res[3:k + 3],
+            subtoken_precision=eval_res[k + 3],
+            subtoken_recall=eval_res[k + 4],
+            subtoken_f1=eval_res[k + 5],
             loss=eval_res[1]
         )
 
@@ -367,7 +377,8 @@ class ModelEvaluationCallback(MultiBatchCallback):
             '    loss: {loss:.4f}, f1: {f1:.4f}, recall: {recall:.4f}, precision: {precision:.4f}'.format(
                 loss=evaluation_results.loss, f1=evaluation_results.subtoken_f1,
                 recall=evaluation_results.subtoken_recall, precision=evaluation_results.subtoken_precision))
-        top_k_acc_formated = ['top{}: {:.4f}'.format(i, acc) for i, acc in enumerate(evaluation_results.topk_acc, start=1)]
+        top_k_acc_formated = ['top{}: {:.4f}'.format(i, acc) for i, acc in
+                              enumerate(evaluation_results.topk_acc, start=1)]
         for top_k_acc_chunk in common.chunks(top_k_acc_formated, 5):
             self.code2vec_model.log('    ' + (', '.join(top_k_acc_chunk)))
 
