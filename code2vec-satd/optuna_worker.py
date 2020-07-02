@@ -7,7 +7,7 @@ from satd_utils import prop2dict
 
 
 def objective(trial):
-    clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 100, 400, 1))
+    clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 100, 200, 1))
     default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 64, 256, 1))
 
     accuracy = None
