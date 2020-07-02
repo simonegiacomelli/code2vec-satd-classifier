@@ -75,5 +75,5 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
 
 
 if __name__ == '__main__':
-    evaluation = run(clean_token_count_limit=20, default_embeddings_size=256, verbose=True, num_train_epochs=5)[0]
+    evaluation = run(clean_token_count_limit=40, default_embeddings_size=64, verbose=True, num_train_epochs=5)[0]
     print('evaluation', evaluation)
