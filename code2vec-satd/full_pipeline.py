@@ -4,13 +4,14 @@ import shutil
 from pathlib import Path
 
 
-def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, output=[]):
+def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, output=[], num_train_epochs=20):
     dataset_path = Path('./build-dataset/java-small')
     dataset_path.mkdir(parents=True, exist_ok=True)
     output_file = os.path.abspath('%s.output.txt' % dataset_path)
     output_file_final = os.path.abspath('%s/output.txt' % dataset_path)
     with open(output_file, 'w') as f:
         f.write(f'Start {__file__}\n')
+
     # shutil.rmtree('./models')
 
     # threading.Thread(target=lambda: os.system(f'tail -F {output_file}'), daemon=True).start()
@@ -45,8 +46,9 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
         test_data = data_dir + '/' + dataset_name + '.val.c2v'
         os.makedirs(model_dir, exist_ok=True)
 
-        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --default_embeddings_size %s --framework keras --tensorboard" % \
-             (data, test_data, model_dir, str(default_embeddings_size))
+        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --default_embeddings_size %s --framework keras --tensorboard" \
+             " --num-train-epochs %d" % \
+             (data, test_data, model_dir, str(default_embeddings_size), num_train_epochs)
         run_command(GO.split(' '))
 
     # test exit code
@@ -73,5 +75,5 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
 
 
 if __name__ == '__main__':
-    evaluation = run(50, default_embeddings_size=256, verbose=True)[0]
+    evaluation = run(clean_token_count_limit=20, default_embeddings_size=256, verbose=True, num_train_epochs=5)[0]
     print('evaluation', evaluation)
