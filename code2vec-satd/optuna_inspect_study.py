@@ -16,7 +16,7 @@ if __name__ == '__main__':
     os.makedirs(base_folder, exist_ok=True)
     for trial in study.trials:
         trial: FrozenTrial
-        if trial.state == TrialState.COMPLETE:
+        if trial.state == TrialState.FAIL:
             ud = trial.user_attrs['user_data']
             with open(base_folder + f'/{trial.number}.txt', 'w') as f:
                 f.write(json.dumps({k: v for k, v in ud.items() if k != 'attachments'}, indent=4))

@@ -17,3 +17,4 @@ if __name__ == '__main__':
     study = optuna.create_study(study_name=study_name, storage=db_url, load_if_exists=True)
     plot_optimization_history(study)
     print('done')
+
