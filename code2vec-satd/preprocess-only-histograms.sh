@@ -29,7 +29,22 @@ TARGET_VOCAB_SIZE=261245
 NUM_THREADS=10
 PYTHON=python3
 ###########################################################
-
+#command line params
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --max-contexts=*)
+      MAX_CONTEXTS="${1#*=}"
+      ;;
+    *)
+      printf "***************************\n"
+      printf "* Error: Invalid argument.*\n"
+      printf "***************************\n"
+      exit 1
+  esac
+  shift
+done
+###########################################################
+echo using MAX_CONTEXTS=$MAX_CONTEXTS
 TRAIN_DATA_FILE=${DATASET_NAME}.train.raw.txt
 VAL_DATA_FILE=${DATASET_NAME}.val.raw.txt
 TEST_DATA_FILE=${DATASET_NAME}.test.raw.txt

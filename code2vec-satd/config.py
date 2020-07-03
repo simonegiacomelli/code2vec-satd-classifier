@@ -45,6 +45,10 @@ class Config:
                             default=None, help='set default_embeddings_size')
         parser.add_argument('--num-train-epochs', dest='num_train_epochs', type=int, required=False,
                             default=20, help='set num_train_epochs')
+        parser.add_argument('--max-contexts', dest='max_contexts', type=int, required=False,
+                            default=200, help='set MAX_CONTEXTS')
+        parser.add_argument('--dropout-keep-rate', dest='dropout_keep_rate', type=float, required=False,
+                            default=0.75, help='set DROPOUT_KEEP_RATE')
         return parser
 
     def set_defaults(self):
@@ -98,6 +102,8 @@ class Config:
             self.CODE_VECTOR_SIZE = self.context_vector_size
             self.TARGET_EMBEDDINGS_SIZE = self.CODE_VECTOR_SIZE
         self.NUM_TRAIN_EPOCHS = args.num_train_epochs
+        self.MAX_CONTEXTS = args.max_contexts
+        self.DROPOUT_KEEP_RATE = args.dropout_keep_rate
 
     def __init__(self, set_defaults: bool = False, load_from_args: bool = False, verify: bool = False):
         self.NUM_TRAIN_EPOCHS: int = 0

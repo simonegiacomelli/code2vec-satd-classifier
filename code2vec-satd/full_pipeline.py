@@ -4,7 +4,8 @@ import shutil
 from pathlib import Path
 
 
-def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, output=[], num_train_epochs=20):
+def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, output=[], num_train_epochs=20,
+        max_contexts=200, dropout_keep_rate=0.75):
     dataset_path = Path('./build-dataset/java-small')
     dataset_path.mkdir(parents=True, exist_ok=True)
     output_file = os.path.abspath('%s.output.txt' % dataset_path)
@@ -39,6 +40,8 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
 
     dataset_name = 'java-small'
     model_dir = 'models/' + dataset_name
+    hyper_params = "--default_embeddings_size %s --max-contexts %d --dropout-keep-rate %f" \
+                   % (str(default_embeddings_size), max_contexts, dropout_keep_rate)
 
     def run_train():
         data_dir = 'data/' + dataset_name
@@ -46,9 +49,10 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
         test_data = data_dir + '/' + dataset_name + '.val.c2v'
         os.makedirs(model_dir, exist_ok=True)
 
-        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model --default_embeddings_size %s --framework keras --tensorboard" \
+        GO = "python3 -u code2vec.py --data %s --test %s --save %s/saved_model %s" \
+             " --framework keras --tensorboard" \
              " --num-train-epochs %d" % \
-             (data, test_data, model_dir, str(default_embeddings_size), num_train_epochs)
+             (data, test_data, model_dir, hyper_params, num_train_epochs)
         run_command(GO.split(' '))
 
     # test exit code
@@ -59,12 +63,12 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
                     , f'-Parguments=--clean_token_count_limit {clean_token_count_limit}'
                     , '--console=plain'],
                 cwd='../satd-classifier')
-    run_command('./preprocess-only-histograms.sh')
+    run_command(f'./preprocess-only-histograms.sh --max-contexts={max_contexts}'.split(' '))
     # run_command('./train.sh')
     run_train()
     # run_command('./evaluate_trained_model.sh')
-    run_command(('python3 code2vec.py --framework keras --load %s/saved_model --predict --default_embeddings_size %s'
-                 % (model_dir, str(default_embeddings_size))).split(' '))
+    run_command(('python3 code2vec.py --framework keras --load %s/saved_model --predict %s'
+                 % (model_dir, hyper_params)).split(' '))
     shutil.move(output_file, output_file_final)
 
     evaluation = (dataset_path / 'evaluation.txt').read_text()
@@ -75,5 +79,7 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
 
 
 if __name__ == '__main__':
-    evaluation = run(clean_token_count_limit=40, default_embeddings_size=64, verbose=True, num_train_epochs=5)[0]
+    evaluation = \
+        run(clean_token_count_limit=40, default_embeddings_size=64, verbose=True, num_train_epochs=5, max_contexts=100,
+            dropout_keep_rate=0.74)[0]
     print('evaluation', evaluation)
