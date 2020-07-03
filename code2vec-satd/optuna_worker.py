@@ -7,14 +7,18 @@ from satd_utils import prop2dict
 
 
 def objective(trial):
-    clean_token_count_limit = int(trial.suggest_discrete_uniform('clean_token_count_limit', 100, 200, 1))
-    default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 64, 256, 1))
+    clean_token_count_limit = 200  # int(trial.suggest_discrete_uniform('clean_token_count_limit', 100, 200, 1))
+    default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 64, 384, 16))  # (384-64)/16=20
+    max_contexts = int(trial.suggest_discrete_uniform('max_contexts', 100, 300, 10))  # (300-100)/10=20
+    dropout_keep_rate = trial.suggest_discrete_uniform('max_contexts', 0.4, 1.0, 0.05)
 
     accuracy = None
     evaluation, evaluation_detail, info, output = ('', '', '', [])
     error = ''
     try:
         evaluation, evaluation_detail, info, _ = full_pipeline.run(clean_token_count_limit, default_embeddings_size,
+                                                                   max_contexts=max_contexts,
+                                                                   dropout_keep_rate=dropout_keep_rate,
                                                                    output=output)
         accuracy_str = prop2dict(evaluation)['accuracy']
         accuracy = float(accuracy_str)
@@ -28,11 +32,7 @@ def objective(trial):
     # ALTER TABLE trial_user_attributes ALTER COLUMN value_json TYPE text;
 
     user_data = {
-        'accuracy': accuracy,
-        # -- store other results like this
         'os_uname': os.uname(),
-        'clean_token_count_limit': clean_token_count_limit,
-        'default_embeddings_size': default_embeddings_size,
         'attachments': {'info': info, 'output': output, 'evaluation_detail': evaluation_detail}
     }
     if error != '':
