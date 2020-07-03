@@ -1,0 +1,9 @@
+satd_colab_starter is using http://e.jako.pro:8000/optuna-properties.txt
+serving postgres backup from xyz@foo:~/code2vec-satd-classifier/satd-classifier/data/backup/bk1 with python http.server
+
+
+#command to restore db on specific port
+cd /content/code2vec-satd-classifier/satd-classifier && ./gradlew pgsqlRestore --console=plain -Dorg.gradle.daemon=false --tcp_port 1604
+
+
+

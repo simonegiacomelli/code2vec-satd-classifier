@@ -6,3 +6,10 @@ where study_id = 55
 group by 1,2
 order by 1,2
 
+--DELETE FAILED TRIALS (substitute study_id)
+
+delete from trial_params where trial_id in (select trial_id from trials where state = 'FAIL' and study_id = 55);
+delete from trial_system_attributes where trial_id in (select trial_id from trials where state = 'FAIL' and study_id = 55);
+delete from trial_user_attributes	where trial_id in (select trial_id from trials where state = 'FAIL' and study_id = 55);
+delete from trial_values where trial_id in (select trial_id from trials where state = 'FAIL' and study_id = 55);
+delete from trials where state = 'FAIL' and study_id = 55;
