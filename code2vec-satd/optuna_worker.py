@@ -8,9 +8,9 @@ from satd_utils import prop2dict
 
 def objective(trial):
     clean_token_count_limit = 200  # int(trial.suggest_discrete_uniform('clean_token_count_limit', 100, 200, 1))
-    default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 64, 384, 16))  # (384-64)/16=20
-    max_contexts = int(trial.suggest_discrete_uniform('max_contexts', 100, 300, 10))  # (300-100)/10=20
-    dropout_keep_rate = trial.suggest_discrete_uniform('dropout_keep_rate', 0.4, 1.0, 0.05)
+    default_embeddings_size = int(trial.suggest_discrete_uniform('default_embeddings_size', 32, 192, 16))  # (384-64)/16=20
+    max_contexts = int(trial.suggest_discrete_uniform('max_contexts', 250, 350, 10))  # (300-100)/10=20
+    dropout_keep_rate = trial.suggest_discrete_uniform('dropout_keep_rate', 0.05, 0.7, 0.05)
 
     accuracy = None
     evaluation, evaluation_detail, info, output = ('', '', '', [])

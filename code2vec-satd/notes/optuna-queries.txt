@@ -1,4 +1,24 @@
+RECORD count FOR STUDIES
 
+SELECT s.study_id,
+       s.study_name,
+       t.state,
+       min(t.datetime_start) min_start,
+       max(t.datetime_start) max_start,
+       COUNT(*)
+FROM studies s
+  JOIN trials t ON (s.study_id = t.study_id)
+GROUP BY 1,
+         2,
+         3
+ORDER BY 1,
+         2,
+         3
+
+
+
+
+#
 select value_json::json->>'os_uname',state,count(*) from trial_user_attributes join trials on (trial_user_attributes.trial_id=trials.trial_id)
 where study_id = 55
 --and state = 'FAIL'
