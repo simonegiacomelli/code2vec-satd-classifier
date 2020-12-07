@@ -69,6 +69,16 @@ private class Args(parser: ArgParser) {
     }
 }
 
+object PgBackup2 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        PgSqlStarter(Args(args)).start()
+        file.deleteRecursively()
+        file.parentFile.mkdirs()
+        PgSqlStarter(Args(args)).pgSqlCtl.pg_dump(DsPostgreSqlProvider.NAME, file.absolutePath)
+    }
+}
+
 object PgStartInstance {
     @JvmStatic
     fun main(args: Array<String>) = mainBody {
