@@ -75,7 +75,7 @@ object PgBackup2 {
         PgSqlStarter(Args(args)).start()
         file.deleteRecursively()
         file.parentFile.mkdirs()
-        PgSqlStarter(Args(args)).pgSqlCtl.pg_dump(DsPostgreSqlProvider.NAME, file.absolutePath)
+        Args(args).pg_dump(DsPostgreSqlProvider.NAME, file.absolutePath)
     }
 }
 

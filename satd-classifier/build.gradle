@@ -201,7 +201,12 @@ task pgsqlBackup(type: JavaExec, dependsOn: [jvmJar]) {
 task pgsqlBackup2(type: JavaExec, dependsOn: [jvmJar]) {
     group = "application"
     main = "pgsql.PgBackup2"
+    standardInput = System.in
     classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
+    if(project.hasProperty('arguments')){
+        args(arguments.split(' '))
+    }
 }
 
 task pgsqlRestore(type: JavaExec, dependsOn: [jvmJar]) {
