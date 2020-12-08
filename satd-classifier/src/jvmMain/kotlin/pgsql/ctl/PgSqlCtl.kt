@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils
 import org.slf4j.LoggerFactory
 import pgsql.DsPostgreSqlProvider
 import pgsql.PgDefaults
+import satd.step2.DbPgsql
 import satd.step2.assert2
 import java.io.File
 import java.io.InputStream
@@ -87,8 +88,9 @@ class PgSqlCtl(
         command.environment()["LANGUAGE"] = "EN"
         log.info("Running command: {}", java.lang.String.join(" ", command.command()))
         log.info("in {}", command.directory())
-        log.info("with environment [{}]", command.environment()
-            .map { "${it.key}=${it.value}" }.joinToString(", ").replace("\n", "\\n")
+        log.info(
+            "with environment [{}]", command.environment()
+                .map { "${it.key}=${it.value}" }.joinToString(", ").replace("\n", "\\n")
         )
         val process = command.start()
         val globber = ProcessStreamGlobber(process, processName = File(tokens[0]).name)
@@ -113,8 +115,17 @@ class PgSqlCtl(
         val exitValue: Int
         exitValue = try {
             exec(
-                getPgBin("initdb"), "--no-locale", "-E", "UTF8", "-U", pgsqlUsername
-                , "-A", "md5", "-D", dataPathStr, "--pwfile=" + pwFile.absolutePath
+                getPgBin("initdb"),
+                "--no-locale",
+                "-E",
+                "UTF8",
+                "-U",
+                pgsqlUsername,
+                "-A",
+                "md5",
+                "-D",
+                dataPathStr,
+                "--pwfile=" + pwFile.absolutePath
             )
         } finally {
             FileUtils.deleteQuietly(pwFile)
@@ -138,8 +149,21 @@ class PgSqlCtl(
     fun pg_dump(databaseName: String, path: String) {
         val exitValue = try {
             val tokens = listOf(
-                getPgBin("pg_dump"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", pgsqlUsername
-                , "-F", "d", "-b", "-c", "-W", "-f", path, databaseName
+                getPgBin("pg_dump"),
+                "-h",
+                "localhost",
+                "-p",
+                "$pgsqlTcpPort",
+                "-U",
+                pgsqlUsername,
+                "-F",
+                "d",
+                "-b",
+                "-c",
+                "-W",
+                "-f",
+                path,
+                databaseName
             )
 
             val command = ProcessBuilder().command(tokens)
@@ -189,8 +213,18 @@ class PgSqlCtl(
     fun pg_restore(databaseName: String, path: String) {
         val exitValue = try {
             val tokens = listOf(
-                getPgBin("pg_restore"), "-h", "localhost", "-p", "$pgsqlTcpPort", "-U", pgsqlUsername
-                , "-W", "-c", "-d", databaseName, path
+                getPgBin("pg_restore"),
+                "-h",
+                "localhost",
+                "-p",
+                "$pgsqlTcpPort",
+                "-U",
+                pgsqlUsername,
+                "-W",
+                "-c",
+                "-d",
+                databaseName,
+                path
             )
 
             val command = ProcessBuilder().command(tokens)
@@ -240,4 +274,10 @@ class PgSqlCtl(
         else log.info("Restore successful")
 
     }
+
+    fun toDbPgsql(databaseName: String = DsPostgreSqlProvider.NAME): DbPgsql = DbPgsql(
+        port = pgsqlTcpPort, databaseName = databaseName, user = pgsqlUsername, pass = pgsqlPassword
+    )
 }
+
+

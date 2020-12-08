@@ -5,7 +5,6 @@ import com.xenomachina.argparser.default
 import com.xenomachina.argparser.mainBody
 import pgsql.ctl.PgSqlCtl
 import satd.step2.DbPgsql
-import satd.step2.MainGenDatasetArgs
 import satd.step2.assert2
 import java.io.File
 
@@ -76,6 +75,19 @@ object PgBackup2 {
         file.deleteRecursively()
         file.parentFile.mkdirs()
         Args(args).pg_dump(DsPostgreSqlProvider.NAME, file.absolutePath)
+    }
+}
+
+object PgRestore2 {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        assert2(file.exists()) { "Folder does not exists! $file" }
+        Args(args).also {
+            PgSqlStarter(it).start()
+            it.toDbPgsql().init()
+            it.pg_restore(DsPostgreSqlProvider.NAME, file.absolutePath)
+        }
+        println("PgRestore end")
     }
 }
 

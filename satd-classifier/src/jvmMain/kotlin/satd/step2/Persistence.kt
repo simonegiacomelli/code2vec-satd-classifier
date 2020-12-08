@@ -18,6 +18,7 @@ import java.nio.file.Path
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
+import java.sql.Statement
 import javax.sql.DataSource
 
 interface IDb {
@@ -77,7 +78,28 @@ class DbPgsql(
 
     override fun startDatabase() {
         PgSqlStarter.def.start()
-        DsPostgreSqlProvider().init(connection(urlMaster))
+        init()
+    }
+
+    fun init() {
+        val pgConn = connection(urlMaster)
+        pgConn.createStatement().use { statement ->
+            if (dbNotExist(statement)) {
+                println("Going to create database $databaseName owner $user")
+                statement.execute(
+                    "CREATE DATABASE $databaseName WITH OWNER = $user ENCODING = 'UTF8' " +
+                            "TABLESPACE = pg_default LC_COLLATE = 'C' LC_CTYPE = 'C' CONNECTION LIMIT = -1;"
+                )
+            }
+        }
+    }
+
+    private fun dbNotExist(statement: Statement): Boolean {
+        val dbCountRs = statement.executeQuery("select count(*) from pg_database where datname='$databaseName'")
+        dbCountRs.next()
+        val dbCount = dbCountRs.getInt(1)
+        dbCountRs.close()
+        return dbCount == 0
     }
 }
 
