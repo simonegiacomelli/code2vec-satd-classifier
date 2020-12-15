@@ -26,7 +26,7 @@ fun main() {
 class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySpec: String) {
 
     private val cacheFolder = workingFolder.resolve("cache")
-    private val tokensFile = workingFolder.resolve("github-tokens.txt")
+    private val tokensFile = workingFolder.resolve("github-tokens.txt").also { println("GitHub auth: $it") }
     private val apiCall = GithubApiV4(tokensFile)
     private val queue = mutableListOf<ReposSearch>()
     private val output = File(workingFolder, "github-url-list.txt")
