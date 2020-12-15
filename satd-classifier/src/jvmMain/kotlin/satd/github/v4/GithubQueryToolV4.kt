@@ -45,7 +45,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
             if (probe.repositoryCount > 0)
                 if (probe.repositoryCount <= 1000) {
                     val pageCount = ceil(probe.repositoryCount.toDouble() / 100).toInt()
-                    val page = execute(search)
+                    val page = collect(search)
                     if (pageCount != page) println("weird $pageCount != $page <-------------------------------")
                 } else
                     queue.addAll(0, search.split())
@@ -55,7 +55,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
         return output
     }
 
-    private fun execute(search: ReposSearch): Int {
+    private fun collect(search: ReposSearch): Int {
         val result = search.toQuery().execute()
         result.save()
         var res = result
