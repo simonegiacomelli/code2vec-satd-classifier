@@ -12,9 +12,9 @@ fun main() {
     val dtStart = DateTime.parse("2000-01-01")
     val dtEnd = DateTime.parse("2019-12-31")
     GithubQueryTool(
-        workingFolder = File("./data/github-url-mining/queryJavaPublic-v4-commit"),
         dateRange = DateRange(dtStart, dtEnd),
-        querySpec = "language:Java is:public"
+        querySpec = "language:Java is:public",
+        workingFolder = File("./data/github-url-mining/queryJavaPublic-v4-commit")
     )
         .createOutputTxt()
         .also { file ->
