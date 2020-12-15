@@ -12,13 +12,13 @@ fun main() {
     val dtStart = DateTime.parse("2000-01-01")
     val dtEnd = DateTime.parse("2019-12-31")
     GithubQueryTool(
-        File("./data/github-url-mining/queryJavaPublic-v4-commit")
-        , DateRange(dtStart, dtEnd)
-        , "language:Java is:public"
+        workingFolder = File("./data/github-url-mining/queryJavaPublic-v4-commit"),
+        dateRange = DateRange(dtStart, dtEnd),
+        querySpec = "language:Java is:public"
     )
         .createOutputTxt()
-        .also {
-            println("Generated: $it contains ${it.useLines { it.count() }}")
+        .also { file ->
+            println("Generated: $file contains ${file.useLines { it.count() }}")
         }
 
 }
@@ -78,8 +78,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
                 Type.PROBE -> qryRepoProbe(querySpec)
                 Type.QUERY -> qryRepoNames(querySpec, cursor)
             }
-            val searchResult = apiCall.Call(queryJson, cacheFile
-                , { SearchResult(it, this) }).invoke()
+            val searchResult = apiCall.Call(queryJson, cacheFile, { SearchResult(it, this) }).invoke()
 
             return searchResult
 
