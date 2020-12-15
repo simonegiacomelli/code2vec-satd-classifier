@@ -29,15 +29,17 @@ public class FeatureExtractor {
 
 	final static String lparen = "(";
 	final static String rparen = ")";
-	final static String upSymbol = "^";
-	final static String downSymbol = "_";
+	public static String upSymbol = "^";
+	public static String downSymbol = "_";
 
 	public FeatureExtractor(CommandLineValues commandLineValues) {
 		this.m_CommandLineValues = commandLineValues;
 	}
 
+	public CompilationUnit compilationUnit; //expose so to print AST in graphViz
+
 	public ArrayList<ProgramFeatures> extractFeatures(String code) throws ParseException, IOException {
-		CompilationUnit compilationUnit = parseFileWithRetries(code);
+		compilationUnit = parseFileWithRetries(code);
 		FunctionVisitor functionVisitor = new FunctionVisitor();
 
 		functionVisitor.visit(compilationUnit, null);
@@ -48,7 +50,7 @@ public class FeatureExtractor {
 		return programs;
 	}
 
-	private CompilationUnit parseFileWithRetries(String code) throws IOException {
+	public CompilationUnit parseFileWithRetries(String code) throws IOException {
 		final String classPrefix = "public class Test {";
 		final String classSuffix = "}";
 		final String methodPrefix = "SomeUnknownReturnType f() {";

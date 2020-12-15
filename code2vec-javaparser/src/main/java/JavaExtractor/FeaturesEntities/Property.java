@@ -20,10 +20,14 @@ public class Property {
 	private String Name;
 	private String SplitName;
 	private String Operator;
+	public final boolean isLeaf; //expose to draw AST with graphviz
+	public final int id; //expose to draw AST with graphviz
 	public static final HashSet<String> NumericalKeepValues = Stream.of("0", "1", "32", "64")
 			.collect(Collectors.toCollection(HashSet::new));
 
 	public Property(Node node, boolean isLeaf, boolean isGenericParent, int id) {
+		this.isLeaf = isLeaf;
+		this.id = id;
 		Class<?> nodeClass = node.getClass();
 		RawType = Type = nodeClass.getSimpleName();
 		if (node instanceof ClassOrInterfaceType && ((ClassOrInterfaceType) node).isBoxedType()) {
