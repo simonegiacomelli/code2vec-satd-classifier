@@ -100,7 +100,7 @@ class Find(val repo: Repo) {
                         COPY, RENAME, ADD, DELETE -> {
                             /* should not matter to our satd tracking */
                         }
-                        null -> TODO()
+                        null -> throw Exception("Should never happen")
                     }
 
                 }
