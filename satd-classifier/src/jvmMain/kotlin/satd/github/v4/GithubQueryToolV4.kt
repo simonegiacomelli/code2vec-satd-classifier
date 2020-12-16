@@ -62,13 +62,13 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
         var page = 1
         while (res.hasNextPage) {
             page++
-            res = ReposSearch(Type.QUERY, search.dateRange, page, res.endCursor).execute()
+            res = ReposSearch(Type.HARVEST, search.dateRange, page, res.endCursor).execute()
             res.save()
         }
         return page
     }
 
-    enum class Type { PROBE, QUERY }
+    enum class Type { PROBE, HARVEST }
 
     inner class ReposSearch(val type: Type, val dateRange: DateRange, val page: Int = 1, val cursor: String = "") {
         override fun toString() = "${dateRange.qry} qs=$querySpec cursor=$cursor"
@@ -76,7 +76,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
         fun execute(): SearchResult {
             val queryJson = when (type) {
                 Type.PROBE -> qryRepoProbe(querySpec)
-                Type.QUERY -> qryRepoNames(querySpec, cursor)
+                Type.HARVEST -> qryRepoNames(querySpec, cursor)
             }
             val searchResult = apiCall.Call(queryJson, cacheFile, { SearchResult(it, this) }).invoke()
 
@@ -90,7 +90,7 @@ class GithubQueryTool(workingFolder: File, val dateRange: DateRange, val querySp
             return listOf(ReposSearch(Type.PROBE, left), ReposSearch(Type.PROBE, right))
         }
 
-        fun toQuery(): ReposSearch = ReposSearch(Type.QUERY, dateRange)
+        fun toQuery(): ReposSearch = ReposSearch(Type.HARVEST, dateRange)
 
         inner class SearchResult(val jsonContent: String, repoSearch: ReposSearch) : GithubApiV4.Verifier {
 
