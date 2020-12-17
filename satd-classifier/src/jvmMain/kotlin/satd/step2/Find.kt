@@ -94,9 +94,12 @@ class Find(val repo: Repo) {
                 .forEach {
                     stat.ratePrinter.spin()
                     when (it.changeType) {
-                        MODIFY ->
-                            blobSatd.processedSatds(it.newId.toObjectId())
-                                .link(blobSatd.processedSatds(it.oldId.toObjectId()), parentCommit, childCommit)
+                        MODIFY -> {
+                            val newProcessed = blobSatd.processedSatds(it.newId.toObjectId())
+                            val oldProcessed = blobSatd.processedSatds(it.oldId.toObjectId())
+
+                            newProcessed.link(oldProcessed, parentCommit, childCommit)
+                        }
                         COPY, RENAME, ADD, DELETE -> {
                             /* should not matter to our satd tracking */
                         }

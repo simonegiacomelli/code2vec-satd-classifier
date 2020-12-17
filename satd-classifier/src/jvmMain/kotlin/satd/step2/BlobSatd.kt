@@ -72,7 +72,7 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
 
             //now old and new contains matching methods instances
             oldSatd.forEach { old ->
-                val new = methods.get(old.name)!!
+                val new = methods[old.name]!!
                 if (old.hasSatd && new.exists && !new.hasSatd)
                     candidateForDb(old, new, newCommitId)
             }
