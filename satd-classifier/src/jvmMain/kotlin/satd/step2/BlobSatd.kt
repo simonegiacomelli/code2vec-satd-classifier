@@ -47,7 +47,6 @@ class BlobSatd(val repo: Repository, val stat: Stat) {
             cache.load()
             return ::processedSatdsYesCache
         }
-
         return ::processedSatdsNoCache
     }
 
