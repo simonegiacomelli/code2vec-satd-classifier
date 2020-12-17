@@ -17,7 +17,7 @@ class Requirements(om: Method, nm: Method) {
         clone.setComment(null)
         clone.allContainedComments.forEach { it.remove() }
 
-        //all non null String literals are set
+        //all non null and non empty String literals are set
         clone.findAll(StringLiteralExpr::class.java)
             .forEach {
                 if (it.asString() != null && it.asString().isNotEmpty())
