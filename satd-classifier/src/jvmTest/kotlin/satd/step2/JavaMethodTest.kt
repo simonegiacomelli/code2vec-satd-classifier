@@ -7,6 +7,8 @@ import kotlin.test.assertTrue
 
 class JavaMethodTest {
 
+    //the string src1, src2, ... are below in this file
+
     @Test
     fun `has inner methods`() {
         assertFalse {  JavaMethod(src1).valid }
