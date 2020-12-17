@@ -227,3 +227,27 @@ val detectFeaturesDuplicatesAndUpdateAccept = """
 
     update DbSatds set ${DbSatds.accept.name} = -2 where id in (select s_id from bad_ids union select f_id from bad_ids);
 """.trimIndent()
+
+/*
+better alternative from above
+    drop table if exists DbDups;
+    create table DbDups(
+    id serial primary key,
+    satd_id int8,
+    kind char(1),
+    hash char(32));
+
+
+    insert into dbdups (satd_id,kind,hash)  select id,'s',md5(substring(old_clean_features, position( ' ' in substring( old_clean_features, 4) ) +4 )) from dbsatds ;
+    insert into dbdups (satd_id,kind,hash)  select id,'f',md5(substring(new_clean_features, position( ' ' in substring( new_clean_features, 4) ) +4 )) from dbsatds ;
+
+
+    create index dbdups1 on dbdups (hash);
+
+    drop table if exists bad_ids ;
+    select s.satd_id s_id,f.satd_id f_id into temp bad_ids from dbdups s join dbdups f on (s.hash = f.hash and s.kind='s' and f.kind='f' );
+
+   select * from bad_ids;
+
+  select * from dbsatds where id in (select s_id from bad_ids)
+ */
