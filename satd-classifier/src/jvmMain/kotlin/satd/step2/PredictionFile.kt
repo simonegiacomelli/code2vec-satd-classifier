@@ -4,7 +4,7 @@ import java.io.File
 import kotlin.streams.toList
 
 fun extractPrediction(file: File): Prediction {
-    val lines = file.bufferedReader(bufferSize = 64).lines().skip(1).limit(3).toList().filterNotNull()
+    val lines = file.bufferedReader(bufferSize = 64).lines().skip(1).limit(40).toList().filterNotNull()
     val map = lines.take(2)
         .filter { it.contains(":") }
         .associate { line ->
@@ -17,13 +17,24 @@ fun extractPrediction(file: File): Prediction {
     val sample: Sample =
         Sample.fromFilename(file.name)
     assert2(type == sample.type)
-    val pred = Prediction(sample, prerdictedClass, v.toDouble())
+    val idx = lines.indexOf("Attention:")
+    val attentions:List<Attention> = if(idx >= 0 ){
+        val attList = lines.drop(idx).map { it.split("\tcontext: ") }.filter { it.size == 2 }
+        attList.map {
+            Attention(it[0].toDouble(),it[1])
+        }
+    }else emptyList()
+    val pred = Prediction(sample, prerdictedClass, v.toDouble(),attentions )
     return pred
 }
 
-data class Prediction(val sample: Sample, val prediction: String, val confidence: Double) {
+data class Prediction(val sample: Sample, val prediction: String, val confidence: Double, val attentions:List<Attention> = emptyList()) {
     val correct = sample.type == prediction
 }
+
+fun List<Attention>.att_ratio(): Double = if (size > 1) this[0].weight / this[1].weight else 0.0
+
+data class Attention(val weight: Double, val context: String)
 
 data class Sample(val satdId: Long, val type: String, val index: Int) {
     fun filename(): String = index.toString().padStart(6, '0') +

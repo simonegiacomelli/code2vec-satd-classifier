@@ -382,6 +382,8 @@ object DbEvals : LongIdTable() {
     val fixed_ok = short("fixed_ok")
     val satd_confidence = double("satd_confidence")
     val fixed_confidence = double("fixed_confidence")
+    val satd_att_ratio = double("satd_att_ratio").default(0.0)
+    val fixed_att_ratio = double("fixed_att_ratio").default(0.0)
 }
 
 /*

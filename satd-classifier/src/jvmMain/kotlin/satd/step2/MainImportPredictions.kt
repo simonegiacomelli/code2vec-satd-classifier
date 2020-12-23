@@ -48,6 +48,8 @@ class MainImportPredictions {
                     it[fixed_ok] = fixedOk
                     it[satd_confidence] = old.confidence
                     it[fixed_confidence] = new.confidence
+                    it[satd_att_ratio] = old.attentions.att_ratio()
+                    it[fixed_att_ratio] = new.attentions.att_ratio()
                 }
             }
         }
