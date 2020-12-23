@@ -80,6 +80,6 @@ def run(clean_token_count_limit, default_embeddings_size=256, verbose=False, out
 
 if __name__ == '__main__':
     evaluation = \
-        run(clean_token_count_limit=200, default_embeddings_size=120, verbose=True, num_train_epochs=20, max_contexts=300,
+        run(clean_token_count_limit=200, default_embeddings_size=112, verbose=True, num_train_epochs=20, max_contexts=300,
             dropout_keep_rate=0.2)[0]
     print('evaluation', evaluation)
