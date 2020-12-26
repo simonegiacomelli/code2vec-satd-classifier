@@ -100,8 +100,8 @@ class ThesisExplainMaterial {
     companion object {
         @JvmStatic
         fun main(arguments: Array<String>) {
-            FeatureExtractor.upSymbol = "↑";
-            FeatureExtractor.downSymbol = "↓";
+//            FeatureExtractor.upSymbol = "↑";
+//            FeatureExtractor.downSymbol = "↓";
 
             val code2 = """ 
                 |void method1() {
@@ -135,24 +135,69 @@ class ThesisExplainMaterial {
                 |  ciao();
                 |}
             """.trimMargin()
-            val code = code3
+            val code_125475_satd = """ 
+public boolean postfire() throws IllegalActionException {
+    generateEvents(new ExecEvent(this, 2));
+    try {
+        Thread.sleep(100);
+    } catch (InterruptedException e) {
+    // FIXME
+    }
+    return super.postfire();
+}
+            """
+
+            val code_66085_satd = """ 
+static void httpRedirect(final Exchange exchange, final String uri) {
+    // FIXME: this constant should in HTTP package?
+    httpResponse(exchange, 302);
+    exchange.response.getHeaders().add(LocationHeader.NAME, uri);
+}
+            """
+            val code_57467_satd = """ 
+@Override
+    public ItemStack satd(ItemStack rod, ItemStack... materials) {
+        if (GemsConfig.TOOL_DISABLE_AXE)
+            return null;
+        return ToolHelper.constructTool(this, rod, materials);
+    }
+
+            """
+            val code_57467_fixed = """ 
+                | public ItemStack satd(ItemStack rod, ItemStack... materials) {
+                |   if (GemsConfig.TOOL_DISABLE_AXE)
+                |       return ItemStack.EMPTY;
+                |   return ToolHelper.constructTool(this, rod, materials);
+                |}
+            """.trimMargin()
+
+            val code_43338_satd = """ public String satd() {
+        return getPrincipal().getName();
+    }"""
+val code_43338_fixed = """ public String fixed() {
+        return getConnection().getClientId();
+    }"""
+            val code = code_43338_fixed
             println(code)
 
             val featureExtractor = FeatureExtractor(args)
             val features = featureExtractor.extractFeatures(code)
 
-            printAstPaths(features)
-            //printAst(featureExtractor.compilationUnit)
+            printAstPaths(features,beautify=false)
+            printAst(featureExtractor.compilationUnit)
 
         }
 
-        private fun printAstPaths(features: ArrayList<ProgramFeatures>) {
+        private fun printAstPaths(features: ArrayList<ProgramFeatures>,beautify:Boolean) {
             val paths = StringBuilder()
             for (f in features) {
                 for (r in f.features) {
                     paths.append(r.source.name + ",")
                     paths.append(r.path)
-                    paths.appendln("," + r.target.name)
+                    paths.append("," + r.target.name)
+                    paths.append(" ")
+                    paths.append(r.toString())
+                    paths.appendln()
                 }
             }
             val replMap = mapOf(
@@ -170,7 +215,7 @@ class ThesisExplainMaterial {
                 "(" to "",
                 ")" to ""
             )
-            val repl = replaceText(paths.toString(),replMap)
+            val repl = if(beautify) replaceText(paths.toString(),replMap) else paths.toString()
             println(repl)
         }
 
