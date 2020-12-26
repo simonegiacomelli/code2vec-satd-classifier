@@ -40,6 +40,25 @@ class PredictionFileKtTest {
         assertEquals(0.974789, res.confidence)
 
     }
+
+    @Test
+    fun testExtractPrediction_attention() {
+        val dir = createTempDir()
+        val file = File(dir, "000005_000025_39892DA4B1B0817AA877BFB816F94BFE4D89F471_satd.java")
+        file.writeText(correct)
+        val res = extractPrediction(file)
+        val s = res.sample
+
+        assertEquals(10, res.attentions.size)
+        val weight0 = 0.03801
+        val context0 = "virtualfile,(ClassOrInterfaceType0)^(VariableDeclarationExpr)^(ForeachStmt)^(BlockStmt)_(IfStmt)_(ExpressionStmt)_(AssignExpr:assign0)_(NameExpr0),mylastdir"
+        assertEquals(weight0, res.attentions[0].weight)
+        assertEquals(context0, res.attentions[0].context)
+        val weight9 = 0.014042
+        val context9 = "virtualfile,(ClassOrInterfaceType2)^(Parameter)^(MethodDeclaration)_(BlockStmt)_(IfStmt)_(BinaryExpr:and)_(MethodCallExpr1)_(ArrayAccessExpr0)_(IntegerLiteralExpr1),0"
+        assertEquals(weight9, res.attentions[9].weight)
+        assertEquals(context9, res.attentions[9].context)
+    }
 }
 
 private val correct =
