@@ -223,6 +223,7 @@ class Generate(val breakMode: Boolean = false, val limit: Boolean = false, val w
             partitions.print2()
 
             val info = DatasetInfo.fromPartitions(partitions, where().toString())
+            logln("Where: [${info.where}]")
             query()
                 .forEachIndexed { idx, it ->
                     val folder = partitions.sequence[idx]

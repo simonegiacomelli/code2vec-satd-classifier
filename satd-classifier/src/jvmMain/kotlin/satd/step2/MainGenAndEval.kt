@@ -27,11 +27,16 @@ object MainGenAndEval {
     fun main(args: Array<String>) {
         Shutdown.hook()
         persistence.setupDatabase()
-        execute(400)
+//        execute(400)
 //        (11..20).forEach {
 //            val token_count = it * 10
 //            execute(token_count)
 //        }
+        (13..60).forEach {
+            val token_count = it * 50
+            execute(token_count)
+        }
+
 
     }
 
@@ -43,8 +48,8 @@ object MainGenAndEval {
             val conda = "bash"
             arrayOf(
                 runCommand("$conda ./preprocess-only-histograms.sh"),
-                runCommand("$conda ./train.sh"),
-                runCommand("$conda ./evaluate_trained_model.sh")
+                runCommand("$conda ./train_best_optuna.sh"),
+                runCommand("$conda ./evaluate_trained_model_best_optuna.sh")
             ).joinToString("\n\n" + "-".repeat(100) + "\n\n")
         }
         val imp = MainImportPredictions()

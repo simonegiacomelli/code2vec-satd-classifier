@@ -4,7 +4,7 @@ import java.io.File
 import kotlin.streams.toList
 
 fun extractPrediction(file: File): Prediction {
-    val lines = file.bufferedReader(bufferSize = 64).lines().skip(1).limit(40).toList().filterNotNull()
+    val lines = file.bufferedReader(bufferSize = 64).use { it.lines().skip(1).limit(40).toList().filterNotNull() }
     val map = lines.take(2)
         .filter { it.contains(":") }
         .associate { line ->
@@ -18,17 +18,22 @@ fun extractPrediction(file: File): Prediction {
         Sample.fromFilename(file.name)
     assert2(type == sample.type)
     val idx = lines.indexOf("Attention:")
-    val attentions:List<Attention> = if(idx >= 0 ){
+    val attentions: List<Attention> = if (idx >= 0) {
         val attList = lines.drop(idx).map { it.split("\tcontext: ") }.filter { it.size == 2 }
         attList.map {
-            Attention(it[0].toDouble(),it[1])
+            Attention(it[0].toDouble(), it[1])
         }
-    }else emptyList()
-    val pred = Prediction(sample, prerdictedClass, v.toDouble(),attentions )
+    } else emptyList()
+    val pred = Prediction(sample, prerdictedClass, v.toDouble(), attentions)
     return pred
 }
 
-data class Prediction(val sample: Sample, val prediction: String, val confidence: Double, val attentions:List<Attention> = emptyList()) {
+data class Prediction(
+    val sample: Sample,
+    val prediction: String,
+    val confidence: Double,
+    val attentions: List<Attention> = emptyList()
+) {
     val correct = sample.type == prediction
 }
 

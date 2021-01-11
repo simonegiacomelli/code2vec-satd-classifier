@@ -57,61 +57,76 @@ class MainRunsEvalAdjusted {
 
     fun main() {
         persistence.setupDatabase()
-
-        val confidences = listOf(0.0, 0.5, 0.6, 0.7, 0.8, 0.9)
+        val result = StringBuilder()
+//        val confidences = listOf(0.0, 0.6, 0.7, 0.8, 0.9)
+        val confidences = listOf(0.0)
 
         transaction {
-            val runId = 7
+//            (IntRange(31, 36) + IntRange(39,62))
+            IntRange(6, 7)
+//            listOf(37,39)
+                .map { runId ->
 
-            val query = DbEvals.run {
-                slice(
-                    satd_id,
-                    satd_ok,
-                    fixed_ok,
-                    satd_confidence,
-                    fixed_confidence
-                ).select { run_id.eq(runId) }
-            }
-
-            val expected = DbRuns.run { slice(test_count).select { id.eq(runId) }.first()[test_count] }
-            val actual = DbEvals.run { select { run_id.eq(runId) }.count() }
-            assert2(expected == actual) { "run_id=$runId DbEvals row count expected=$expected actual=$actual" }
-            data class Eval(val posiClass: String, val confidenceLevel: Double) {
-                val metrics = mutableListOf(0, 0, 0, 0, 0) // tp, tn, fp, fn, discarded_fn
-                fun accumulate(isPosiClass: Boolean, correct: Boolean, confidence: Double) {
-                    val index = (if (correct) 0 else 2) + (if (isPosiClass) 0 else 1)
-                    if (confidence >= confidenceLevel)
-                        metrics[index] += 1
-                    else
-                        if (index == 3) //# adjust for recall definition; we account for discarded wrong
-                            metrics[4] += 1
-                }
-
-
-            }
-
-            val evals = listOf("satd", "fixed").map { positiveClass ->
-                confidences.map { confidence ->
-                    val eval = Eval(positiveClass, confidence)
-                    DbEvals.run {
-                        query.map { row ->
-                            eval.accumulate(positiveClass == "satd", row[satd_ok].toInt() == 1, row[satd_confidence])
-                            eval.accumulate(positiveClass == "fixed", row[fixed_ok].toInt() == 1, row[fixed_confidence])
-                        }
+                    val query = DbEvals.run {
+                        slice(
+                            satd_id,
+                            satd_ok,
+                            fixed_ok,
+                            satd_confidence,
+                            fixed_confidence
+                        ).select { run_id.eq(runId) }
                     }
-                    RelevanceMeasuresAdjusted(positiveClass, confidence, eval.metrics)
+
+                    val expected = DbRuns.run { slice(test_count).select { id.eq(runId) }.first()[test_count] }
+                    val actual = DbEvals.run { select { run_id.eq(runId) }.count() }
+                    assert2(expected == actual) { "run_id=$runId DbEvals row count expected=$expected actual=$actual" }
+                    data class Eval(val posiClass: String, val confidenceLevel: Double) {
+                        val metrics = mutableListOf(0, 0, 0, 0, 0) // tp, tn, fp, fn, discarded_fn
+                        fun accumulate(isPosiClass: Boolean, correct: Boolean, confidence: Double) {
+                            val index = (if (correct) 0 else 2) + (if (isPosiClass) 0 else 1)
+                            if (confidence >= confidenceLevel)
+                                metrics[index] += 1
+                            else
+                                if (index == 3) //# adjust for recall definition; we account for discarded wrong
+                                    metrics[4] += 1
+                        }
+
+
+                    }
+                    val listOf = listOf("satd")//, "fixed")
+
+                    val evals = listOf.map { positiveClass ->
+                        confidences.map { confidence ->
+                            val eval = Eval(positiveClass, confidence)
+                            DbEvals.run {
+                                query.map { row ->
+                                    eval.accumulate(
+                                        positiveClass == "satd",
+                                        row[satd_ok].toInt() == 1,
+                                        row[satd_confidence]
+                                    )
+                                    eval.accumulate(
+                                        positiveClass == "fixed",
+                                        row[fixed_ok].toInt() == 1,
+                                        row[fixed_confidence]
+                                    )
+                                }
+                            }
+                            RelevanceMeasuresAdjusted(positiveClass, confidence, eval.metrics)
+                        }
+
+                    }.flatten()
+
+
+                    val tsv = listOf(
+
+                        *(evals.map { "$runId\t" + it.round().tsv }.toTypedArray())
+                    ).joinToString("\n")
+                    result.appendln(tsv)
                 }
-
-            }.flatten()
-
-
-            val tsv = listOf(
-                "runId\t" + RelevanceMeasuresAdjusted.tsvHeader,
-                *(evals.map { "$runId\t" + it.round().tsv }.toTypedArray())
-            ).joinToString("\n")
-            println("")
-            println(tsv)
-            val stringSelection = StringSelection(tsv)
+            println(result)
+            val stringSelection =
+                StringSelection("runId\t" + RelevanceMeasuresAdjusted.tsvHeader + "\n" + result.toString())
             Toolkit.getDefaultToolkit().systemClipboard.setContents(stringSelection, stringSelection)
         }
     }
